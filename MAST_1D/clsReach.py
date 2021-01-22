@@ -924,11 +924,13 @@ class clsReach(object):
         """        
         
         Node = self.Node[3] # Elwha specific!
-        fluxrate = map(lambda x: x*dt, Node.Load.QsAvkLoad[0:self.NBedSizes + 1])
+        #fluxrate = map(lambda x: x*dt, Node.Load.QsAvkLoad[0:self.NBedSizes + 1])
+        fluxrate = list(map(lambda x: x*dt, Node.Load.QsAvkLoad[0:self.NBedSizes + 1]))
         self.CumulativeOutput[0:] = self.CumulativeOutput[0:] + fluxrate 
         
         Node = self.Node[0]
-        feedrate = map(lambda x: x*dt, Node.Load.QsAvkFeed[0:self.NBedSizes + 1])
+        #feedrate = map(lambda x: x*dt, Node.Load.QsAvkFeed[0:self.NBedSizes + 1])
+        feedrate = list(map(lambda x: x*dt, Node.Load.QsAvkFeed[0:self.NBedSizes + 1]))
         self.CumulativeFeed[0:] = self.CumulativeFeed[0:] + feedrate
 
         # Sum bank supply from all nodes in Middle Elwha:  Elwha Specific!

@@ -11,8 +11,10 @@ REQUIRED PACKAGES
 User does not modify.
 """
 import os
+import tkinter as tk
 import sys
 import csv
+
 import json
 from copy import deepcopy
 import multiprocessing
@@ -21,6 +23,9 @@ from Hydrology.clsTimeSeries import clsTimeSeries
 from Hydrology.clsQCreator import clsQCreator
 from MAST_1D.clsInputs import clsInputs
 from MAST_1D.clsModel import clsModel
+from tkinter import filedialog
+
+#repackage.up()
 
 """
 OBJECT AND FUNCTION DEFINITION
@@ -98,7 +103,11 @@ Here you can import a .csv file with spacially-explicit initial conditions
 I.B  IMPORT REACH CONDITIONS FROM A PREVIOUS RUN
 """
 inputs.initialcond = False # If you are using a prior run as initial conditions, True; if starting from scratch, False
-inputs.priorReach = 'C:\Users\Katie\Dropbox\MAST-1D_version_K15\Output\PreRemoval\EDamIndex3Mob06AlphaN1AlphaG055NewAvulsionFP02'+ '//' +'save.Reach' # File with initial conditions Reach object
+#inputs.priorReach = 'C:\Users\Katie\Dropbox\MAST-1D_version_K15\Output\PreRemoval\EDamIndex3Mob06AlphaN1AlphaG055NewAvulsionFP02'+ '//' +'save.Reach' # File with initial conditions Reach object
+if inputs.initialcond == True:
+    root = tk.Tk()
+    root.withdraw()
+    inputs.priorReach = filedialog.askopenfilename(title="Select prior reach output file, should be a save.Reach file")
 
 """
 II:  SET CHANNEL GEOMETRY.

@@ -28,7 +28,8 @@ class clsTimeSeries(object):
     def __init__(self,Dates,Values, label="", text=""):
         self.Dates = Dates
         self.Values = Values
-        self.average = np.mean(self.Values)
+        #self.average = np.mean(self.Values)
+        self.average = np.mean(list(self.Values))
         self.DurationCurves = []
         self.label = label
         self.text = text
@@ -72,7 +73,7 @@ class clsTimeSeries(object):
         
         #  Define bin edges
         maxbin = max(self.Values)
-        binlist = range(0,int(maxbin),int(bins))
+        binlist = list(range(0,int(maxbin),int(bins)))
         
         if logbin == True:
             binlist = [0,bins]
@@ -91,7 +92,7 @@ class clsTimeSeries(object):
         
         #  Convert from histogram to frequency plot
         total = float(sum(DCraw))
-        DC = map(lambda x: x/total, DCraw)
+        DC = list(map(lambda x: x/total, DCraw))
 
         #  Find average value of each bin
         i = 0

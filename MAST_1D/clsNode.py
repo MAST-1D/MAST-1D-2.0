@@ -1194,7 +1194,7 @@ class clsNode(object):
             # floodplain level is just total suspended load divided by channel 
             # discharge
             if Lf / Hc < 0.05:
-                print 'floodplain elevation is below near bed elevation so Rouse Profile can not be computed.  Concentration set to load/discharge.'
+                print('floodplain elevation is below near bed elevation so Rouse Profile can not be computed.  Concentration set to load/discharge.')
 
             # Integrate for lower part of water column up to floodplain level.
             # Assume near bed concentration is evaluated at zeta = 0.05 and
@@ -1428,8 +1428,8 @@ class clsNode(object):
         """
         
         if self.Floodplain.L-self.ActiveLayer.L < threshold:
-            print 'Avulsion!'
-            print self.Floodplain.L
+            print('Avulsion!')
+            print(self.Floodplain.L)
             # This part of the code extracts a slice of substrate that is the 
             # thickness of the user-specified original substrate spacing.  This
             # is so that the depth of the new channel is consistent and does not

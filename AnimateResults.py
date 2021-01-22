@@ -13,7 +13,7 @@ import matplotlib.animation as animation
 import os
 import sys
 sys.path.append("..")
-import Tkinter as T
+import tkinter as T
 from Animator.clsGUI import clsGUI
 
 # Find initial output folder.

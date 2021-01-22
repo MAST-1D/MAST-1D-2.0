@@ -3,8 +3,8 @@ from clsExchangeTypes import clsExchangeTypes
 from clsGSD import clsGSD
 import numpy as np
 from math import exp
-from decimal import* #Katie add
-getcontext().prec = 6
+#from decimal import* #Katie add
+#getcontext().prec = 6
 #from numba.decorators import jit, autojit
 class clsLoad(object):
     """
@@ -195,7 +195,7 @@ class clsLoad(object):
         g = 9.81
         ResultArray = np.zeros(GSD.NBedSizes + 1) 
         #x = GSD.D65
-        y = 'filler'
+        #y = 'filler'
         
         TauPrime = self.findWC_TauPrime(g, Sf, U, GSD.D65) # Katie change; moved TauPrime to its own function
         
@@ -508,7 +508,7 @@ class clsLoad(object):
         elif Section == 'Upper':
             NormQ = Q
         else:
-            print 'Unsupported discharge for Curran suspended load'
+            print('Unsupported discharge for Curran suspended load')
 
         Qssc = (0.1*10**(-4)*(NormQ)**2.5)
 

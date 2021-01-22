@@ -250,8 +250,8 @@ class clsModel(object):
         if self.inputs.Hydrograph == False:
             BoundaryType = 'counter'
         else:
-            BoundaryFactorCount = map(lambda x: datetime.date(*x[:6]),\
-                self.inputs.BoundaryFactorCount)
+            BoundaryFactorCount = list(map(lambda x: datetime.date(*x[:6]),\
+                self.inputs.BoundaryFactorCount))
             BoundaryType = 'date'
         NextBoundary = 0 #  Keeps track of which item in BoundaryChangeCount is the current trigger      
         
@@ -312,7 +312,7 @@ class clsModel(object):
         NextCount = 0 # Keeps track of what value of counter will trigger the next standard print interval
         
         #  Output files that are written at user-defined dates for model performance testing      
-        ValidateDates = map(lambda x: datetime.date(*x[:6]), self.inputs.ValidateDates) # List of dates to output data
+        ValidateDates = list(map(lambda x: datetime.date(*x[:6]), self.inputs.ValidateDates)) # List of dates to output data
         VarPrintstep = 0 # Locator for performance-testing output files  
 
         """
@@ -324,7 +324,7 @@ class clsModel(object):
                 self.inputs.MudFraction, self.inputs.Qlist[counter],\
                 self.inputs.vfunc, self.inputs.TrinityFit, CalibrationFactor, ControlGSD, Section = 'Middle')       
         
-        print 'Model setup complete!  Starting timesteps...'
+        print('Model setup complete!  Starting timesteps...')
 
         while counter < MaxSteps and Reach.Node[3].ActiveLayer.GSD.D50 == Reach.Node[3].ActiveLayer.GSD.D50:
             """
@@ -336,14 +336,15 @@ class clsModel(object):
             #if Tyear == 0 or date.month == 10 and date.day == 1 and subdaycount == 1:
 #            if counter % 1 == 0: # To print every timestep for debugging purposes
 #            if subdaycount == Tmult: # To output every day for debugging purposes
-            if counter == NextCount:
+            if counter == int(NextCount):
                 NextCount = NextCount + Interval
                 year = 0                
                 if Tyear == 0:
                     year = 0.
                 else:
                     year = Tyear-(dt/60./60./24./365.25)
-                    
+                
+                print('Saving regular output at count = %s' % counter) 
                 for out in self.inputs.Outputvars:
                     OutputObj.Output('Out_'+ out, Reach, out, \
                         Printstep, year)
@@ -362,6 +363,7 @@ class clsModel(object):
                 
             #  If date is one specified for performance testing, write output.
             if date in ValidateDates and subdaycount == 1:
+                print('Saving validation output at specified date of: %s ' % date)
                 for out in self.inputs.Validatevars:
                     OutputObj.Output('OutValidate_'+ out, Reach, out, \
                         VarPrintstep, float(date.year))
@@ -796,9 +798,9 @@ class clsModel(object):
             #  Print record of time--every 10 timesteps for duration curve and 
             #  every month for hydrographs
             if date.day == 1 and subdaycount == 0 and self.inputs.Hydrograph == True and self.inputs.CyclingHydrograph == False:
-                print str(date)
+                print(str(date))
             if self.inputs.Hydrograph == False and counter % 10 == 0:
-                print counter
+                print(counter)
             
             #  Change the length of the timestep if at the user-specified point in the model            
             if len(dtcount) > 0 and counter == dtcount[m]:

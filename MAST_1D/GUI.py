@@ -5,15 +5,18 @@ Created on Fri Feb 13 12:21:25 2015
 @author: geography
 """
 
-from Tkinter import *
-import os
+#from Tkinter import *
+#from tkinter import *
+import tkinter as tk
+#import os
 
 from clsInputs import clsInputs
 from ReachTester import clsModel
-import numpy as np
+#import numpy as np
 import pickle as pic
 
-root = Tk()
+#root = Tk()
+root = tk.TK()
 root.wm_title("MAST-1D vK1")
 
 font = 'Times'
@@ -42,8 +45,10 @@ class clsFrame(object):
     def __init__(self, pf, receiver, row, column, nrows, ncolumns):
         self.pf=pf
         self.receiver = receiver # class receiver instance indexing where links should go        
-        self.f=Frame(pf, bd=2, relief = 'groove')
-        self.f.grid(row=row, column=column, sticky=N+S+E+W)
+        #self.f=Frame(pf, bd=2, relief = 'groove')
+        self.f=tk.Frame(pf, bd=2, relief = 'groove')
+        #self.f.grid(row=row, column=column, sticky=N+S+E+W)
+        self.f.grid(row=row, column=column, sticky=tk.N+tk.S+tk.E+tk.W)
         self.row=row
         self.column=column
         self.nrows=nrows
@@ -74,7 +79,7 @@ class clsFrame(object):
             ent.radiomaker(var, buttonlist,j)
             #self.i=self.i+1
             self.c = 2 #  Add if you want to indent
-            exec b[2]
+            exec(b[2])
             self.i = self.i+1
             self.c = 0  #  Add if you want to indent
             ent.i=ent.i+2            
@@ -125,40 +130,43 @@ class clsEntry(object):
         self.var=var
         self.i=i
         self.c=c
-        self.vartag = BooleanVar()
-        self.box = StringVar()
+        #self.vartag = BooleanVar()
+        #self.box = StringVar()
+        self.vartag = tk.BooleanVar()
+        self.box = tk.StringVar()
         self.active = False
         self.text = ""
         
     
     def labelmaker(self):
-        Label(self.f, text=self.var).grid(row=self.i, column=self.c,sticky=E)
- 
+        #Label(self.f, text=self.var).grid(row=self.i, column=self.c,sticky=E)
+        tk.Label(self.f, text=self.var).grid(row=self.i, column=self.c,sticky=tk.E)
+  
     def entrymaker(self):        
-        self.box = Entry(self.f)
-        self.box.grid(row = self.i, column=self.c+1, sticky=W)
+        self.box = tk.Entry(self.f)
+        self.box.grid(row = self.i, column=self.c+1, sticky=tk.W)
         
     def radiomaker(self, alias, buttonlist,j):
-        self.box = Radiobutton(self.f, text=buttonlist[j][0], variable=self.vartag, value=buttonlist[j][1])
-        self.box.grid(row=self.i, column=1, sticky=W)
+        self.box = tk.Radiobutton(self.f, text=buttonlist[j][0], variable=self.vartag, value=buttonlist[j][1])
+        self.box.grid(row=self.i, column=1, sticky=tk.W)
         
     def buttonmaker(self, alias, var, receiver):
-        self.box = Button(self.f, text='Configure', command = lambda alias=alias: self.messageWindow(receiver, alias, var))
-        self.box.grid(row = self.i, column = self.c+1, sticky=W)
+        self.box = tk.Button(self.f, text='Configure', command = lambda alias=alias: self.messageWindow(receiver, alias, var))
+        self.box.grid(row = self.i, column = self.c+1, sticky=tk.W)
         receiver.buttonlist.append([self.f,var, self.i, self.c+1])
             
     def headingmaker(self):
-        Label(self.f, text=self.var, justify=CENTER, font=(font + " " + size + " " + 'bold')).grid(row=self.i,columnspan=2)        
+        tk.Label(self.f, text=self.var, justify=tk.CENTER, font=(font + " " + size + " " + 'bold')).grid(row=self.i,columnspan=2)        
 
     def messageWindow(self, receiver, alias, text): # Make save function that both fills out input class and reloads text in new window.
-        win = Toplevel()
+        win = tk.Toplevel()
         message = text
-        Label(win, text=message).pack()
-        self.y = Text(win, height=20, width=30) 
+        tk.Label(win, text=message).pack()
+        self.y = tk.Text(win, height=20, width=30) 
         self.y.pack()
         if self.active == True:
-            self.y.insert(END,self.text)
-        Button(win, text='Ok', command=lambda alias=alias:receiver.windowsave(alias, self)).pack()
+            self.y.insert(tk.END,self.text)
+        tk.Button(win, text='Ok', command=lambda alias=alias:receiver.windowsave(alias, self)).pack()
         
         
 class clsReceiver(object):
@@ -210,7 +218,7 @@ class clsReceiver(object):
         for entry in self.entrylist:
             key = entry[0]
             ent = entry[1]
-            ent.delete(0,END)
+            ent.delete(0,tk.END)
             ent.insert(0, entries.get(key))
         for entry in self.radiolist:
             key = entry[0]
@@ -376,16 +384,16 @@ def runmodel():
     print ('Model run complete!')
     
 def instantplotter(thing):
-    print 'Ping!'
-    print thing
+    print('Ping!')
+    print(thing)
 
 action = clsFrame(mainframe.f,receiver,4,0,1,3)
 
-x=Button(action.f, text = 'Load inputs', command=testcomb)
+x=tk.Button(action.f, text = 'Load inputs', command=testcomb)
 x.grid(row=0, column=0)
-y=Button(action.f, text = 'RUN', command=runmodel, bg='Green')
+y=tk.Button(action.f, text = 'RUN', command=runmodel, bg='Green')
 y.grid(row=0, column=2)
-z = Button(action.f, text = 'set vals', command = setmodel)
+z = tk.Button(action.f, text = 'set vals', command = setmodel)
 z.grid(row = 0, column=1)
 
 action.f.columnconfigure(0,weight=1)
@@ -393,4 +401,4 @@ action.f.columnconfigure(1,weight=1)
 action.f.columnconfigure(2,weight=1)
 
 
-mainloop()
+tk.mainloop()

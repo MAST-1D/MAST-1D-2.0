@@ -46,7 +46,7 @@ def load_hydrograph(inputs):
     # Load in discharge file as a list
     DischargeFile = os.path.join(os.pardir,"Discharge_Files", inputs.DischargeFile)
     Qlist = open(DischargeFile).readlines()
-    inputs.Qlist = map(lambda x: float(x), Qlist)
+    inputs.Qlist = list(map(lambda x: float(x), Qlist))
     
     # Create a duration curve from the list for setting up equilibrium floodplain
     # conditions and feed.  Other parameters can be customized (see ExtractDC function).

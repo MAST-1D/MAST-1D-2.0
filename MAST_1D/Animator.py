@@ -16,11 +16,17 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import os
 import sys
 sys.path.append("..")
-from Tkinter import *
+#from Tkinter import *
+import tkinter as tk
 import pandas
 
 # User inputs output folder here.
-path = os.path.join(os.pardir, 'C:\Users\geography\Dropbox\MAST-1D_version_K12\Output\FinalRuns_DamRemovalPaper\Removal_MiddleAldwell_02_4000_twothirds_newOutput2')
+#path = os.path.join(os.pardir, 'C:\Users\geography\Dropbox\MAST-1D_version_K12\Output\FinalRuns_DamRemovalPaper\Removal_MiddleAldwell_02_4000_twothirds_newOutput2')
+root = tk.Tk()
+root.withdraw()
+path = tk.filedialog.askdirectory(title="Select Output Folder")
+print(path)
+print("Printed")
 
 ##################################################
 
@@ -88,7 +94,7 @@ def datamaker(path):
     df['Node'] = df['Node'].astype(float)
     df['Value'] = df['Value'].astype(float)
     
-    df.set_index(['Variable'], drop='False', inplace = 'True')
+    df.set_index(['Variable'], drop='False', inplace = True)
     vals = df.loc[varlist[0],:]
     minx = min(vals['Node'].tolist())
     maxx = max(vals['Node'].tolist())
@@ -108,7 +114,7 @@ def datamaker(path):
         
         objectdict[var] = varobject
 
-    df.reset_index(inplace='True')
+    df.reset_index(inplace=True)
         
     return([df,objectdict]) # for matplotlib
 ####################################################
@@ -172,7 +178,8 @@ def fforward():
 extraction = datamaker(path)
 data = extraction[0]
 attributes = extraction[1]
-variablelist = attributes.keys()
+#variablelist = attributes.keys()
+variablelist = list(attributes.keys())
 
 #  Animation plot
 figure = plt.Figure()
@@ -190,42 +197,42 @@ annotation = ax.annotate('t = ' + "" + ' yrs', xy=(axes.minx+0.75*((axes.maxx-ax
 annotation.set_animated(True)
 
 # GUI
-root = Tk()
+root = tk.Tk()
 root.wm_title("MAST-1D vK3 animator")
-var = StringVar()
+var = tk.StringVar()
 var.set(variablelist[0])
 
-f = Frame(root, bd=2)
-ft = Frame(root, bd = 2)
+f = tk.Frame(root, bd=2)
+ft = tk.Frame(root, bd = 2)
 ft.pack()
 f.pack()
-VarsToPlot = OptionMenu(ft, var, *sorted(set(variablelist)), command=updateplot).grid(column=1, row=0, sticky=W) 
-Plotlabel = Label(ft, text='Variable to plot:', font = ('12' + 'bold')).grid(column=0, row=0, pady=10, sticky=E)  
+VarsToPlot = tk.OptionMenu(ft, var, *sorted(set(variablelist)), command=updateplot).grid(column=1, row=0, sticky=tk.W) 
+Plotlabel = tk.Label(ft, text='Variable to plot:', font = ('12' + 'bold')).grid(column=0, row=0, pady=10, sticky=tk.E)  
 
 aniplot = FigureCanvasTkAgg(figure, master=f)
 aniplot.get_tk_widget().grid(column=0, row=1, padx=10, columnspan=3)
 
 pause = False
-pausebutton = Button(f, text = u"\u2016", font=('bold'), bg='RED', command = pauseorplay)
+pausebutton = tk.Button(f, text = u"\u2016", font=('bold'), bg='RED', command = pauseorplay)
 pausebutton.config(height=2, width=5)
 pausebutton.grid(column=1, row=3, pady=10)
 
-rewindbutton = Button(f, text = u"\u23EA", font=('bold'), command = rewind)
+rewindbutton = tk.Button(f, text = u"\u23EA", font=('bold'), command = rewind)
 rewindbutton.config(height=1, width = 3)
 rewindbutton.grid(column=0, row=3)
 
-ffbutton = rewindbutton = Button(f, text = u"\u23E9", font=('bold'), command = fforward)
+ffbutton = rewindbutton = tk.Button(f, text = u"\u23E9", font=('bold'), command = fforward)
 ffbutton.config(height=1, width = 3)
 ffbutton.grid(column=2, row=3)
 
 # Find out how many records there are
-data.set_index(['Node', 'Variable'], drop='False', inplace = 'True')
+data.set_index(['Node', 'Variable'], drop='False', inplace = True)
 values = data.loc[0, var.get(),:]
 ntimes = len(values.index)
-data.reset_index(inplace='True')
+data.reset_index(inplace=True)
 
 # Find out how many nodes there are
-data.set_index(['Time', 'Variable'], drop='False', inplace = 'True')
+data.set_index(['Time', 'Variable'], drop='False', inplace = True)
 values = data.loc['0.0', var.get(),:]
 nnodes = len(values.index)
 timestamp = list(data.index.values)
@@ -234,4 +241,4 @@ timestamp = list(data.index.values)
 j = 0
 ani = animation.FuncAnimation(figure, animate, init_func=init,frames=ntimes, interval=50, blit=True)
 
-mainloop()
+tk.mainloop()

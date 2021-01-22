@@ -47,35 +47,35 @@ class clsReservoir:
     
     NSizes = property(getNSizes)
     
-    def __init__(self, BinBdySizes, NTracers):
+    def __init__(self, BinBdySizes, NumTracers):
         """
         Arguments:
             BinBdySizes -- [float]
             NTracers -- int
         """
         if not self.Initialized:
-            self.NSizes = len(BinBdySizes) - 2
+            #self.NSizes = len(BinBdySizes) - 2
+            sizes = len(BinBdySizes)-2
+            #self.NTracers = NTracers
             
-            self.NTracers = NTracers
-            
-            self.ExSed = clsExchangeTypes(self.NSizes)
-            self.ExTracer = [clsExchangeTypes(self.NSizes) for i in \
-                            range(NTracers)]
+            #self.ExSed = clsExchangeTypes(self.NSizes)
+            self.ExSed = clsExchangeTypes(sizes)
+            self.ExTracer = [clsExchangeTypes(sizes) for i in range(NumTracers)]
             self.GSD = clsGSD(BinBdySizes)
-            self.T = np.zeros((self.NSizes + 1, NTracers))
+            self.T = np.zeros((sizes + 1, NumTracers))
             self.Initialized = True
             self.DeltaS = 0. # Katie add to keep track of mass conservation
             self.L = 0.
             self.Volume = 0.
             
-            self.SourceLatSed = np.zeros(self.NSizes + 1)
-            self.SourceLatTracer = np.zeros((self.NSizes + 1, NTracers))
-            self.SinkLatSed = np.zeros(self.NSizes + 1)
-            self.SinkLatTracer = np.zeros((self.NSizes + 1, NTracers))
-            self.SourceFeedSed = np.zeros(self.NSizes + 1)
-            self.SourceFeedTracer = np.zeros((self.NSizes + 1, NTracers))
-            self.SinkLoadSed = np.zeros(self.NSizes + 1)
-            self.SinkLoadTracer = np.zeros((self.NSizes + 1, NTracers))
+            self.SourceLatSed = np.zeros(sizes + 1)
+            self.SourceLatTracer = np.zeros((sizes + 1, NumTracers))
+            self.SinkLatSed = np.zeros(sizes + 1)
+            self.SinkLatTracer = np.zeros((sizes + 1, NumTracers))
+            self.SourceFeedSed = np.zeros(sizes + 1)
+            self.SourceFeedTracer = np.zeros((sizes + 1, NumTracers))
+            self.SinkLoadSed = np.zeros(sizes + 1)
+            self.SinkLoadTracer = np.zeros((sizes + 1, NumTracers))
         else:
             raise RuntimeError('Tried to initiate clsReservoir twice.')
     
