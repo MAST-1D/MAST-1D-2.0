@@ -8,18 +8,155 @@ import os
 
 class clsReach(object):
     """
-    Attributes:
-        Node -- [clsNode]
-        Qsjkfeed -- [float]
-        QsAvkFeed -- [float]
-        BoundaryConditionDownstreamEtaBed -- float
-        NBedSizes -- int (number of sizes)
-        NTracers -- int (number of sizes)
-        NFlows -- int (number of flows in FDC)
-        NLayers -- int
-        CumulativeOutput -- [float] (Cumulative amount of sediment for each size
-            class transported from the last node) # Katie add to track reservoir filling!
-        Initialized -- bool
+    A class defining a river reach.
+    
+    Defines the properties of a river reach within which sediment will be
+    routed downstream.  A reach consists of a set of nodes connected in
+    series.  Each node represents multiple bends of the channel.  The reach
+    class includes methods for computing water level in each node given
+    flow in the reach and downstream boundary conditions.  It also includes
+    methods for specifying a size-specific sediment feed rate.
+    
+    Note
+    ----
+    Because the reach object requires many input parameters upon instantiation,
+    all parameters are passed as class attributes of a user-defined "inputs" object.
+    Because the nature of the inputs expected by clsReach are quite specific, they
+    are documented here rather than in the clsInputs class definition (which is
+    left relativly undefined so that the user can add model features
+    as needed.  A helpful addition to the code would be to break the 
+    clsInput class up so that the variables required by all reaches 
+    are explicitly called out, perhaps as a separate sub-class or
+    individual well-defined attributes.
+    
+    Parameters
+    ----------
+    inputs.Dbdy : array_like(float)
+        Sediment grain size at each bin boundary. Referred to as
+        BinBdySizes elsewhere.
+    inputs.Qw : array_like(float)
+        Flows in flow duration distribution applied to reach.
+    inputs.NLayers : int
+        Number of substrate layers to consider.
+    inputs.NTracers : int
+        Number of tracers being considered by the model
+    inputs.Nnodes : int
+        Number of nodes in the reach.
+    inputs.ManningStabilizer : ???
+        NEEDS DOCUMENTATION
+    inputs.p : array_like(float)
+        Fraction of time represented by each discharge bin.
+    inputs.Fa : array_like(float)
+        Initial fractions for each sediment size class in active layer.
+
+        Note that Presently the initial floodplain size fractions are solved for to 
+        ensure that exchange between floodplain and channel is initially in
+        equilibrium.
+
+    inputs.Bc : float
+        Initial channel width (m).
+    inputs.Bf : float
+        Initial valley width (m).
+
+        Note that it appears that the user enters intial valley width inputs.Bf as a parameter, but 
+        the node attribute Node.Bf represents the width of the floodplain, not the
+        entire valley, whose width is the sum of Node.Bf + Node.Bc.
+
+    inputs.Cfc : float
+        Friction factor for channel. Cfc = 1/Czc^2.
+    inputs.Cff : float
+        Friction factor for floodplain. Cff = 1/Czf^2.
+    inputs.Slope : float
+        Initial slope of reach.
+    inputs.migration : float
+        Reach-average lateral migration rate (m/s) (yes, it's a small number).
+    inputs.ChSin : float
+        Reach-averaged sinusity (channel length / valley length).
+    inputs.dxf : float (optional)
+        Floodplain spacing between nodes.
+    inputs.FSandSusp : float
+        Fraction sand moving in suspension.  This load is in
+        in addition to any sand transport computed from the surface-based
+        bed material transport equation.
+    inputs.FlBed : float
+        Floodplain number for suspended bed material.  Determines the
+        fraction of bed material flux moving across the floodplain zone
+        that deposits on the floodplain as overbank deposition.
+    inputs.MudFraction : float
+        ???
+
+        It appears that inputs.MudFraction still needs documentation.
+
+    inputs.FloodplainL : float
+        Initial floodplain thickness (m).
+    inputs.ActiveLayerL : float
+        Thickness of active layer (m).
+    inputs.Hpb : float
+        Point bar thickness (m).
+    inputs.lambdap : float
+        Porosity of all sediment deposits.
+    inputs.Kbar : float
+        Parameter influencing fraction mud stored in bars.
+        Motivated by Hoey and Ferguson, who created sediment deposits
+        in substrate as mixture of load and sediment surface.
+    inputs.AlphaBar : float
+        Another parameter influencing fraction mud stored in bars.
+    inputs.AlphaPartlyAlluvial : float
+        Parameter influencing sediment passing through partly alluvial reaches.
+    inputs.ncAddons : float
+        Total additional form roughness added to grain roughness.
+    inputs.ncMultiplier : float
+        Multiplier for grain roughness.
+    inputs.nf : float
+        Floodplain roughness parameter.
+    inputs.LayerL : float
+        Initial thickness of substrate layers (m).
+    inputs.DLag : float
+        Relates to lag deposit in nodes. NEED TO DEFINE
+    inputs.FLag : float
+        Relates to lag deposit in nodes. NEED TO DEFINE
+
+        Note that presently, there is an elevation hard coded into node.
+
+    inputs.vfunc : UNKNOWN
+        NEED TO DOCUMENT: PROBABLY A VELOCITY FUNCTION.
+    inputs.ReachwideBedrock : bool
+        Flag that allows bedrock to be modeled for all nodes.  If False,
+        the reach is assumed to always be fully alluvial.
+    inputs.SetBoundary : bool
+        NEED TO DOCUMENT: PROBABLY HELPS SET DOWNSTREAM BOUNDARY CONDITION.
+    inputs.BoundaryFactor : array_like(float)???
+        NEED TO DOCUMENT: PROBABLY ADJUSTS BOUNDARY CONDITION
+    inputs.TransFunc : UNKOWN
+        NEED TO DOCUMENT
+    inputs.TrinityFit : Bool
+        Flag that determines if Gaeuman fit to Wilcock & Crowe is used.  Regular
+        Wilcock and Crowe used if false.
+    inputs.CalibrationFactor : Float
+        Multiplier applied to all computed bed material transport rates.
+
+    Attributes
+    ----------
+    Node : array_like(:obj:`MAST_1D.clsNode`, length = NNodes)
+        An array of interconnected node objects.
+    NFlows : int
+        Number of discharge bins considered in flow duration distribution 
+    NBedSizes : int 
+        Number of bed material sediment size bins
+     
+    Notes
+    -----
+    Lots more to document here:
+    Qsjkfeed -- [float]
+    QsAvkFeed -- [float]
+    BoundaryConditionDownstreamEtaBed -- float
+    NTracers -- int (number of sizes)
+    NFlows -- int (number of flows in FDC)
+    NLayers -- int
+    CumulativeOutput -- [float] (Cumulative amount of sediment for each size
+        class transported from the last node) # Katie add to track reservoir filling!
+    Initialized -- bool
+    
     """
     Initialized = False
     
@@ -30,16 +167,7 @@ class clsReach(object):
         return np.sum(self.QsAvkFeed[1:self.NBedSizes + 1])
     
     def __init__(self, inputs): # Katie add Manning Stabilizer
-        """
-        Arguments:
-            nnodes -- int
-            NLayers -- int
-            NTracers -- int
-            BinBdySizes -- [float]
-            NFlows -- int
-            SetBoundary -- bool (Katie add--determines whether or not boundary condition is manually set)
-            BoundaryHc -- float (Katie add--optional set downstream WSE)
-        """
+    
         if not self.Initialized:
             self.NBedSizes = len(inputs.Dbdy) - 2
             self.NFlows = len(inputs.Qw)
@@ -65,11 +193,9 @@ class clsReach(object):
     
     def SetupReach(self, inputs):
         """
-        Arguments:
-            TrinityFit -- bool
-            CalibrationFactor -- float
-            
-        Return: clsReach
+        Subroutine that uses the clsInputs object to set up initial 
+        properties of the reach, especially the properties of all 
+        nodes within the reach.  
         """
         
         i = 0
@@ -356,12 +482,29 @@ class clsReach(object):
 
     def SetupTracers(self, inputs, TracerProperties):
         """
-        Setup as Cosmogenic 14C
+        Sets up tracers using parameters appropriate for cosmogenic 14C
         
-        Arguments:
-            TracerProperties -- clsTracerProperties
-            
-        Return: clsTracerProperties
+        Parameters
+        ----------
+        TracerProperties : :obj:`MAST_1D.clsTracerProperties`
+            Tracer properties object to modify.
+        inputs.coj : array_like(float, length = 3)
+            Surface production rates from spallation and fast or slow muons
+        inputs.Lcj :  array_like(float, length = 3)
+            Attenuation lengths from spallation, fast, or slow muons.
+        inputs.name : string
+            Name of tracer under consideration.
+        inputs.DecayConst : float
+            Decay constant for tracer (1/yr)
+        inputs.ProductionRate : float   
+            Surface production rate of tracer, Atoms/g SiO2/yr.
+        inputs.FalloutRate : float
+            For fallout radionuclides, fallout rate in atoms/cm2/yr.
+                
+        Returns
+        -------
+        :obj:`MAST_1D.clsTracerProperties`
+            Object formatted with specified tracer properties.
         """
         TracerProperties.coj[0] = inputs.coj[0] # % production from this process 
             # (at surface, presumably--not integrated over depth)
@@ -381,9 +524,10 @@ class clsReach(object):
 
     def find_downstream_boundary(self, ControlNode):
         """
-        Katie moved here.
         Finds the downstream boundary condition given a Node object and list and
         number of discharges.
+        
+        Katie moved here.
         """
 
         # Find downstream boundary condition--Katie commented out for normal flow
@@ -408,9 +552,8 @@ class clsReach(object):
    
     def set_up_hydrograph(self):
         """
-        Katie add.
         After the floodplain initial conditions are set up, the flow and transport
-        bins are reset to accomodate just one flow.
+        bins are reset to accomodate just one flow. Katie add.
         """
         
         self.NFlows = 1
@@ -450,34 +593,53 @@ class clsReach(object):
     def BackwaterPredictor(self, WSE1, KC1, KF1, KC2, KF2, AC1, AF1, AC2, \
         AF2, dxc, dxf, Q1, Q2):
         """
+        Applies energy equation between simplified cross sections.
+        
         This function computes an upstream predicted water surface elevation 
         using the energy equation, assuming subcritical flow and ignoring
-        expansion/contraction losses (which should be included in the estimate 
+        expansion/contraction losses (which should be accounted for in the estimate 
         of the friction coefficients).  It is written using the conveyance form
         of the energy equation, which means that it does not require any 
         specific parameterization for friction as long as conveyance can be 
         estimated. The algorithm is based on the USACE HEC-RAS hydraulic 
         reference manual.
     
-        Arguments:
-            WSE1 -- float (Water surface elevation in downstream section)
-            KC1 -- float (Channel conveyance in section 1. For manning, 
-                k = 1/n*A*R^(2/3))
-            KF1 -- float (floodplain conveyance in secion 1.)
-            KC2 -- float (Channel conveyance in section 2.)
-            KF2 -- float (floodplain conveyance in section 2.)
-            AC1 -- float (flow area for channel in section 1)
-            AF1 -- float (flow area for floodplain in section 1)
-            AC2 -- float (flow area for channel in section 2)
-            AF2 -- float (flow area for floodplain in section 2)
-            dxc -- float (Down channel length between sections)
-            dxf -- float (Down foodplain length between sections)
-            Q1 -- float (Total discharge in m3/s at section 2)
-            Q2 -- float (Total discharge in m3/s at section 2)
-            WSE2Guess -- float (Estimated water surface elevation in 
-                upstream section)
+        Parameters
+        ----------
+        WSE1 : float 
+            Water surface elevation in downstream section.
+        KC1 : float 
+            Channel conveyance in section 1. For manning,
+            k = 1/n*A*R^(2/3))
+        KF1 : float
+            Floodplain conveyance in secion 1.
+        KC2 : float
+            Channel conveyance in section 2.
+        KF2 : float 
+            Floodplain conveyance in section 2.
+        AC1 : float
+            Flow area for channel in section 1.
+        AF1 : float 
+            Flow area for floodplain in section 1.
+        AC2 : float 
+            Flow area for channel in section 2.
+        AF2 : float 
+            Flow area for floodplain in section 2.
+        dxc : float 
+            Down channel length between sections.
+        dxf : float 
+            Down foodplain length between sections.
+        Q1 : float 
+            Total discharge in m3/s at section 2.
+        Q2 : float 
+            Total discharge in m3/s at section 2.
+        WSE2Guess : float 
+            Estimated water surface elevation in upstream section.       
         
-        Return: float
+        Returns
+        -------
+        float
+            Water surface elevation in upstream section.
         """
         
         if AF1 > 0.:
@@ -510,18 +672,44 @@ class clsReach(object):
         return WSE2
 
     def ManningBackwaterDepthDischargeandSf(self, Q1, Q2, DSNode1, USNode2, \
-        WSE1, WSE2guess,j,ManningStabilizer): # Katie add ManningStabilizer to allow user to adjust amount of chane in iteration for stabilization purposes
+        WSE1, WSE2guess,j,ManningStabilizer): 
         """
-        Arguments:
-            Q1 -- float
-            Q2 -- float
-            DSNode1 -- clsNode
-            USNode2 -- clsNode
-            WSE1 -- float
-            WSE2 -- float
+        Applies backwater equation between two nodes.
+
+        Given the geometry of an upstream and downstram node, discharge, and
+        water level at th downstream node, computes water level, channel discharge,
+        and friction slope for the upstream node.
+
+        Parameters
+        ----------
+        Q1 : float
+            Discharge in the downstream section.
+        Q2 : float
+            Discharge in the upstream section.
+        DSNode1 : :obj:`MAST_1D.clsNode`
+            The downstream node.
+        USNode2 : :obj:`MAST_1D.clsNode`
+            The upstream node.
+        WSE1 : float
+            The water surface elevation in the downstream node.
+        WSE2guess : float
+            An initial estimate for the water surface elevation at the upstream node.
+        j : int
+            Number of discharge bins.
+        ManningStabilizer : ???
+            NEEDS TO BE DOCUMENTED.
+
+        Returns
+        -------
+        HC2 : float 
+            Channel depth at the upstream section.
+        Q2 : float  
+            Channel discharge in the upstream section.
+        Sf : float
+            Friction slope.
+        """
+        # Katie add ManningStabilizer to allow user to adjust amount of chanel in iteration for stabilization purposes
         
-        Return: float
-        """
         # Compute flow area and conveyance for downstream section
         HC1 = WSE1 - DSNode1.etabav
         HF1 = WSE1 - (DSNode1.etabav + DSNode1.Floodplain.L - \
@@ -584,29 +772,42 @@ class clsReach(object):
             print('Backwater iteration did not converge in 20 iterations')
         Sf = (Q2 / (KC2 + KF2)) ** 2
         Qc = KC2 / (KC2 + KF2) * Q2
-
         
         return np.array([HC2, Qc, Sf])
     
     def ManningNormalDepthForBoundary(self, Slope, Bc, Bf, nc, nf, \
         ChannelDepth, Q, Sinuosity):
         """
-        This function iterates for normal depth using the backwater solver.  
-        Normal depth is assumed to have been found when the calculated water 
-        surface is parallel to the specified bed slope for an arbitrarily 
-        specified channel distance (100 m).
+        Solves for steady uniform flow depth.
         
-        Arguments:
-            Slope -- float
-            Bc -- float
-            Bf -- float
-            nc -- float
-            nf -- float
-            ChannelDepth -- float
-            Q -- float
-            Sinuosity -- float
+        This function iterates for normal depth (steady uniform flow) using 
+        the backwater solver. Normal depth is assumed to have been found 
+        when the calculated water surface is parallel to the specified bed 
+        slope for an arbitrarily specified channel distance (100 m).
+        
+        Parameters
+        ----------
+        Slope : float
+            Average channel slope.
+        Bc : float
+            Channel width (m).
+        Bf : float
+            Floodplain width (m).
+        nc : float
+            Manning's n for channel.
+        nf : float
+            Manning's n for floodplain.
+        ChannelDepth : float
+            Depth of flow in channel.
+        Q : float
+            Total discharge for cross-section.
+        Sinuosity : float
+            Channel sinuosity.
             
-        Return: float
+        Returns
+        -------
+        float
+            Steady uniform flow depth in channel. 
         """
         FlowDepth = (nc * Q / Bc / Slope ** 0.5) ** (3. / 5.)
         error = 1.
@@ -638,7 +839,9 @@ class clsReach(object):
         return FlowDepth
     
     def UpdateManningDepthAtAllFlowAndNodes(self):
-
+        """
+        Iterates through all nodes to perform hydraulic computations.
+        """
         for i in range(self.nnodes() - 2, -1, -1): # Loop from downstream to
         # upstream (high i to low) For gradually-varied flow, should be self.nnodes()-2
             for j in range(self.NFlows):
@@ -769,28 +972,47 @@ class clsReach(object):
         WidthChange, W, ErodeT, alphatau, BcMin, Manning, AvulsionThreshold, ControlGSD,\
         AvulsionExchange, MobilityThreshold):
         """
-        Arguments:
-            dt -- float
-            alphabed -- float
-            LMinAfterSplit -- float
-            LMinBeforeRemove -- float
-            SubstrateSpacing -- float
-            TracerProperties -- clsTracerProperties
-            TrinityFit -- bool
-            CalibrationFactor -- float
-            W -- float (optional for width change function)
-			ErodeT -- float (optional for width change function)
-            Bp -- float (optional for width change function)
-            Manning -- bool (optional for width change function)
+        Subroutine that performs the computations necessary to step forward in time.
+        
+        Parameters
+        ----------
+        dt : float
+            Timestep.
+        alphabed : float
+            Hoey-Ferguson parameter determining the ratios of load to active later that
+            get transferred to channel substrate when aggrading.
+        LMinAfterSplit : float
+            Minimum thickness (m) for a substrate node if a new substrate layer is to be spawned (when aggrading).
+            This It is necessary to split substrate so as not to mix material too deeply.
+        LMinBeforeRemove : float
+            Minimum thickness (m) allowed for the top substrate layer if system is degrading.  
+            If too thin, the layer is removed and its sediment is mixed with the next lower layer.             
+        SubstrateSpacing : float
+            Thickness of all but top-most substrate layers (m).
+        TracerProperties : :obj:`MAST_1D.clsTracerProperties`
+            Properties of tracer under consideration.
+        TrinityFit : bool
+            Flag that determines if Gaeuman fit to Wilcock & Crowe is used.  Regular
+            Wilcock and Crowe used if false.
+        CalibrationFactor : float
+            Multiplier applied to all computed bed material transport rates.
+        W : float (optional)
+            Parameter for width change function.
+        ErodeT : float (optional)
+            Parameter for width change function.
+        Bp : float (optional)
+            Parameter for width change function.
+        Manning : bool (optional)
+            Parameter for width change function.
         """
         Dmudj = np.zeros(self.NFlows)
         
         # do hydraulics, sediment transport, morphodynamics and sediment mass
         # conservation
         
-        """
-        Calculate hydraulics
-        """
+        #********
+        #Calculate hydraulics
+        
         self.UpdateManningDepthAtAllFlowAndNodes()
         for i in range(self.nnodes()):
             if i == self.nnodes()-1:
@@ -800,24 +1022,24 @@ class clsReach(object):
             # any calibration necessary for reference shear stress.
             Node = self.Node[i]                          
             #print i
-            """
-            Calculate sediment transport
-            """            
+            
+            #********
+            #Calculate sediment transport            
             
             Node.Load.UpdateSedimentLoadByDurationAndSize(Node.DC, \
                 Node.ActiveLayer.GSD, 1000., 2.7, Node.Bc, \
                 Node.FractionAlluvial, TransFunc, TrinityFit, CalibrationFactor)
             
-            """
-            Determine width change
-            """
+            #********
+            #Determine width change
+            
             if  Node.Canyon == False and WidthChange == True:
                 Node.WidthChange(Manning, TrinityFit, CalibrationFactor, 2.7, 1000.,\
                     9.81, W, ErodeT, alphatau, BcMin, dt, ControlGSD, MobilityThreshold) # Katie add
             
-            """
-            Calculate lateral reservoir exchanges
-            """
+            #********
+            #Calculate lateral reservoir exchanges
+            
             Node.UpdateLateralSedFluxes()
             Node.UpdateLateralTracerConcentrations() # Note that lateral tracer 
                 # concentrations in mud are set using the mud feed
@@ -840,9 +1062,9 @@ class clsReach(object):
                 # concentration in overbank deposition is computed from 
                 # deposition-averaged mud feed
             
-            """
-            Determine vertical bed change and reservoir exchanges
-            """
+            #********
+            #Determine vertical bed change and reservoir exchanges
+            
             Node.ExnerBed()
             #print 'reach' + str(Node.DeltaEtaB)          
             Node.UpdateVerticalExchangeSedFluxes(Node.DeltaEtaB, alphabed)
@@ -860,9 +1082,9 @@ class clsReach(object):
             Node.UpdateVolumeSizeFractionsandTracersInAllReservoirs(dt, \
                 TracerProperties)
             
-            """
-            Determine if the channel avulses
-            """
+            #********
+            #Determine if the channel avulses
+            
             if Node.Canyon == False:
                 Node.Avulsion(AvulsionThreshold, SubstrateSpacing, AvulsionExchange) # Katie add
             Node.UpdateGeometricParameters(dt)
@@ -872,9 +1094,9 @@ class clsReach(object):
             # Still need to implement update of tracer production and decay
             # in all reservoirs
             
-            """
-            Set feed for downstream node
-            """
+            #********
+            #Set feed for downstream node
+            
             # Set feed for next downstream node unless on the last node
             if i < self.nnodes() - 1:
                 for k in range(self.NBedSizes + 1):
@@ -891,8 +1113,11 @@ class clsReach(object):
                         if self.NTracers > 0 and k > 0:
                             self.Node[i + 1].Load.TBedFeedk[k, L] = \
                                 Node.ActiveLayer.T[k, L]
-				
+                
     def UpdateSlope(self):
+        """
+        Subroutine to computes slope for each node from geometry of nodes in reach.
+        """
         Node = self.Node
         for i in range(self.nnodes()):
             if i == self.nnodes() - 1:
@@ -913,14 +1138,16 @@ class clsReach(object):
 #                Node[i].Slope = Node[i - 1].Slope
                 
     def UpdateOutput(self, dt):
-        
         """
-        Katie add!
         Calculates cumulative bed material output from bottom-most node and cumulative feed.
-        Also calculates cumulative supply from banks
+        Also calculates cumulative supply from banks.
         
-        Attributes:
-        dt--float (timestep in seconds)
+        Katie add!
+        
+        Parameters
+        ----------
+        dt : float
+            Timestep in seconds.
         """        
         
         Node = self.Node[3] # Elwha specific!
@@ -944,8 +1171,7 @@ class clsReach(object):
         self.CumulativeBankSupply = self.CumulativeBankSupply + BankSup
         self.CumulativeBankSink = self.CumulativeBankSink + BankSink
         
-    def Add_Nodes(self, NewNode, numnodes, etabav, xc, Outputvars, Validatevars, ValidateDvars, Outputfolder):
-        
+    def Add_Nodes(self, NewNode, numnodes, etabav, xc, Outputvars, Validatevars, ValidateDvars, Outputfolder):    
         """
         Katie add this function to add nodes to the end of the reach.  Was
         developed for the dam removal, where aggradation on the final node
@@ -957,13 +1183,25 @@ class clsReach(object):
         output files with no data for the time elapsed before the nodes
         were added.
         
-        Attributes:
-        -Reach--clsReach (Reach object holding the nodes)
-        -NewNode--clsNode (control node object that whose attributes will be)
-        copied into all of the new nodes.
-        -numnodes--int (number of new nodes to be added)
-        -etabav--float (initial etabav of the downstreammost node)
-        -xc--int (longitudinal coordinate of the downstreammost node)
+        Parameters
+        ----------
+        NewNode : :obj:`MAST_1D.clsNode`
+            Control node object that whose attributes will be copied 
+            into all of the new nodes.
+        numnodes : int
+            Number of new nodes to be added.
+        etabav : float
+            Initial etabav of the downstreammost node.
+        xc : int
+            Longitudinal coordinate of the downstreammost node.
+        Outputvars : ???
+            NEEDS TO BE DOCUMENTED
+        Validatevars : ???
+            NEEDS TO BE DOCUMENTED
+        ValidateDvars : ???
+            NEEDS TO BE DOCUMENTED
+        Outputfolder : ???
+            NEEDS TO BE DOCUMENTED
         """        
         
         #  Add specified number of nodes to downstream end of reach and 

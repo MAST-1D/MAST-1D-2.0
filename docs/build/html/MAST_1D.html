@@ -1,0 +1,2116 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>MAST_1D package &mdash; MAST-1D 2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Overview" href="README.html" />
+    <link rel="prev" title="Hydrology package" href="Hydrology.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> MAST-1D
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">MAST-1D-2.0</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="AnimateResults.html">AnimateResults module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Animator.html">Animator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Hydrology.html">Hydrology package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">MAST_1D package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mast-1d-animator-module">MAST_1D.Animator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mast-1d-animatorcomparison-module">MAST_1D.AnimatorComparison module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mast-1d-gui-module">MAST_1D.GUI module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mast-1d-inputschecker-module">MAST_1D.InputsChecker module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsDurationCurve">MAST_1D.clsDurationCurve module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsDurationCurveTest">MAST_1D.clsDurationCurveTest module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsExchangeTypes">MAST_1D.clsExchangeTypes module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsExport_object">MAST_1D.clsExport_object module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsGSD">MAST_1D.clsGSD module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsInputs">MAST_1D.clsInputs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsLoad">MAST_1D.clsLoad module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsModel">MAST_1D.clsModel module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mast-1d-clsmodeldata-module">MAST_1D.clsModelData module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsNode">MAST_1D.clsNode module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsOutputSpecs">MAST_1D.clsOutputSpecs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsOutputWriter">MAST_1D.clsOutputWriter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsReach">MAST_1D.clsReach module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsReservoir">MAST_1D.clsReservoir module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsSubstratePairClass">MAST_1D.clsSubstratePairClass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsTracerProperties">MAST_1D.clsTracerProperties module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.deleteme">MAST_1D.deleteme module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="README.html">Overview</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MAST-1D</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">MAST-1D-2.0</a> &raquo;</li>
+        
+      <li>MAST_1D package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/MAST_1D.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mast-1d-package">
+<h1>MAST_1D package<a class="headerlink" href="#mast-1d-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="mast-1d-animator-module">
+<h2>MAST_1D.Animator module<a class="headerlink" href="#mast-1d-animator-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="mast-1d-animatorcomparison-module">
+<h2>MAST_1D.AnimatorComparison module<a class="headerlink" href="#mast-1d-animatorcomparison-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="mast-1d-gui-module">
+<h2>MAST_1D.GUI module<a class="headerlink" href="#mast-1d-gui-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="mast-1d-inputschecker-module">
+<h2>MAST_1D.InputsChecker module<a class="headerlink" href="#mast-1d-inputschecker-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-MAST_1D.clsDurationCurve">
+<span id="mast-1d-clsdurationcurve-module"></span><h2>MAST_1D.clsDurationCurve module<a class="headerlink" href="#module-MAST_1D.clsDurationCurve" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="MAST_1D.clsDurationCurve.clsDurationCurve">
+<em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsDurationCurve.</code><code class="sig-name descname">clsDurationCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">NFlows</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsDurationCurve.clsDurationCurve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl>
+<dt>Attributes:</dt><dd><p>Qw – [float] Water Discharge in bin
+p – [float] Fraction of time bin occurs
+Uc – [float] Water velocity in channel in bin
+Uf – [float] Water velocity on floodplain in bin
+Hc – [float] Water depth in channel in bin
+Hf – [float] Water depth on floodplain in bin
+Qwc – [float] Discharge of water in the channel in bin
+Qwf – [float] Discharge of water on the floodplain in bin
+Qs – [float] Sediment discharge in bin – probably should remove</p>
+<blockquote>
+<div><p>this since all load is handled in clsLoad</p>
+</div></blockquote>
+<p>WSE – [float] Water surface elevation
+Sf – [float] Friction Slope
+Dfloodplain – [float] Floodplain deposition in bin–should check</p>
+<blockquote>
+<div><p>whether this is stored elsewhere</p>
+</div></blockquote>
+<dl class="simple">
+<dt>MigrationFactor – [float] Factor that determines how much of the</dt><dd><p>annual average migration occurs for each of duration curve</p>
+</dd>
+</dl>
+<p>Initialized – bool</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="MAST_1D.clsDurationCurve.clsDurationCurve.FroudChannel">
+<code class="sig-name descname">FroudChannel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">j</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsDurationCurve.clsDurationCurve.FroudChannel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="MAST_1D.clsDurationCurve.clsDurationCurve.Initialized">
+<code class="sig-name descname">Initialized</code><em class="property"> = False</em><a class="headerlink" href="#MAST_1D.clsDurationCurve.clsDurationCurve.Initialized" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsDurationCurve.clsDurationCurve.NFlows">
+<code class="sig-name descname">NFlows</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsDurationCurve.clsDurationCurve.NFlows" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsDurationCurve.clsDurationCurve.WeightByFDC">
+<code class="sig-name descname">WeightByFDC</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsDurationCurve.clsDurationCurve.WeightByFDC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-MAST_1D.clsDurationCurveTest">
+<span id="mast-1d-clsdurationcurvetest-module"></span><h2>MAST_1D.clsDurationCurveTest module<a class="headerlink" href="#module-MAST_1D.clsDurationCurveTest" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="MAST_1D.clsDurationCurveTest.clsDurationCurve">
+<em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsDurationCurveTest.</code><code class="sig-name descname">clsDurationCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">NFlows</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsDurationCurveTest.clsDurationCurve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl>
+<dt>Attributes:</dt><dd><p>Qw – [float] Water Discharge in bin
+p – [float] Fraction of time bin occurs
+Uc – [float] Water velocity in channel in bin
+Uf – [float] Water velocity on floodplain in bin
+Hc – [float] Water depth in channel in bin
+Hf – [float] Water depth on floodplain in bin
+Qwc – [float] Discharge of water in the channel in bin
+Qwf – [float] Discharge of water on the floodplain in bin
+Qs – [float] Sediment discharge in bin – probably should remove</p>
+<blockquote>
+<div><p>this since all load is handled in clsLoad</p>
+</div></blockquote>
+<p>WSE – [float] Water surface elevation
+Sf – [float] Friction Slope
+Dfloodplain – [float] Floodplain deposition in bin–should check</p>
+<blockquote>
+<div><p>whether this is stored elsewhere</p>
+</div></blockquote>
+<dl class="simple">
+<dt>MigrationFactor – [float] Factor that determines how much of the</dt><dd><p>annual average migration occurs for each of duration curve</p>
+</dd>
+</dl>
+<p>Initialized – bool</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="MAST_1D.clsDurationCurveTest.clsDurationCurve.FroudChannel">
+<code class="sig-name descname">FroudChannel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">j</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsDurationCurveTest.clsDurationCurve.FroudChannel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="MAST_1D.clsDurationCurveTest.clsDurationCurve.Initialized">
+<code class="sig-name descname">Initialized</code><em class="property"> = False</em><a class="headerlink" href="#MAST_1D.clsDurationCurveTest.clsDurationCurve.Initialized" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsDurationCurveTest.clsDurationCurve.NFlows">
+<code class="sig-name descname">NFlows</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsDurationCurveTest.clsDurationCurve.NFlows" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsDurationCurveTest.clsDurationCurve.WeightByFDC">
+<code class="sig-name descname">WeightByFDC</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsDurationCurveTest.clsDurationCurve.WeightByFDC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsDurationCurveTest.clsDurationCurve.find_TauPrime">
+<code class="sig-name descname">find_TauPrime</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">NFlows</span></em>, <em class="sig-param"><span class="n">g</span></em>, <em class="sig-param"><span class="n">D65</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsDurationCurveTest.clsDurationCurve.find_TauPrime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Katie add.  Calculates the channel-averaged shear stress.  Was moved from
+the main Wilcock-Crowe function.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>Sf – float
+g – float
+D65
+U – float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-MAST_1D.clsExchangeTypes">
+<span id="mast-1d-clsexchangetypes-module"></span><h2>MAST_1D.clsExchangeTypes module<a class="headerlink" href="#module-MAST_1D.clsExchangeTypes" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="MAST_1D.clsExchangeTypes.clsExchangeTypes">
+<em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsExchangeTypes.</code><code class="sig-name descname">clsExchangeTypes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">NSizes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsExchangeTypes.clsExchangeTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This defines the main types of even boundary-movement exchanges.
+Non-boundary movement exchanges are handled elsewhere.
+This can be used for storing either sediment volume fluxes or sediment
+tracer concentrations.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>OutMigration – [float]
+OutWidthChange – [float]
+OutVerticalChange – [float]
+InMigration – [float]
+InWidthChange – [float]
+InVerticalChange – [float]
+NSizes – int
+Initialized – bool</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="MAST_1D.clsExchangeTypes.clsExchangeTypes.Initialized">
+<code class="sig-name descname">Initialized</code><em class="property"> = False</em><a class="headerlink" href="#MAST_1D.clsExchangeTypes.clsExchangeTypes.Initialized" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-MAST_1D.clsExport_object">
+<span id="mast-1d-clsexport-object-module"></span><h2>MAST_1D.clsExport_object module<a class="headerlink" href="#module-MAST_1D.clsExport_object" title="Permalink to this headline">¶</a></h2>
+<p>Created on Fri May 13 11:18:12 2016</p>
+<p>&#64;author: geography</p>
+<dl class="py class">
+<dt id="MAST_1D.clsExport_object.clsExport_object">
+<em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsExport_object.</code><code class="sig-name descname">clsExport_object</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">folder</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsExport_object.clsExport_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Unpickles the output object in the same directory as the object to avoid pickle problems</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-MAST_1D.clsGSD">
+<span id="mast-1d-clsgsd-module"></span><h2>MAST_1D.clsGSD module<a class="headerlink" href="#module-MAST_1D.clsGSD" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="MAST_1D.clsGSD.clsGSD">
+<em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsGSD.</code><code class="sig-name descname">clsGSD</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">BinBdySizes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl>
+<dt>Attributes:</dt><dd><p>D_lower – [float] (size (mm) at bin lower bin boundary)
+D_upper – [float] (size (mm) at upper bin boundary)
+FfinerThanD_upper – [float] (cumulative fraction finer than upper</p>
+<blockquote>
+<div><p>limit of bin boundary)</p>
+</div></blockquote>
+<p>D – [float] (geometric mean size in bin (mm))
+F – [float] (fraction in bin)
+Vs – [float] (Settling velocity of geometric mean size in bin (m/s))
+D84 – float (Size (mm) for which 84% is finer)
+D64 – float (Size (mm) for which 64% is finer)
+D50 – float (median diameter (mm))
+Dg – float (geometric mean diameter (mm))
+SigmaG – float (geometric standard deviation (no units))
+SigmaSG – float (standard deviation on psi scale (no units))
+Initialized – bool
+NBedSizes – int
+UpToDate – bool (flag that determines whether statistics need to be</p>
+<blockquote>
+<div><p>recomputed.  Set to false if F or D are changed.)</p>
+</div></blockquote>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.D50">
+<em class="property">property </em><code class="sig-name descname">D50</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.D50" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.D65">
+<em class="property">property </em><code class="sig-name descname">D65</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.D65" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.D84">
+<em class="property">property </em><code class="sig-name descname">D84</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.D84" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.D90">
+<em class="property">property </em><code class="sig-name descname">D90</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.D90" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.D95">
+<em class="property">property </em><code class="sig-name descname">D95</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.D95" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.D_x">
+<code class="sig-name descname">D_x</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.D_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Geometrically interpolates the kth percentile of a grain size
+distribution Uses a grain size distribution and the kth percentila
+Provides as output the diameter for which k percent of the distribution
+is finer, as interpolated in log space</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>x – float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.Dg">
+<em class="property">property </em><code class="sig-name descname">Dg</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.Dg" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.DietrichSettlingVelocity">
+<code class="sig-name descname">DietrichSettlingVelocity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">D</span></em>, <em class="sig-param"><span class="n">nu</span></em>, <em class="sig-param"><span class="n">g</span></em>, <em class="sig-param"><span class="n">rho</span></em>, <em class="sig-param"><span class="n">rhos</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.DietrichSettlingVelocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns settling velocity in m/s</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>D – float (particle diameter in mm)
+nu – float (kinematic viscosity (m2/s))
+g – float (gravity (m/s2))
+rho – float (water density (kg/m3))
+rhos – float (sediment density (kg/m3))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.F">
+<em class="property">property </em><code class="sig-name descname">F</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.F" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.FfinerThanD_upper">
+<em class="property">property </em><code class="sig-name descname">FfinerThanD_upper</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.FfinerThanD_upper" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="MAST_1D.clsGSD.clsGSD.Initialized">
+<code class="sig-name descname">Initialized</code><em class="property"> = False</em><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.Initialized" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.NBedSizes">
+<em class="property">property </em><code class="sig-name descname">NBedSizes</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.NBedSizes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.SigmaSG">
+<em class="property">property </em><code class="sig-name descname">SigmaSG</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.SigmaSG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard deviation of sediment on psi scale (no units)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.Sigmag">
+<em class="property">property </em><code class="sig-name descname">Sigmag</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.Sigmag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Geometric standard deviation, transformed to length scale (mm)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.UpdateDg">
+<code class="sig-name descname">UpdateDg</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.UpdateDg" title="Permalink to this definition">¶</a></dt>
+<dd><p>computes and stores geometric mean grain size</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.UpdateFfiner">
+<code class="sig-name descname">UpdateFfiner</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.UpdateFfiner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes cumulative fraction finer given the grain size fractions in
+the GSD.  Renormalizes if necessary to ensure that the sum of fractions
+across all bins is 1.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.UpdateSigmaSG">
+<code class="sig-name descname">UpdateSigmaSG</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.UpdateSigmaSG" title="Permalink to this definition">¶</a></dt>
+<dd><p>computes and stores geometric standard deviation of grain size on psi
+scale – and transforms back to length scale</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.UpdateStatistics">
+<code class="sig-name descname">UpdateStatistics</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.UpdateStatistics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Populates basic statistics of the size distribution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.getD50">
+<code class="sig-name descname">getD50</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getD50" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.getD65">
+<code class="sig-name descname">getD65</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getD65" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.getD84">
+<code class="sig-name descname">getD84</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getD84" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.getD90">
+<code class="sig-name descname">getD90</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getD90" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.getD95">
+<code class="sig-name descname">getD95</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getD95" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.getDg">
+<code class="sig-name descname">getDg</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getDg" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.getF">
+<code class="sig-name descname">getF</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.getFfinerThanD_upper">
+<code class="sig-name descname">getFfinerThanD_upper</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getFfinerThanD_upper" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.getNBedSizes">
+<code class="sig-name descname">getNBedSizes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getNBedSizes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.getSigmaSG">
+<code class="sig-name descname">getSigmaSG</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getSigmaSG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard deviation of sediment on psi scale (no units)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.getSigmag">
+<code class="sig-name descname">getSigmag</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getSigmag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Geometric standard deviation, transformed to length scale (mm)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsGSD.clsGSD.setF">
+<code class="sig-name descname">setF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.setF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-MAST_1D.clsInputs">
+<span id="mast-1d-clsinputs-module"></span><h2>MAST_1D.clsInputs module<a class="headerlink" href="#module-MAST_1D.clsInputs" title="Permalink to this headline">¶</a></h2>
+<p>Created on Tue Feb 24 13:22:30 2015</p>
+<p>&#64;author: geography</p>
+<dl class="py class">
+<dt id="MAST_1D.clsInputs.clsInputs">
+<em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsInputs.</code><code class="sig-name descname">clsInputs</code><a class="headerlink" href="#MAST_1D.clsInputs.clsInputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-MAST_1D.clsLoad">
+<span id="mast-1d-clsload-module"></span><h2>MAST_1D.clsLoad module<a class="headerlink" href="#module-MAST_1D.clsLoad" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="MAST_1D.clsLoad.clsLoad">
+<em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsLoad.</code><code class="sig-name descname">clsLoad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">NFlows</span></em>, <em class="sig-param"><span class="n">BinBdySizes</span></em>, <em class="sig-param"><span class="n">NTracers</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class defines the sediment load and feed for a given node in all sizes
+and provides methods for computing bed material load.  It also provides
+methods conserving mass and tracer in suspended washload sediment for a
+given flow (bin of duration curve) and for averaging washload tracer
+concentration across the flow duration curve. Right now, only Wilcock and
+Crowe is implemented for sediment transport, but new features can be added
+in the future as separate methods that modify the basic data elements in
+this class, the Qsjk(j,k) and TMudj(j,k) arrays.</p>
+<p>This class does not provide rubust methods for tracking bed material tracer
+concentration in the load.  Instead, in class node, it is assumed that bed
+material tracer concentration in the load is the same as in the bed.  A
+variable is provided in load to track duration-averaged tracer
+concentration.</p>
+<p>In principle, it would be possible to track tracer concentration in the
+load in each size class and to allow this to differ from tracer
+concentration in the active layer.  This would require the specification of
+an exchange rate between the active layer and the load, which could be
+determined for a given bin of the duration curve as a function of near bed
+concentration, and settling velocity (or entrainment rate could be solved
+as a function of particle step length–a function of hydraulics–and
+computed load).  For now, it is assumed that all bed material classes
+undergo step lengths that are short relative the spacing between nodes, so
+that a large amount of mixing occurs between the active layer and load over
+the distance dxc and very little bypassing occurs.  For this reason, tracer
+concentration in the load is only tracked for mud. Elsewhere in the code,
+tracer concentration in the load is set to that of the active layer.</p>
+<p>Not sure that ExSED and ExTracer are needed since mass conservation due to
+morphodynamic movement occurs at node level.</p>
+<dl>
+<dt>Attributes:</dt><dd><dl class="simple">
+<dt>TMudj – [float] (Tracer concentration in flow j for size k=0 for</dt><dd><p>tracer type l)</p>
+</dd>
+<dt>TMudFeedj – [float] (Tracer concentration of tracer type l in size k=0</dt><dd><p>in feed for bin j of duration curve)</p>
+</dd>
+<dt>TBedFeedk – [float] (Tracer concentration of tracer type l in size k.</dt><dd><p>Should be set equal to T of upstream active layer or feed
+for reach.)</p>
+</dd>
+<dt>ExSed – clsExchangeTypes (Size specific sediment fluxes into and out</dt><dd><p>of reservoir (units of volume/time))</p>
+</dd>
+<dt>ExTracer – [clsExchangeTypes] (Size specific tracer concentrations for</dt><dd><p>sediment moving into and out of reservoir)</p>
+</dd>
+<dt>LatSed – [float] (Volumetric lateral sediment source for reservoir</dt><dd><p>(units of volume/time))</p>
+</dd>
+<dt>LatTracer – [float] (Concentration of tracers in lateral sediment</dt><dd><p>source)</p>
+</dd>
+</dl>
+<p>SinkSed – [float] (Volumetric sediment sink term.)
+NTracers – int (number of tracers)
+NSizes – int (number of bed material grain sizes.  note that k = 0</p>
+<blockquote>
+<div><p>represents washload.)</p>
+</div></blockquote>
+<p>NFlows – int (number of flows in flow duration curve)
+GSDBedloadj – [clsGSD] (grain size distribution of load for bin j of</p>
+<blockquote>
+<div><p>FDC)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>GSDBedloadAv – clsGSD (grain size distribution for annual average</dt><dd><p>load)</p>
+</dd>
+</dl>
+<p>Qsjk – [float] (Sediment load in bin j and size k)
+Qsjkfeed – [float] (Sediment load in bin j and size k)
+QsjTot – [float] (Sediment load in bin j of flow duration curve,</p>
+<blockquote>
+<div><p>summed across all grain sizesL)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>QsAvkLoad – [float] (Sediment load capacity averaged across all bins</dt><dd><p>of FDC in size k.)</p>
+</dd>
+<dt>QsAvkFeed – [float] (Sediment feed averaged across all bins of FDC in</dt><dd><p>size k)</p>
+</dd>
+<dt>TVolumeAvMudFeed – [float] (Sediment feed tracer concentration in size</dt><dd><p>k=0 and tracer l averaged across all volume
+(including weighting by duration curve))</p>
+</dd>
+<dt>TTemporalAvMudFeed – [float] (Sediment feed tracer concentration in</dt><dd><p>size k=0 and tracer l averaged across all time in
+duration curve)</p>
+</dd>
+<dt>TVolumeAvMudLoad – [float] (Sediment load tracer concentration in size</dt><dd><p>k=0 and tracer l averaged across all volume
+(including weighting by duration curve))</p>
+</dd>
+<dt>TTemporalAvMudLoad – [float] (Sediment load tracer concentration in</dt><dd><p>size k=0 and tracer l averaged across all time in
+duration curve)</p>
+</dd>
+<dt>TDepositionAvMudFeed – [float] (Sediment feed tracer concentration in</dt><dd><p>size k = 0 and tracer l averaged across all
+overbank mud deposition and duration curve)</p>
+</dd>
+<dt>TDepositionAvMudLoad – [float] (Sediment load tracer concentration in</dt><dd><p>size k = 0 and tracer l averaged across all
+overbank mud deposition and duration curve)</p>
+</dd>
+</dl>
+<p>TauPrime – float (channel-averaged shear stress)
+TauRm – float (critical shear stress for the median particle size)
+Initialized – bool</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.ApplyMassConservationToMudLoad">
+<code class="sig-name descname">ApplyMassConservationToMudLoad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">DC</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.ApplyMassConservationToMudLoad" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Arguments:</dt><dd><p>DC – clsDurationCurve</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.ApplyTracerConservationToMudLoad">
+<code class="sig-name descname">ApplyTracerConservationToMudLoad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">DC</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.ApplyTracerConservationToMudLoad" title="Permalink to this definition">¶</a></dt>
+<dd><p>WL May 5, 2013: Note that it should also be possible to apply tracer
+concentration to the long-term average bedload as long as an exchange
+rate is known between the active layer and the load.  This can be
+specified as a function of suspended sediment transport rate and
+settling velocity (which allows computation of near-bed concentration
+and thus entrainment rate) or as a function of particle step length
+and the computed load.  In the latter case, the issue would be then
+making particle step length a function of the hydraulics–I need to
+review the literature.  As is, the active layer mixes with the load
+only when net duration-averaged morphodynamic change occurs, so the
+model is not yet a gravel tracer model (except to the extent that
+lateral exchange is greater than vertical exchange, which is certainly
+possible given the right conditions). However, even the, the model
+pulls the gravel that is being put into storage from both the active
+layer and load at rather arbitrary rates, so it is not clear whether
+it is pulling the correct amount of traver gravel from the active
+layer. In other words, if there is minimal bed change, it is possible
+for tracer particles to move too far downstream since there is no
+exchange between load and active layer.</p>
+<p>This routine sets Tjk in the load for k = 0</p>
+<p>This assumes that the sediment tracer concentration in the water column
+is always in steady state for a given flow
+This should be reasonable since the volume of suspended sediment in the
+water column at any given time is small relative to the exchange rates.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>DC – clsDuratinCurve</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.CurranLoad">
+<code class="sig-name descname">CurranLoad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Q</span></em>, <em class="sig-param"><span class="n">Section</span><span class="o">=</span><span class="default_value">'Middle'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.CurranLoad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Katie add!</p>
+<p>Calculates suspended sediment load for feed based on Curran’s rating curve
+calibrated to the reservoir sediment presented in Konrad’s pre-removal
+modeling paper.  Includes the discharge correction that needs to be applied
+when using the gauge at McDonald Bridge.</p>
+<dl>
+<dt>Arguments:</dt><dd><p>Q – float
+Section – str (determines whether or not to normalize the discharge because feed</p>
+<blockquote>
+<div><p>is determined by the Upper River discharge)</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="MAST_1D.clsLoad.clsLoad.Initialized">
+<code class="sig-name descname">Initialized</code><em class="property"> = False</em><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.Initialized" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.QWashloadAnnual">
+<code class="sig-name descname">QWashloadAnnual</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">DC</span></em>, <em class="sig-param"><span class="n">Qsjk</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.QWashloadAnnual" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Arguments:</dt><dd><p>DC – clsDurationCurve
+Qsjk – float</p>
+</dd>
+</dl>
+<p>Return: [float]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.UpdateElwhaDamRemovalDurationCurve">
+<code class="sig-name descname">UpdateElwhaDamRemovalDurationCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ControlNode</span></em>, <em class="sig-param"><span class="n">Multiplier</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.UpdateElwhaDamRemovalDurationCurve" title="Permalink to this definition">¶</a></dt>
+<dd><p>An exponential decay function to estimate sediment exported from Lake
+Mills.</p>
+<p>Attributes:
+-ControlNode-clsNode (Node with original feed characteristics)
+-C–float (Decay multiplier)
+-t–float (Time since dam removal)
+-tau–float (Exponent that determines time to recovery–same unit as t)</p>
+<p>Currently obsolete function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.UpdateElwhaDamRemovalRatingCurve">
+<code class="sig-name descname">UpdateElwhaDamRemovalRatingCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ControlNode</span></em>, <em class="sig-param"><span class="n">C</span></em>, <em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">tau</span></em>, <em class="sig-param"><span class="n">MudFraction</span></em>, <em class="sig-param"><span class="n">Q</span></em>, <em class="sig-param"><span class="n">vfunc</span></em>, <em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">CalibrationFactor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.UpdateElwhaDamRemovalRatingCurve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a multiplier to the sediment rating curve for the Elwha that decays
+exponentially.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.UpdateElwhaFeedFineRatingCurve">
+<code class="sig-name descname">UpdateElwhaFeedFineRatingCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ControlNode</span></em>, <em class="sig-param"><span class="n">Multiplier</span></em>, <em class="sig-param"><span class="n">MudFraction</span></em>, <em class="sig-param"><span class="n">Q</span></em>, <em class="sig-param"><span class="n">vfunc</span></em>, <em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">CalibrationFactor</span></em>, <em class="sig-param"><span class="n">ControlGSD</span></em>, <em class="sig-param"><span class="n">FineGSD</span></em>, <em class="sig-param"><span class="n">Section</span><span class="o">=</span><span class="default_value">'Middle'</span></em>, <em class="sig-param"><span class="n">Removal</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">PercSus</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">FixedCapacity</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">FirstPulse</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.UpdateElwhaFeedFineRatingCurve" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Like UpdateElwhaRatingCurve but for alternate removal scenario.  All sizes</dt><dd><p>are supplied at capacity and an additional pulse consists of just fine sediment</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.UpdateElwhaFeedRatingCurve">
+<code class="sig-name descname">UpdateElwhaFeedRatingCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ControlNode</span></em>, <em class="sig-param"><span class="n">Multiplier</span></em>, <em class="sig-param"><span class="n">MudFraction</span></em>, <em class="sig-param"><span class="n">Q</span></em>, <em class="sig-param"><span class="n">vfunc</span></em>, <em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">CalibrationFactor</span></em>, <em class="sig-param"><span class="n">ControlGSD</span></em>, <em class="sig-param"><span class="n">Section</span><span class="o">=</span><span class="default_value">'Middle'</span></em>, <em class="sig-param"><span class="n">Removal</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">PercSus</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">FixedCapacity</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">FirstPulse</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.UpdateElwhaFeedRatingCurve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the UpdateFeedRatingCurve in this object to calculate the bed material
+feed, then uses Curran’s emperical rating curve for the mudload.</p>
+<p>Section determines whether the discharge needs to be normalized for the Curran
+relation.  See UpdateFeedRatingCurve for other attributes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.UpdateFeedDurationCurve">
+<code class="sig-name descname">UpdateFeedDurationCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ControlNode</span></em>, <em class="sig-param"><span class="n">Multiplier</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.UpdateFeedDurationCurve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard method for updating feed–designed for the flow duration curve.
+Feed is a user-defined fraction of sediment transport capacity</p>
+<p>Attributes:</p>
+<p>-ControlNode–clsNode (Node object that holds sediment feed)
+-Multiplier–float (Multiplier for feed)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.UpdateFeedRatingCurve">
+<code class="sig-name descname">UpdateFeedRatingCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ControlNode</span></em>, <em class="sig-param"><span class="n">Multiplier</span></em>, <em class="sig-param"><span class="n">MudFraction</span></em>, <em class="sig-param"><span class="n">Q</span></em>, <em class="sig-param"><span class="n">vfunc</span></em>, <em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">CalibrationFactor</span></em>, <em class="sig-param"><span class="n">ControlGSD</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.UpdateFeedRatingCurve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rating curve method–the standard for hydrograph runs.
+Feed is a user-defined fraction of sediment transport capacity
+for a given flow.  Mud feed is a set proportion of feed for the
+next finest size class.  Returns size specific, and flow/size specific
+feed, although the function can only be used when there is only one flow
+in the duration curve (i.e. when a hydrograph is used).</p>
+<p>Attributes:</p>
+<p>-ControlNode–clsNode (Node object that holds sediment feed)
+-Multiplier–float (Multiplier for feed)
+-MudFraction–float (ratio of mud to next finest size class)
+-Q–float (discharge)
+-vfunc–bool (True for Manning, False for Chezy)
+-TrinityFit–bool (True for Trinity River sed transport calc, False for</p>
+<blockquote>
+<div><p>Wilcock and Crowe)</p>
+</div></blockquote>
+<p>-CalibrationFactor-float (calibration for sediment transport equation)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.UpdateMudTracerAverages">
+<code class="sig-name descname">UpdateMudTracerAverages</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Dj</span></em>, <em class="sig-param"><span class="n">DC</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.UpdateMudTracerAverages" title="Permalink to this definition">¶</a></dt>
+<dd><p>for completeness, this computes Temporal, Volumetric, and         Deposition-weighted Averages for Tracer Concentrations in mud Load         and Feed for all sizes.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>Dj – [float]
+DC – clsDurationCurve</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.UpdateSedimentLoadByDurationAndSize">
+<code class="sig-name descname">UpdateSedimentLoadByDurationAndSize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">DC</span></em>, <em class="sig-param"><span class="n">SurfaceGSD</span></em>, <em class="sig-param"><span class="n">rhow</span></em>, <em class="sig-param"><span class="n">SG</span></em>, <em class="sig-param"><span class="n">Bc</span></em>, <em class="sig-param"><span class="n">FractionAlluvial</span></em>, <em class="sig-param"><span class="n">TransFunc</span></em>, <em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">CalibrationFactor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.UpdateSedimentLoadByDurationAndSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Populates sediment load array in load object with wilcock crowe loads
+(m3/s) for each bin of FDC and for each size in bed GSD.
+Requires that hydraulics of node have already been populated</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>DC – clsDurationCurve
+SurfaceGSD – clsGSD
+rhow – float
+SG – float
+Bc – float
+FractionAlluvial – float
+TrinityFit – bool
+CalibrationFactor – float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.WilcockCroweLoadBySize">
+<code class="sig-name descname">WilcockCroweLoadBySize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">U</span></em>, <em class="sig-param"><span class="n">Sf</span></em>, <em class="sig-param"><span class="n">GSD</span></em>, <em class="sig-param"><span class="n">rho_w</span></em>, <em class="sig-param"><span class="n">SG</span></em>, <em class="sig-param"><span class="n">Bc</span></em>, <em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">CalibrationFactor</span></em>, <em class="sig-param"><span class="n">IndD</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.WilcockCroweLoadBySize" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns a 1d array of size specific loads of length
+GSD.nsizes (i.e. the bed material sizes in GSD).  Load is in units of
+m3/s.
+It uses the reference stress form of Wilcock and Crowe 2003 unless the
+flag TrinityFit is true, in which case it uses the reference stress of
+Guiman 2009.
+This should probably be updated to allow any calibrated reference
+stress to be used.  For now, it allows for a calibration factor that
+multiplies the reference stress from either of the above equations by a
+constant.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>U – float
+Sf – float
+GSD – clsGSD
+rho_w – float
+SG – float
+Bc – float
+TrinityFit – boolean
+CalibrationFactor – float</p>
+</dd>
+</dl>
+<p>Return: [float]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.WrightParkerLoadBySize">
+<code class="sig-name descname">WrightParkerLoadBySize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Q</span></em>, <em class="sig-param"><span class="n">H</span></em>, <em class="sig-param"><span class="n">U</span></em>, <em class="sig-param"><span class="n">Sf</span></em>, <em class="sig-param"><span class="n">GSD</span></em>, <em class="sig-param"><span class="n">rho_w</span></em>, <em class="sig-param"><span class="n">SG</span></em>, <em class="sig-param"><span class="n">Bc</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.WrightParkerLoadBySize" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns a 1d array of size specific loads of length
+GSD.nsizes (i.e. the bed material sizes in GSD).  Load is in units of
+m3/s.</p>
+<p>Load is calculated using the relation of Wright and Parker (2004).
+Currently, no calibration factor is included.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>H – float
+U – float
+Sf – float
+GSD – clsGSD
+rho_w – float
+SG – float
+Bc – float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.calc_wStari">
+<code class="sig-name descname">calc_wStari</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">TauRm</span></em>, <em class="sig-param"><span class="n">D</span></em>, <em class="sig-param"><span class="n">F</span></em>, <em class="sig-param"><span class="n">GSD</span></em>, <em class="sig-param"><span class="n">TauPrime</span></em>, <em class="sig-param"><span class="n">ustar</span></em>, <em class="sig-param"><span class="n">Bc</span></em>, <em class="sig-param"><span class="n">SG</span></em>, <em class="sig-param"><span class="n">g</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.calc_wStari" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.findWC_ReferenceShear">
+<code class="sig-name descname">findWC_ReferenceShear</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">TauRm</span></em>, <em class="sig-param"><span class="n">D</span></em>, <em class="sig-param"><span class="n">Dg</span></em>, <em class="sig-param"><span class="n">D50</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.findWC_ReferenceShear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Katie add.  This function calculates the
+the reference shear stress (TauRi,equations 3 and 4 in Wilcock and Crowe,
+2003) given inputs of the size in question, the D50, and the critical shear
+stress for the mean bed size.  It was made independent from the Wilcock
+and Crowe function to make it easier to calculate the critical shear stress
+for the D84 for the width change function.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>TauRm – float
+D – float
+D50 – float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.findWC_TauPrime">
+<code class="sig-name descname">findWC_TauPrime</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">g</span></em>, <em class="sig-param"><span class="n">Sf</span></em>, <em class="sig-param"><span class="n">U</span></em>, <em class="sig-param"><span class="n">D65</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.findWC_TauPrime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Katie add.  Calculates the channel-averaged shear stress.  Was moved from
+the main Wilcock-Crowe function.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>Sf – float
+g – float
+D65
+U – float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsLoad.clsLoad.return_excess_shear">
+<code class="sig-name descname">return_excess_shear</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">TauPrime</span></em>, <em class="sig-param"><span class="n">TauRi</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.return_excess_shear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates and returns excess shear stress for a specific size class for
+plotting purposes</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-MAST_1D.clsModel">
+<span id="mast-1d-clsmodel-module"></span><h2>MAST_1D.clsModel module<a class="headerlink" href="#module-MAST_1D.clsModel" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="MAST_1D.clsModel.clsModel">
+<em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsModel.</code><code class="sig-name descname">clsModel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsModel.clsModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="MAST_1D.clsModel.clsModel.CustomNodes">
+<code class="sig-name descname">CustomNodes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Reach</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsModel.clsModel.CustomNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Section II:  Control the behavior of individual nodes if desired.
+Specify which input variables have node-specific initial or
+boundary conditions.  The user can add/remove custom variables.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsModel.clsModel.RunModel">
+<code class="sig-name descname">RunModel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsModel.clsModel.RunModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Section III:  Set initial conditions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsModel.clsModel.SetInitialConditions">
+<code class="sig-name descname">SetInitialConditions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsModel.clsModel.SetInitialConditions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Section I:  Load the Reach object from specifications in ‘InputsMainpage…’</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="mast-1d-clsmodeldata-module">
+<h2>MAST_1D.clsModelData module<a class="headerlink" href="#mast-1d-clsmodeldata-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-MAST_1D.clsNode">
+<span id="mast-1d-clsnode-module"></span><h2>MAST_1D.clsNode module<a class="headerlink" href="#module-MAST_1D.clsNode" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="MAST_1D.clsNode.clsNode">
+<em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsNode.</code><code class="sig-name descname">clsNode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">NLayers</span></em>, <em class="sig-param"><span class="n">NTracers</span></em>, <em class="sig-param"><span class="n">BinBdySizes</span></em>, <em class="sig-param"><span class="n">NFlows</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl>
+<dt>Attributes:</dt><dd><p>ActiveLayer – clsReservoir
+Substrate – [clsSubstratePairClass]
+Floodplain – clsReservoir
+Load – clsLoad (This represents sediment moving out of the node)
+Slope – float (Down channel slope)
+H – float
+Bf – float (floodplain width)
+Bc – float (channel width)        cbank – float (Bank migration rate normal to down-channel direction)
+DeltaEtaB – float (Rate of bed elevation change)
+InitialBedElev – float (Initial bed elevation)
+Hpb – float (point bar thickness)
+Bcrate – float (widening rate)
+etabav – float (bed elevation)
+ChSin – float (channel sinusity)
+xc – float (down channel coordinate)
+x – float (down valley coordinate)
+Dfjk – [float] (deposition rate on the floodplain in each bin of the</p>
+<blockquote>
+<div><p>flow duration curve j and for each size k–could be a
+property of load)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>SLatSourcejk – [float] (lateral sources of sediment in m3/s in each</dt><dd><p>bin of the flow duration curve j in size k)</p>
+</dd>
+<dt>SLatSourceAv – [float] (mean annual lateral source of sediment in</dt><dd><p>m3/s in size k)</p>
+</dd>
+<dt>Dfav – [float] (duration-averaged deposition rate on the floodplain</dt><dd><p>in size k)</p>
+</dd>
+</dl>
+<p>FixedElev – bool (flag to determine if the node’s elevation is fixed
+(e.g. bedrock or boundary condition))</p>
+<p><a href="#id1"><span class="problematic" id="id2">**</span></a><a href="#id3"><span class="problematic" id="id4">**</span></a>Note that pTLatSource could be adjusted as a function of time to
+represent individual erosion events.  This would require changing the
+duration curve at various times in the computation as well.
+TLatSourceAv – [float] (Duration-averaged concentration of cosmogenic</p>
+<blockquote>
+<div><p>nuclides in the sediment coming from lateral sources
+in size k and tracer l)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>DC – clsDurationCurve (Duration curve object used to store flow and</dt><dd><p>sediment flux in each bin of flow duration curve.)</p>
+</dd>
+<dt>Initialized – bool (flag to determine if arrays have been</dt><dd><p>redimensioned appropriately)</p>
+</dd>
+</dl>
+<p>lambdap – float (porosity)
+sigma – float (subsidence rate)
+dxc – float (Down channel spacing to next node represented by this</p>
+<blockquote>
+<div><p>node)</p>
+</div></blockquote>
+<p>Cfc – float (Friction coefficient for channel)
+Cff – float (Friction coefficient for floodplain)
+FSandSusp – float (Fraction sand load that is suspended)
+Kbar – float (Parameter controlling fraction washload in point bar</p>
+<blockquote>
+<div><p>deposits)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>AlphaBar – float (Parameter controlling similarity between bed</dt><dd><p>material load and bar deposition.)</p>
+</dd>
+</dl>
+<p>AlphaPartlyAlluvial – float (Parameter controlling similarity between
+bed material load and deposition in the active layer of a partly
+alluvial node)
+nc – float (Manning’s n for channel)
+ncAddons – float (Form drag addition for manning’s n)
+ncMultiplier – float (Sinuosity multiplier for manning’s n)
+nf – float (Manning’s n for floodplain)
+PointBarSubsurfaceGSD – clsGSD
+Flmud – float (Floodplain number for mud)
+Flbed – float (Floodplain number for bed material sizes)
+Data-structure related parameters
+NSizes – int (number of sizes)
+NTracers – int (number of tracers)
+NFlows – int (number of flows in FDC)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.Avulsion">
+<code class="sig-name descname">Avulsion</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">threshold</span></em>, <em class="sig-param"><span class="n">spacing</span></em>, <em class="sig-param"><span class="n">exchange</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.Avulsion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Katie added this function.
+This function simulates avulsion on a node-by-node basis.  When the channel
+elevation approaches that of the bank (how close is a user-defined threshold),
+the uppermost substrate layer will be incorporated back into the floodplain.
+The active layer will also join the Floodplain reservoir.  The bed elevation
+(etabav) will be adjusted so that it is lowered by an increment of 1 substrate
+spacing.</p>
+<p>If this occurs repeatedly in a given node, it should simulate valley filling,
+like that of a delta.</p>
+<p>Attributes:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>-threshold (float)–difference between the bank (Floodplain.L-ActiveLayer.L)</dt><dd><p>the channel elevation after which avulsion will occur</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.BarPavingRatio">
+<em class="property">property </em><code class="sig-name descname">BarPavingRatio</code><a class="headerlink" href="#MAST_1D.clsNode.clsNode.BarPavingRatio" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.BedPavingRatio">
+<em class="property">property </em><code class="sig-name descname">BedPavingRatio</code><a class="headerlink" href="#MAST_1D.clsNode.clsNode.BedPavingRatio" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.ChezyDischarge">
+<code class="sig-name descname">ChezyDischarge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">H</span></em>, <em class="sig-param"><span class="n">Bc</span></em>, <em class="sig-param"><span class="n">Czc</span></em>, <em class="sig-param"><span class="n">Sc</span></em>, <em class="sig-param"><span class="n">Bf</span></em>, <em class="sig-param"><span class="n">Czf</span></em>, <em class="sig-param"><span class="n">Tf</span></em>, <em class="sig-param"><span class="n">Sf</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.ChezyDischarge" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Arguments:</dt><dd><p>H – float
+Bc – float
+Czc – float
+Sc – float
+Bf – float
+Czf – float
+Tf – float
+Sf – float</p>
+</dd>
+</dl>
+<p>Return: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.CumulativeBedChange">
+<em class="property">property </em><code class="sig-name descname">CumulativeBedChange</code><a class="headerlink" href="#MAST_1D.clsNode.clsNode.CumulativeBedChange" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.EquilibriumMudFloodplainNumber">
+<code class="sig-name descname">EquilibriumMudFloodplainNumber</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">DeltaEta</span></em>, <em class="sig-param"><span class="n">cbank</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.EquilibriumMudFloodplainNumber" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function can be used to compute the floodplain number for mud at
+perfect equilibrium, when the bed is not changing and there is no net
+divergence in load.  It must be called after the hydraulics have been
+updated and mud feed has been specified for the node.
+The variable DeltaEta should represent the mud fraction of the
+thickness of the overbank sediment deposit.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>DeltaEta – float
+cbank – float</p>
+</dd>
+</dl>
+<p>Return: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.ExnerBed">
+<code class="sig-name descname">ExnerBed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.ExnerBed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.FloodplainDeposition">
+<code class="sig-name descname">FloodplainDeposition</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">C</span></em>, <em class="sig-param"><span class="n">Qwf</span></em>, <em class="sig-param"><span class="n">Fl</span></em>, <em class="sig-param"><span class="n">Bf</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.FloodplainDeposition" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine computes overbank deposition rates (m/s), outgoing
+suspended mud flux (m3/s), and fraction mud in point bars (no units)
+for a single set of steady discharge and sediment supply terms at a
+single node.  All terms are assumed constant over the interval of the
+computation.
+If the computed outgoing suspended sediment flux is less than zero, the
+deposition rate is reduced so that the outgoing sediment flux is zero
+and mass is conserved.</p>
+<dl>
+<dt>Arguments:</dt><dd><dl class="simple">
+<dt>C – float (Average suspended sediment concentration above</dt><dd><p>floodplain level)</p>
+</dd>
+</dl>
+<p>Qwf – float (Water discharge across floodplain (m3/s))
+Fl – float (Floodplain number (can be size specific))
+Bf – float (Floodplain width (m))</p>
+</dd>
+</dl>
+<p>Return: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.FractionAlluvial">
+<em class="property">property </em><code class="sig-name descname">FractionAlluvial</code><a class="headerlink" href="#MAST_1D.clsNode.clsNode.FractionAlluvial" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="MAST_1D.clsNode.clsNode.Initialized">
+<code class="sig-name descname">Initialized</code><em class="property"> = False</em><a class="headerlink" href="#MAST_1D.clsNode.clsNode.Initialized" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.ManningDischarge">
+<code class="sig-name descname">ManningDischarge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">H</span></em>, <em class="sig-param"><span class="n">Bc</span></em>, <em class="sig-param"><span class="n">nc</span></em>, <em class="sig-param"><span class="n">Sc</span></em>, <em class="sig-param"><span class="n">Bf</span></em>, <em class="sig-param"><span class="n">nf</span></em>, <em class="sig-param"><span class="n">Tf</span></em>, <em class="sig-param"><span class="n">Sf</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.ManningDischarge" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Arguments:</dt><dd><p>H – float
+Bc – float
+nc – float
+Sc – float
+Bf – float
+nf – float
+Tf – float
+Sf – float</p>
+</dd>
+</dl>
+<p>Return: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.NLayers">
+<code class="sig-name descname">NLayers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.NLayers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.Narrowing">
+<code class="sig-name descname">Narrowing</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">BcMin</span></em>, <em class="sig-param"><span class="n">W</span></em>, <em class="sig-param"><span class="n">alphatau</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.Narrowing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.NormalChannelDepthAndDischarge">
+<code class="sig-name descname">NormalChannelDepthAndDischarge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Qw</span></em>, <em class="sig-param"><span class="n">threshold</span></em>, <em class="sig-param"><span class="n">Manning</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.NormalChannelDepthAndDischarge" title="Permalink to this definition">¶</a></dt>
+<dd><p>This subroutine computes the normal water depth as a function of
+channel width, floodplain thickness, floodplain width, friction
+coefficients in channel and on floodplain, and slope, and partitions
+flow into channel and floodplain zones.</p>
+<dl class="simple">
+<dt>Can perform calculation either using Manning’s equation (for Manning</dt><dd><p>= True) or Chezy equation (For Manning = False)</p>
+</dd>
+<dt>Arguments:</dt><dd><p>Qw – float
+threshold – float
+Manning – bool</p>
+</dd>
+</dl>
+<p>Return: [float]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.RouseFractionSuspendedLoadAboveFloodplainLevel">
+<code class="sig-name descname">RouseFractionSuspendedLoadAboveFloodplainLevel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">SettlingVel</span></em>, <em class="sig-param"><span class="n">ustar</span></em>, <em class="sig-param"><span class="n">Hc</span></em>, <em class="sig-param"><span class="n">Lf</span></em>, <em class="sig-param"><span class="n">Intervals</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.RouseFractionSuspendedLoadAboveFloodplainLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Units of settling velocity and ustar must be consistent
+Units of Hc and Hf must be consistent</p>
+<dl>
+<dt>Arguments:</dt><dd><dl class="simple">
+<dt>SusSedLoad – float (Volumetric suspended sediment load in size</dt><dd><p>class of interest)</p>
+</dd>
+</dl>
+<p>Qc – float (Water discharge in channel)
+SettlingVel – float (Settling velocity for suspended sediment)
+Ustar – float (Shear velocity in channel)
+Hc – float (Flow depth in channel)
+Lf – float (height of floodplain with respect to channel bed)
+Intervals – float (number of intervals over which integral is</p>
+<blockquote>
+<div><p>numerically integrated.)</p>
+</div></blockquote>
+</dd>
+</dl>
+<p>Return: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.RouseIntegrand">
+<code class="sig-name descname">RouseIntegrand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Zita</span></em>, <em class="sig-param"><span class="n">Zitab</span></em>, <em class="sig-param"><span class="n">Vs</span></em>, <em class="sig-param"><span class="n">ustar</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.RouseIntegrand" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Arguments:</dt><dd><p>Zita – float
+ZItab – float
+Vs – float
+ustar – float</p>
+</dd>
+</dl>
+<p>Return: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.SplitOrCombineSubstrate">
+<code class="sig-name descname">SplitOrCombineSubstrate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">LMinAfterSplit</span></em>, <em class="sig-param"><span class="n">LMinBeforeRemove</span></em>, <em class="sig-param"><span class="n">Spacing</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.SplitOrCombineSubstrate" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Arguments:</dt><dd><p>LMinAfterSplit – float
+LMinBeforeRemove – float
+Spacing – float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.UpdateDMudj">
+<code class="sig-name descname">UpdateDMudj</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.UpdateDMudj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates mud deposition rate for each bin and computes flow-duration
+averaged value of overbank mud deposition rate (k = 0).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.UpdateDSandj">
+<code class="sig-name descname">UpdateDSandj</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.UpdateDSandj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates sand deposition rate for each bin and computes flow-duration
+averaged value of overbank sand deposition rate (k = represntative of
+all sand sizes).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.UpdateDepthAndDischargeAtAllFlows">
+<code class="sig-name descname">UpdateDepthAndDischargeAtAllFlows</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Manning</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.UpdateDepthAndDischargeAtAllFlows" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Arguments:</dt><dd><p>Manning – bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.UpdateDepthAndDischargeAtOneFlow">
+<code class="sig-name descname">UpdateDepthAndDischargeAtOneFlow</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Manning</span></em>, <em class="sig-param"><span class="n">Qw</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.UpdateDepthAndDischargeAtOneFlow" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Arguments:</dt><dd><p>Manning – bool
+Qw – float</p>
+</dd>
+</dl>
+<p>Katie add for width change function with flow duration curve</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.UpdateExtraWidthFluxes">
+<code class="sig-name descname">UpdateExtraWidthFluxes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">WidenRate</span></em>, <em class="sig-param"><span class="n">NarrowRate</span></em>, <em class="sig-param"><span class="n">AggRate</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.UpdateExtraWidthFluxes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.UpdateGeometricParameters">
+<code class="sig-name descname">UpdateGeometricParameters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.UpdateGeometricParameters" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Arguments:</dt><dd><p>dt – float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.UpdateLateralSedFluxes">
+<code class="sig-name descname">UpdateLateralSedFluxes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.UpdateLateralSedFluxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>These are volume fluxes and do not include overbank deposition, which
+is handled as a net source term for the floodplian and as a net sink
+term for the water column (for mud) or the active layer (for sand)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.UpdateLateralTracerConcentrations">
+<code class="sig-name descname">UpdateLateralTracerConcentrations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.UpdateLateralTracerConcentrations" title="Permalink to this definition">¶</a></dt>
+<dd><p>This subroutine is necessary because the subroutine that updates tracer
+concentrations based on mass conservation at each node operates as a
+method of clsReservoir and thus does not have access to the tracer
+concentrations in the adjacent reservoirs.
+Consequently, these must be set up at node level.</p>
+<p>This does not need to be called before calling mass conservaiton on the
+load because all washload tracer concentrations are computed using the
+tracer concentration of the washload feed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.UpdateNetSedimentSourcesAndSinks">
+<code class="sig-name descname">UpdateNetSedimentSourcesAndSinks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.UpdateNetSedimentSourcesAndSinks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Floodplain deposition is handled as a sink here</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.UpdateNetTracerSourceAndSinkConcentrations">
+<code class="sig-name descname">UpdateNetTracerSourceAndSinkConcentrations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.UpdateNetTracerSourceAndSinkConcentrations" title="Permalink to this definition">¶</a></dt>
+<dd><p>This subroutine is necessary because the mass conservation at each node
+operates as a method of clsReservoir and thus does not have access to
+the node’s lateral sources and sinks.</p>
+<p>This routine also computes the duration-averaged tracer concentration
+in the load.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.UpdateVerticalExchangeSedFluxes">
+<code class="sig-name descname">UpdateVerticalExchangeSedFluxes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">BedAggradationRate</span></em>, <em class="sig-param"><span class="n">alpha</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.UpdateVerticalExchangeSedFluxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>This subroutine considers only fluxes associated with boundary movement
+of bottom of active layer/floodplain. Net fluxes associated with
+overbank deposition are handled in UpdateSedimentSourcesAndSinks</p>
+<p>This routine results in a source of mud to the water column from the
+bed if the channel is degrading into a substrate that contains mud.
+Only the duration-averaged supply rate of mud to the water column is
+specified.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>BedAggredationRate – float
+alpha – float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.UpdateVerticalExchangeTracerConcentrations">
+<code class="sig-name descname">UpdateVerticalExchangeTracerConcentrations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.UpdateVerticalExchangeTracerConcentrations" title="Permalink to this definition">¶</a></dt>
+<dd><p>This subroutine is necessary because the subroutine that updates tracer
+concentrations based on mass conservation at each node operates as a
+method of clsReservoir and thus does not have access to the tracer
+concentrations in the adjacent reservoirs.
+Consequently, these must be set up at node level.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.UpdateVolumeSizeFractionsandTracersInAllReservoirs">
+<code class="sig-name descname">UpdateVolumeSizeFractionsandTracersInAllReservoirs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dt</span></em>, <em class="sig-param"><span class="n">TracerProperties</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.UpdateVolumeSizeFractionsandTracersInAllReservoirs" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Arguments:</dt><dd><p>dt – float
+TracerProperties – clsTracerProperties</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.WidthChange">
+<code class="sig-name descname">WidthChange</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Manning</span></em>, <em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">CalibrationFactor</span></em>, <em class="sig-param"><span class="n">SG</span></em>, <em class="sig-param"><span class="n">rho_w</span></em>, <em class="sig-param"><span class="n">g</span></em>, <em class="sig-param"><span class="n">W</span></em>, <em class="sig-param"><span class="n">alphaF</span></em>, <em class="sig-param"><span class="n">alphatau</span></em>, <em class="sig-param"><span class="n">BcMin</span></em>, <em class="sig-param"><span class="n">dt</span></em>, <em class="sig-param"><span class="n">ControlGSD</span></em>, <em class="sig-param"><span class="n">MobilityThreshold</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.WidthChange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Katie added this function.  It is an optional add-on to replace the constant
+migration rate (Node.cbank).  Bank erosion and floodplain sequestration are
+treated as separate, independent processes.</p>
+<p>Arguments:</p>
+<p>Manning – bool
+thresholdQ – float
+W – float
+ErodeT – float
+BcMin – float
+dt – float</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="MAST_1D.clsNode.clsNode.g">
+<code class="sig-name descname">g</code><em class="property"> = 9.81</em><a class="headerlink" href="#MAST_1D.clsNode.clsNode.g" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.getBarPavingRatio">
+<code class="sig-name descname">getBarPavingRatio</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.getBarPavingRatio" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.getBedPavingRatio">
+<code class="sig-name descname">getBedPavingRatio</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.getBedPavingRatio" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.getCumulativeBedChange">
+<code class="sig-name descname">getCumulativeBedChange</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.getCumulativeBedChange" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.getFractionAlluvial">
+<code class="sig-name descname">getFractionAlluvial</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.getFractionAlluvial" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.nGrain">
+<code class="sig-name descname">nGrain</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.nGrain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsNode.clsNode.nc">
+<code class="sig-name descname">nc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsNode.clsNode.nc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return: float</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-MAST_1D.clsOutputSpecs">
+<span id="mast-1d-clsoutputspecs-module"></span><h2>MAST_1D.clsOutputSpecs module<a class="headerlink" href="#module-MAST_1D.clsOutputSpecs" title="Permalink to this headline">¶</a></h2>
+<p>Created on Tue May 10 16:37:05 2016</p>
+<p>&#64;author: geography</p>
+<p>Stores daily data for output.  For use with hydrographs.</p>
+<dl class="py class">
+<dt id="MAST_1D.clsOutputSpecs.clsOutputSpecs">
+<em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsOutputSpecs.</code><code class="sig-name descname">clsOutputSpecs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">startdate</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsOutputSpecs.clsOutputSpecs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="MAST_1D.clsOutputSpecs.clsOutputSpecs.AddDay">
+<code class="sig-name descname">AddDay</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsOutputSpecs.clsOutputSpecs.AddDay" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsOutputSpecs.clsOutputSpecs.PopulateLists">
+<code class="sig-name descname">PopulateLists</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Node</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsOutputSpecs.clsOutputSpecs.PopulateLists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-MAST_1D.clsOutputWriter">
+<span id="mast-1d-clsoutputwriter-module"></span><h2>MAST_1D.clsOutputWriter module<a class="headerlink" href="#module-MAST_1D.clsOutputWriter" title="Permalink to this headline">¶</a></h2>
+<p>Created on Tue May 10 16:37:05 2016</p>
+<p>&#64;author: geography</p>
+<p>Stores functions for writing output to files.</p>
+<dl class="py class">
+<dt id="MAST_1D.clsOutputWriter.clsOutputWriter">
+<em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsOutputWriter.</code><code class="sig-name descname">clsOutputWriter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Outputfolder</span></em>, <em class="sig-param"><span class="n">DailyNodes</span></em>, <em class="sig-param"><span class="n">startdate</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsOutputWriter.clsOutputWriter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="MAST_1D.clsOutputWriter.clsOutputWriter.Output">
+<code class="sig-name descname">Output</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Filename</span></em>, <em class="sig-param"><span class="n">Reach</span></em>, <em class="sig-param"><span class="n">VariableName</span></em>, <em class="sig-param"><span class="n">Nprint</span></em>, <em class="sig-param"><span class="n">T</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsOutputWriter.clsOutputWriter.Output" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Arguments:</dt><dd><p>Filename – str
+Reach – clsReach
+VariableName – str
+Nprint – int
+T – float
+toplot – list # Katie add</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsOutputWriter.clsOutputWriter.OutputFlux">
+<code class="sig-name descname">OutputFlux</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Reach</span></em>, <em class="sig-param"><span class="n">Nprint</span></em>, <em class="sig-param"><span class="n">T</span></em>, <em class="sig-param"><span class="n">tag</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsOutputWriter.clsOutputWriter.OutputFlux" title="Permalink to this definition">¶</a></dt>
+<dd><p>Katie add!</p>
+<p>Outputs size-specific flux leaving bottom-most node or the feed into the top node.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsOutputWriter.clsOutputWriter.PopulateDailyLists">
+<code class="sig-name descname">PopulateDailyLists</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Reach</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsOutputWriter.clsOutputWriter.PopulateDailyLists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attributes:</p>
+<p>-Reach–clsReach (Reach with data to output)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsOutputWriter.clsOutputWriter.WriteDailyFiles">
+<code class="sig-name descname">WriteDailyFiles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsOutputWriter.clsOutputWriter.WriteDailyFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes the daily data stored in the clsOutputSpecs object to a json file
+at the end of the run.  For hydrograph runs.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-MAST_1D.clsReach">
+<span id="mast-1d-clsreach-module"></span><h2>MAST_1D.clsReach module<a class="headerlink" href="#module-MAST_1D.clsReach" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="MAST_1D.clsReach.clsReach">
+<em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsReach.</code><code class="sig-name descname">clsReach</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReach.clsReach" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class defining a river reach.</p>
+<p>Defines the properties of a river reach within which sediment will be
+routed downstream.  A reach consists of a set of nodes connected in
+series.  Each node represents multiple bends of the channel.  The reach
+class includes methods for computing water level in each node given
+flow in the reach and downstream boundary conditions.  It also includes
+methods for specifying a size-specific sediment feed rate.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Because the reach object requires many input parameters upon instantiation,
+all parameters are passed as class attributes of a user-defined “inputs” object.
+Because the nature of the inputs expected by clsReach are quite specific, they
+are documented here rather than in the clsInputs class definition (which is
+left relativly undefined so that the user can add model features
+as needed.  A helpful addition to the code would be to break the
+clsInput class up so that the variables required by all reaches
+are explicitly called out, perhaps as a separate sub-class or
+individual well-defined attributes.</p>
+</div>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul>
+<li><p><strong>inputs.Dbdy</strong> (<em>array_like(float)</em>) – Sediment grain size at each bin boundary. Referred to as
+BinBdySizes elsewhere.</p></li>
+<li><p><strong>inputs.Qw</strong> (<em>array_like(float)</em>) – Flows in flow duration distribution applied to reach.</p></li>
+<li><p><strong>inputs.NLayers</strong> (<em>int</em>) – Number of substrate layers to consider.</p></li>
+<li><p><strong>inputs.NTracers</strong> (<em>int</em>) – Number of tracers being considered by the model</p></li>
+<li><p><strong>inputs.Nnodes</strong> (<em>int</em>) – Number of nodes in the reach.</p></li>
+<li><p><strong>inputs.ManningStabilizer</strong> (<em>???</em>) – NEEDS DOCUMENTATION</p></li>
+<li><p><strong>inputs.p</strong> (<em>array_like(float)</em>) – Fraction of time represented by each discharge bin.</p></li>
+<li><p><strong>inputs.Fa</strong> (<em>array_like(float)</em>) – Initial fractions for each sediment size class in active layer.</p>
+<p>Note that Presently the initial floodplain size fractions are solved for to
+ensure that exchange between floodplain and channel is initially in
+equilibrium.</p>
+</li>
+<li><p><strong>inputs.Bc</strong> (<em>float</em>) – Initial channel width (m).</p></li>
+<li><p><strong>inputs.Bf</strong> (<em>float</em>) – Initial valley width (m).</p>
+<p>Note that it appears that the user enters intial valley width inputs.Bf as a parameter, but
+the node attribute Node.Bf represents the width of the floodplain, not the
+entire valley, whose width is the sum of Node.Bf + Node.Bc.</p>
+</li>
+<li><p><strong>inputs.Cfc</strong> (<em>float</em>) – Friction factor for channel. Cfc = 1/Czc^2.</p></li>
+<li><p><strong>inputs.Cff</strong> (<em>float</em>) – Friction factor for floodplain. Cff = 1/Czf^2.</p></li>
+<li><p><strong>inputs.Slope</strong> (<em>float</em>) – Initial slope of reach.</p></li>
+<li><p><strong>inputs.migration</strong> (<em>float</em>) – Reach-average lateral migration rate (m/s) (yes, it’s a small number).</p></li>
+<li><p><strong>inputs.ChSin</strong> (<em>float</em>) – Reach-averaged sinusity (channel length / valley length).</p></li>
+<li><p><strong>inputs.dxf</strong> (<em>float (optional)</em>) – Floodplain spacing between nodes.</p></li>
+<li><p><strong>inputs.FSandSusp</strong> (<em>float</em>) – Fraction sand moving in suspension.  This load is in
+in addition to any sand transport computed from the surface-based
+bed material transport equation.</p></li>
+<li><p><strong>inputs.FlBed</strong> (<em>float</em>) – Floodplain number for suspended bed material.  Determines the
+fraction of bed material flux moving across the floodplain zone
+that deposits on the floodplain as overbank deposition.</p></li>
+<li><p><strong>inputs.MudFraction</strong> (<em>float</em>) – ???</p>
+<p>It appears that inputs.MudFraction still needs documentation.</p>
+</li>
+<li><p><strong>inputs.FloodplainL</strong> (<em>float</em>) – Initial floodplain thickness (m).</p></li>
+<li><p><strong>inputs.ActiveLayerL</strong> (<em>float</em>) – Thickness of active layer (m).</p></li>
+<li><p><strong>inputs.Hpb</strong> (<em>float</em>) – Point bar thickness (m).</p></li>
+<li><p><strong>inputs.lambdap</strong> (<em>float</em>) – Porosity of all sediment deposits.</p></li>
+<li><p><strong>inputs.Kbar</strong> (<em>float</em>) – Parameter influencing fraction mud stored in bars.
+Motivated by Hoey and Ferguson, who created sediment deposits
+in substrate as mixture of load and sediment surface.</p></li>
+<li><p><strong>inputs.AlphaBar</strong> (<em>float</em>) – Another parameter influencing fraction mud stored in bars.</p></li>
+<li><p><strong>inputs.AlphaPartlyAlluvial</strong> (<em>float</em>) – Parameter influencing sediment passing through partly alluvial reaches.</p></li>
+<li><p><strong>inputs.ncAddons</strong> (<em>float</em>) – Total additional form roughness added to grain roughness.</p></li>
+<li><p><strong>inputs.ncMultiplier</strong> (<em>float</em>) – Multiplier for grain roughness.</p></li>
+<li><p><strong>inputs.nf</strong> (<em>float</em>) – Floodplain roughness parameter.</p></li>
+<li><p><strong>inputs.LayerL</strong> (<em>float</em>) – Initial thickness of substrate layers (m).</p></li>
+<li><p><strong>inputs.DLag</strong> (<em>float</em>) – Relates to lag deposit in nodes. NEED TO DEFINE</p></li>
+<li><p><strong>inputs.FLag</strong> (<em>float</em>) – Relates to lag deposit in nodes. NEED TO DEFINE</p>
+<p>Note that presently, there is an elevation hard coded into node.</p>
+</li>
+<li><p><strong>inputs.vfunc</strong> (<em>UNKNOWN</em>) – NEED TO DOCUMENT: PROBABLY A VELOCITY FUNCTION.</p></li>
+<li><p><strong>inputs.ReachwideBedrock</strong> (<em>bool</em>) – Flag that allows bedrock to be modeled for all nodes.  If False,
+the reach is assumed to always be fully alluvial.</p></li>
+<li><p><strong>inputs.SetBoundary</strong> (<em>bool</em>) – NEED TO DOCUMENT: PROBABLY HELPS SET DOWNSTREAM BOUNDARY CONDITION.</p></li>
+<li><p><strong>inputs.BoundaryFactor</strong> (<em>array_like(float)???</em>) – NEED TO DOCUMENT: PROBABLY ADJUSTS BOUNDARY CONDITION</p></li>
+<li><p><strong>inputs.TransFunc</strong> (<em>UNKOWN</em>) – NEED TO DOCUMENT</p></li>
+<li><p><strong>inputs.TrinityFit</strong> (<em>Bool</em>) – Flag that determines if Gaeuman fit to Wilcock &amp; Crowe is used.  Regular
+Wilcock and Crowe used if false.</p></li>
+<li><p><strong>inputs.CalibrationFactor</strong> (<em>Float</em>) – Multiplier applied to all computed bed material transport rates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>Node</strong> (array_like(<a class="reference internal" href="#module-MAST_1D.clsNode" title="MAST_1D.clsNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsNode</span></code></a>, length = NNodes)) – An array of interconnected node objects.</p></li>
+<li><p><strong>NFlows</strong> (<em>int</em>) – Number of discharge bins considered in flow duration distribution</p></li>
+<li><p><strong>NBedSizes</strong> (<em>int</em>) – Number of bed material sediment size bins</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Lots more to document here:
+Qsjkfeed – [float]
+QsAvkFeed – [float]
+BoundaryConditionDownstreamEtaBed – float
+NTracers – int (number of sizes)
+NFlows – int (number of flows in FDC)
+NLayers – int
+CumulativeOutput – [float] (Cumulative amount of sediment for each size</p>
+<blockquote>
+<div><p>class transported from the last node) # Katie add to track reservoir filling!</p>
+</div></blockquote>
+<p>Initialized – bool</p>
+<dl class="py method">
+<dt id="MAST_1D.clsReach.clsReach.AbridgedStepDownstream">
+<code class="sig-name descname">AbridgedStepDownstream</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">BcMin</span></em>, <em class="sig-param"><span class="n">W</span></em>, <em class="sig-param"><span class="n">dt</span></em>, <em class="sig-param"><span class="n">TracerProperties</span></em>, <em class="sig-param"><span class="n">WidthChange</span></em>, <em class="sig-param"><span class="n">TransFunc</span></em>, <em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">CalibrationFactor</span></em>, <em class="sig-param"><span class="n">alphatau</span></em>, <em class="sig-param"><span class="n">alphabed</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReach.clsReach.AbridgedStepDownstream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Katie add.  This function is used during low flow, when only narrowing
+is allowed to occur.  It makes all exchange functions zero except narrowing.</p>
+<p>Right now, lateral inputs are not ‘turned off’–should fix this.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReach.clsReach.Add_Nodes">
+<code class="sig-name descname">Add_Nodes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">NewNode</span></em>, <em class="sig-param"><span class="n">numnodes</span></em>, <em class="sig-param"><span class="n">etabav</span></em>, <em class="sig-param"><span class="n">xc</span></em>, <em class="sig-param"><span class="n">Outputvars</span></em>, <em class="sig-param"><span class="n">Validatevars</span></em>, <em class="sig-param"><span class="n">ValidateDvars</span></em>, <em class="sig-param"><span class="n">Outputfolder</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReach.clsReach.Add_Nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Katie add this function to add nodes to the end of the reach.  Was
+developed for the dam removal, where aggradation on the final node
+rose above boundary condition for WSE, causing the model to crash.</p>
+<p>This function does two things:  it adds nodes to the bottom of the
+model, with the attributes of a control node.  Bed elevations are
+adjusted given the slope of the control node.  It also updates the
+output files with no data for the time elapsed before the nodes
+were added.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>NewNode</strong> (<a class="reference internal" href="#module-MAST_1D.clsNode" title="MAST_1D.clsNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsNode</span></code></a>) – Control node object that whose attributes will be copied
+into all of the new nodes.</p></li>
+<li><p><strong>numnodes</strong> (<em>int</em>) – Number of new nodes to be added.</p></li>
+<li><p><strong>etabav</strong> (<em>float</em>) – Initial etabav of the downstreammost node.</p></li>
+<li><p><strong>xc</strong> (<em>int</em>) – Longitudinal coordinate of the downstreammost node.</p></li>
+<li><p><strong>Outputvars</strong> (<em>???</em>) – NEEDS TO BE DOCUMENTED</p></li>
+<li><p><strong>Validatevars</strong> (<em>???</em>) – NEEDS TO BE DOCUMENTED</p></li>
+<li><p><strong>ValidateDvars</strong> (<em>???</em>) – NEEDS TO BE DOCUMENTED</p></li>
+<li><p><strong>Outputfolder</strong> (<em>???</em>) – NEEDS TO BE DOCUMENTED</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReach.clsReach.BackwaterPredictor">
+<code class="sig-name descname">BackwaterPredictor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">WSE1</span></em>, <em class="sig-param"><span class="n">KC1</span></em>, <em class="sig-param"><span class="n">KF1</span></em>, <em class="sig-param"><span class="n">KC2</span></em>, <em class="sig-param"><span class="n">KF2</span></em>, <em class="sig-param"><span class="n">AC1</span></em>, <em class="sig-param"><span class="n">AF1</span></em>, <em class="sig-param"><span class="n">AC2</span></em>, <em class="sig-param"><span class="n">AF2</span></em>, <em class="sig-param"><span class="n">dxc</span></em>, <em class="sig-param"><span class="n">dxf</span></em>, <em class="sig-param"><span class="n">Q1</span></em>, <em class="sig-param"><span class="n">Q2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReach.clsReach.BackwaterPredictor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies energy equation between simplified cross sections.</p>
+<p>This function computes an upstream predicted water surface elevation
+using the energy equation, assuming subcritical flow and ignoring
+expansion/contraction losses (which should be accounted for in the estimate
+of the friction coefficients).  It is written using the conveyance form
+of the energy equation, which means that it does not require any
+specific parameterization for friction as long as conveyance can be
+estimated. The algorithm is based on the USACE HEC-RAS hydraulic
+reference manual.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>WSE1</strong> (<em>float</em>) – Water surface elevation in downstream section.</p></li>
+<li><p><strong>KC1</strong> (<em>float</em>) – Channel conveyance in section 1. For manning,
+k = 1/n*A*R^(2/3))</p></li>
+<li><p><strong>KF1</strong> (<em>float</em>) – Floodplain conveyance in secion 1.</p></li>
+<li><p><strong>KC2</strong> (<em>float</em>) – Channel conveyance in section 2.</p></li>
+<li><p><strong>KF2</strong> (<em>float</em>) – Floodplain conveyance in section 2.</p></li>
+<li><p><strong>AC1</strong> (<em>float</em>) – Flow area for channel in section 1.</p></li>
+<li><p><strong>AF1</strong> (<em>float</em>) – Flow area for floodplain in section 1.</p></li>
+<li><p><strong>AC2</strong> (<em>float</em>) – Flow area for channel in section 2.</p></li>
+<li><p><strong>AF2</strong> (<em>float</em>) – Flow area for floodplain in section 2.</p></li>
+<li><p><strong>dxc</strong> (<em>float</em>) – Down channel length between sections.</p></li>
+<li><p><strong>dxf</strong> (<em>float</em>) – Down foodplain length between sections.</p></li>
+<li><p><strong>Q1</strong> (<em>float</em>) – Total discharge in m3/s at section 2.</p></li>
+<li><p><strong>Q2</strong> (<em>float</em>) – Total discharge in m3/s at section 2.</p></li>
+<li><p><strong>WSE2Guess</strong> (<em>float</em>) – Estimated water surface elevation in upstream section.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Water surface elevation in upstream section.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="MAST_1D.clsReach.clsReach.Initialized">
+<code class="sig-name descname">Initialized</code><em class="property"> = False</em><a class="headerlink" href="#MAST_1D.clsReach.clsReach.Initialized" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReach.clsReach.ManningBackwaterDepthDischargeandSf">
+<code class="sig-name descname">ManningBackwaterDepthDischargeandSf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Q1</span></em>, <em class="sig-param"><span class="n">Q2</span></em>, <em class="sig-param"><span class="n">DSNode1</span></em>, <em class="sig-param"><span class="n">USNode2</span></em>, <em class="sig-param"><span class="n">WSE1</span></em>, <em class="sig-param"><span class="n">WSE2guess</span></em>, <em class="sig-param"><span class="n">j</span></em>, <em class="sig-param"><span class="n">ManningStabilizer</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReach.clsReach.ManningBackwaterDepthDischargeandSf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies backwater equation between two nodes.</p>
+<p>Given the geometry of an upstream and downstram node, discharge, and
+water level at th downstream node, computes water level, channel discharge,
+and friction slope for the upstream node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Q1</strong> (<em>float</em>) – Discharge in the downstream section.</p></li>
+<li><p><strong>Q2</strong> (<em>float</em>) – Discharge in the upstream section.</p></li>
+<li><p><strong>DSNode1</strong> (<a class="reference internal" href="#module-MAST_1D.clsNode" title="MAST_1D.clsNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsNode</span></code></a>) – The downstream node.</p></li>
+<li><p><strong>USNode2</strong> (<a class="reference internal" href="#module-MAST_1D.clsNode" title="MAST_1D.clsNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsNode</span></code></a>) – The upstream node.</p></li>
+<li><p><strong>WSE1</strong> (<em>float</em>) – The water surface elevation in the downstream node.</p></li>
+<li><p><strong>WSE2guess</strong> (<em>float</em>) – An initial estimate for the water surface elevation at the upstream node.</p></li>
+<li><p><strong>j</strong> (<em>int</em>) – Number of discharge bins.</p></li>
+<li><p><strong>ManningStabilizer</strong> (<em>???</em>) – NEEDS TO BE DOCUMENTED.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>HC2</strong> (<em>float</em>) – Channel depth at the upstream section.</p></li>
+<li><p><strong>Q2</strong> (<em>float</em>) – Channel discharge in the upstream section.</p></li>
+<li><p><strong>Sf</strong> (<em>float</em>) – Friction slope.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReach.clsReach.ManningNormalDepthForBoundary">
+<code class="sig-name descname">ManningNormalDepthForBoundary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Slope</span></em>, <em class="sig-param"><span class="n">Bc</span></em>, <em class="sig-param"><span class="n">Bf</span></em>, <em class="sig-param"><span class="n">nc</span></em>, <em class="sig-param"><span class="n">nf</span></em>, <em class="sig-param"><span class="n">ChannelDepth</span></em>, <em class="sig-param"><span class="n">Q</span></em>, <em class="sig-param"><span class="n">Sinuosity</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReach.clsReach.ManningNormalDepthForBoundary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solves for steady uniform flow depth.</p>
+<p>This function iterates for normal depth (steady uniform flow) using
+the backwater solver. Normal depth is assumed to have been found
+when the calculated water surface is parallel to the specified bed
+slope for an arbitrarily specified channel distance (100 m).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Slope</strong> (<em>float</em>) – Average channel slope.</p></li>
+<li><p><strong>Bc</strong> (<em>float</em>) – Channel width (m).</p></li>
+<li><p><strong>Bf</strong> (<em>float</em>) – Floodplain width (m).</p></li>
+<li><p><strong>nc</strong> (<em>float</em>) – Manning’s n for channel.</p></li>
+<li><p><strong>nf</strong> (<em>float</em>) – Manning’s n for floodplain.</p></li>
+<li><p><strong>ChannelDepth</strong> (<em>float</em>) – Depth of flow in channel.</p></li>
+<li><p><strong>Q</strong> (<em>float</em>) – Total discharge for cross-section.</p></li>
+<li><p><strong>Sinuosity</strong> (<em>float</em>) – Channel sinuosity.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Steady uniform flow depth in channel.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReach.clsReach.QsavBedTotFeed">
+<code class="sig-name descname">QsavBedTotFeed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReach.clsReach.QsavBedTotFeed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReach.clsReach.SetupReach">
+<code class="sig-name descname">SetupReach</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReach.clsReach.SetupReach" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subroutine that uses the clsInputs object to set up initial
+properties of the reach, especially the properties of all
+nodes within the reach.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReach.clsReach.SetupTracers">
+<code class="sig-name descname">SetupTracers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span></em>, <em class="sig-param"><span class="n">TracerProperties</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReach.clsReach.SetupTracers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets up tracers using parameters appropriate for cosmogenic 14C</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TracerProperties</strong> (<a class="reference internal" href="#module-MAST_1D.clsTracerProperties" title="MAST_1D.clsTracerProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsTracerProperties</span></code></a>) – Tracer properties object to modify.</p></li>
+<li><p><strong>inputs.coj</strong> (<em>array_like(float, length = 3)</em>) – Surface production rates from spallation and fast or slow muons</p></li>
+<li><p><strong>inputs.Lcj</strong> (<em>array_like(float, length = 3)</em>) – Attenuation lengths from spallation, fast, or slow muons.</p></li>
+<li><p><strong>inputs.name</strong> (<em>string</em>) – Name of tracer under consideration.</p></li>
+<li><p><strong>inputs.DecayConst</strong> (<em>float</em>) – Decay constant for tracer (1/yr)</p></li>
+<li><p><strong>inputs.ProductionRate</strong> (<em>float</em>) – Surface production rate of tracer, Atoms/g SiO2/yr.</p></li>
+<li><p><strong>inputs.FalloutRate</strong> (<em>float</em>) – For fallout radionuclides, fallout rate in atoms/cm2/yr.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Object formatted with specified tracer properties.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#module-MAST_1D.clsTracerProperties" title="MAST_1D.clsTracerProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsTracerProperties</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReach.clsReach.StepDownstream">
+<code class="sig-name descname">StepDownstream</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dt</span></em>, <em class="sig-param"><span class="n">alphabed</span></em>, <em class="sig-param"><span class="n">LMinAfterSplit</span></em>, <em class="sig-param"><span class="n">LMinBeforeRemove</span></em>, <em class="sig-param"><span class="n">SubstrateSpacing</span></em>, <em class="sig-param"><span class="n">TracerProperties</span></em>, <em class="sig-param"><span class="n">TransFunc</span></em>, <em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">CalibrationFactor</span></em>, <em class="sig-param"><span class="n">WidthChange</span></em>, <em class="sig-param"><span class="n">W</span></em>, <em class="sig-param"><span class="n">ErodeT</span></em>, <em class="sig-param"><span class="n">alphatau</span></em>, <em class="sig-param"><span class="n">BcMin</span></em>, <em class="sig-param"><span class="n">Manning</span></em>, <em class="sig-param"><span class="n">AvulsionThreshold</span></em>, <em class="sig-param"><span class="n">ControlGSD</span></em>, <em class="sig-param"><span class="n">AvulsionExchange</span></em>, <em class="sig-param"><span class="n">MobilityThreshold</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReach.clsReach.StepDownstream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subroutine that performs the computations necessary to step forward in time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – Timestep.</p></li>
+<li><p><strong>alphabed</strong> (<em>float</em>) – Hoey-Ferguson parameter determining the ratios of load to active later that
+get transferred to channel substrate when aggrading.</p></li>
+<li><p><strong>LMinAfterSplit</strong> (<em>float</em>) – Minimum thickness (m) for a substrate node if a new substrate layer is to be spawned (when aggrading).
+This It is necessary to split substrate so as not to mix material too deeply.</p></li>
+<li><p><strong>LMinBeforeRemove</strong> (<em>float</em>) – Minimum thickness (m) allowed for the top substrate layer if system is degrading.
+If too thin, the layer is removed and its sediment is mixed with the next lower layer.</p></li>
+<li><p><strong>SubstrateSpacing</strong> (<em>float</em>) – Thickness of all but top-most substrate layers (m).</p></li>
+<li><p><strong>TracerProperties</strong> (<a class="reference internal" href="#module-MAST_1D.clsTracerProperties" title="MAST_1D.clsTracerProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsTracerProperties</span></code></a>) – Properties of tracer under consideration.</p></li>
+<li><p><strong>TrinityFit</strong> (<em>bool</em>) – Flag that determines if Gaeuman fit to Wilcock &amp; Crowe is used.  Regular
+Wilcock and Crowe used if false.</p></li>
+<li><p><strong>CalibrationFactor</strong> (<em>float</em>) – Multiplier applied to all computed bed material transport rates.</p></li>
+<li><p><strong>W</strong> (<em>float (optional)</em>) – Parameter for width change function.</p></li>
+<li><p><strong>ErodeT</strong> (<em>float (optional)</em>) – Parameter for width change function.</p></li>
+<li><p><strong>Bp</strong> (<em>float (optional)</em>) – Parameter for width change function.</p></li>
+<li><p><strong>Manning</strong> (<em>bool (optional)</em>) – Parameter for width change function.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReach.clsReach.UpdateManningDepthAtAllFlowAndNodes">
+<code class="sig-name descname">UpdateManningDepthAtAllFlowAndNodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReach.clsReach.UpdateManningDepthAtAllFlowAndNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates through all nodes to perform hydraulic computations.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReach.clsReach.UpdateOutput">
+<code class="sig-name descname">UpdateOutput</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReach.clsReach.UpdateOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates cumulative bed material output from bottom-most node and cumulative feed.
+Also calculates cumulative supply from banks.</p>
+<p>Katie add!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – Timestep in seconds.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReach.clsReach.UpdateSlope">
+<code class="sig-name descname">UpdateSlope</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReach.clsReach.UpdateSlope" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subroutine to computes slope for each node from geometry of nodes in reach.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReach.clsReach.find_downstream_boundary">
+<code class="sig-name descname">find_downstream_boundary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ControlNode</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReach.clsReach.find_downstream_boundary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the downstream boundary condition given a Node object and list and
+number of discharges.</p>
+<p>Katie moved here.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReach.clsReach.nnodes">
+<code class="sig-name descname">nnodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReach.clsReach.nnodes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReach.clsReach.set_up_hydrograph">
+<code class="sig-name descname">set_up_hydrograph</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReach.clsReach.set_up_hydrograph" title="Permalink to this definition">¶</a></dt>
+<dd><p>After the floodplain initial conditions are set up, the flow and transport
+bins are reset to accomodate just one flow. Katie add.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-MAST_1D.clsReservoir">
+<span id="mast-1d-clsreservoir-module"></span><h2>MAST_1D.clsReservoir module<a class="headerlink" href="#module-MAST_1D.clsReservoir" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="MAST_1D.clsReservoir.clsReservoir">
+<em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsReservoir.</code><code class="sig-name descname">clsReservoir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">BinBdySizes</span></em>, <em class="sig-param"><span class="n">NumTracers</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReservoir.clsReservoir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class defining a sediment storage reservoir.</p>
+<p>Defines the volume and nature of sediment stored within a given
+sediment storage reservoir and includes the method for performing size-specific
+mass balance computations for sediment and tracer mass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>BinBdySizes</strong> (<em>array_like(float)</em>) – Sediment grain size at each bin boundary. Note that the number
+of sediment sizes NSizes = BinBdySizes - 2.</p></li>
+<li><p><strong>NTracers</strong> (<em>int</em>) – Number of tracers.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#MAST_1D.clsReservoir.clsReservoir.NTracers" title="MAST_1D.clsReservoir.clsReservoir.NTracers"><strong>NTracers</strong></a> (<em>int</em>) – Number of tracers.</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsReservoir.clsReservoir.NSizes" title="MAST_1D.clsReservoir.clsReservoir.NSizes"><strong>NSizes</strong></a> (<em>int</em>) – Number of bed material grain sizes. Note that k = 0 represents washload.)</p></li>
+<li><p><strong>GSD</strong> (<a class="reference internal" href="#module-MAST_1D.clsGSD" title="MAST_1D.clsGSD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsGSD</span></code></a>) – Grain size distribution of sediment for reservoir.</p></li>
+<li><p><strong>Volume</strong> (<em>float</em>) – Total reservoir volume including voids, for all sizes.</p></li>
+<li><p><strong>L</strong> (<em>float</em>) – Vertical thickness of reservoir</p></li>
+<li><p><strong>T</strong> (<em>array_like</em><em> (</em><em>float</em><em>, </em><em>length = NTracers</em><em>)</em>) – Tracer concentration in size k.</p></li>
+<li><p><strong>ExSed</strong> (<a class="reference internal" href="#module-MAST_1D.clsExchangeTypes" title="MAST_1D.clsExchangeTypes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsExchangeTypes</span></code></a>) – Size specific sediment fluxes representing processes considered in the
+clsExchangeTypes class moving into and out of the reservoir.
+(units of volume/time).</p></li>
+<li><p><strong>ExTracer</strong> (array_like(<a class="reference internal" href="#module-MAST_1D.clsExchangeTypes" title="MAST_1D.clsExchangeTypes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsExchangeTypes</span></code></a>, length = NTracers)) – Size and tracer specific tracer concentrations in sediment
+moving into and out of reservoir. Defined for each tracer type.</p></li>
+<li><p><strong>SourceLatSed</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length=Nsizes</em><em>)</em>) – Size-specific lateral sediment source (e.g. bluffs, etc.).</p></li>
+<li><p><strong>SourceLatTracer</strong> (<em>array_like</em><em> (</em><em>float</em><em>, </em><em>ndim = 2</em><em>)</em>) – Tracer concentration in net lateral tracer source for each tracer type
+and sediment size.  Size of array is NSizes x NTracers.</p></li>
+<li><p><strong>SinkLatSed</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length=Nsizes</em><em>)</em>) – Size specific sediment flux to lateral sink (e.g. floodplain deposition,
+dredging, etc.).</p></li>
+<li><p><strong>SinkLatTracer</strong> (<em>array_like</em><em> (</em><em>float</em><em>, </em><em>ndim = 2</em><em>)</em>) – Tracer concentration in lateral sediment sink for each size and tracer time.
+Size of array is NSizes x NTracers.
+May not be necessary since for cosmogenic tracer, loss is proportional to T.</p></li>
+<li><p><strong>SourceFeedSed</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length=Nsizes</em><em>)</em>) – Upstream sediment feed for each sediment size.</p></li>
+<li><p><strong>SourceFeedTracer</strong> (<em>array_like</em><em> (</em><em>float</em><em>, </em><em>ndim = 2</em><em>)</em>) – Tracer concentration in upstream sediment feed, for each
+sediment size and tracer type. Size of array is NSizes x NTracers.</p></li>
+<li><p><strong>SinkLoadSed</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length=Nsizes</em><em>)</em>) – Sediment flux out of node in load for each sediment size.</p></li>
+<li><p><strong>SinkLoadTracer</strong> (<em>array_like</em><em> (</em><em>float</em><em>, </em><em>ndim = 2</em><em>)</em>) – Tracer concentration in load for each
+sediment size and tracer type. Size of array is NSizes x NTracers</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsReservoir.clsReservoir.Initialized" title="MAST_1D.clsReservoir.clsReservoir.Initialized"><strong>Initialized</strong></a> (<em>bool</em>) – Flag to determine if reservoir has been initialized</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="MAST_1D.clsReservoir.clsReservoir.Initialized">
+<code class="sig-name descname">Initialized</code><em class="property"> = False</em><a class="headerlink" href="#MAST_1D.clsReservoir.clsReservoir.Initialized" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReservoir.clsReservoir.NSizes">
+<em class="property">property </em><code class="sig-name descname">NSizes</code><a class="headerlink" href="#MAST_1D.clsReservoir.clsReservoir.NSizes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReservoir.clsReservoir.NTracers">
+<em class="property">property </em><code class="sig-name descname">NTracers</code><a class="headerlink" href="#MAST_1D.clsReservoir.clsReservoir.NTracers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReservoir.clsReservoir.UpdateFandT">
+<code class="sig-name descname">UpdateFandT</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dt</span></em>, <em class="sig-param"><span class="n">lambdap</span></em>, <em class="sig-param"><span class="n">TracerProperties</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReservoir.clsReservoir.UpdateFandT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply mass conservation to the reservoir to estimate sediment size fractions and
+tracer concentrations in future timestep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – Timestep (seconds).</p></li>
+<li><p><strong>lambdap</strong> (<em>float</em>) – Porosity of reservoir deposit.</p></li>
+<li><p><strong>TracerProperties</strong> (<em>array_like(:obj:clsTracerProperties, length = NTracers)</em>) – Production and decay properties for each tracer type.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReservoir.clsReservoir.getNSizes">
+<code class="sig-name descname">getNSizes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReservoir.clsReservoir.getNSizes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="MAST_1D.clsReservoir.clsReservoir.getNTracers">
+<code class="sig-name descname">getNTracers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsReservoir.clsReservoir.getNTracers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-MAST_1D.clsSubstratePairClass">
+<span id="mast-1d-clssubstratepairclass-module"></span><h2>MAST_1D.clsSubstratePairClass module<a class="headerlink" href="#module-MAST_1D.clsSubstratePairClass" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="MAST_1D.clsSubstratePairClass.clsSubstratePairClass">
+<em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsSubstratePairClass.</code><code class="sig-name descname">clsSubstratePairClass</code><a class="headerlink" href="#MAST_1D.clsSubstratePairClass.clsSubstratePairClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>C – [clsReservoir]
+P – [clsReservoir]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-MAST_1D.clsTracerProperties">
+<span id="mast-1d-clstracerproperties-module"></span><h2>MAST_1D.clsTracerProperties module<a class="headerlink" href="#module-MAST_1D.clsTracerProperties" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="MAST_1D.clsTracerProperties.clsTracerProperties">
+<em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsTracerProperties.</code><code class="sig-name descname">clsTracerProperties</code><a class="headerlink" href="#MAST_1D.clsTracerProperties.clsTracerProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<blockquote>
+<div><p>Properties of radioisotopic tracer that may move with sediment</p>
+</div></blockquote>
+<p>Represents the properties of a given radioactive tracer that may
+be associated with sediment particles in a given size class.
+Parameters are available for representing tracers produced in-situ
+in quartz by cosmogenic production or through atmospheric fallout.
+Not yet fully implemented.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ProductionRate</strong> (<em>float</em>) – Production rate of cosmogenic radionuclides in atoms/gram of SiO2/yr</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsTracerProperties.clsTracerProperties.Lcj" title="MAST_1D.clsTracerProperties.clsTracerProperties.Lcj"><strong>Lcj</strong></a> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = 3</em><em>)</em>) – E-folding lengths (m) for the production of cosmogenic nuclides
+in m for production process n (spallation, fast muons, slow muons)</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsTracerProperties.clsTracerProperties.coj" title="MAST_1D.clsTracerProperties.clsTracerProperties.coj"><strong>coj</strong></a> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = 3</em><em>)</em>) – Contribution of the mechanism in the production of cosmogenic
+nuclides for production proce(ss n (spallation, fast muons, slow muons)</p></li>
+<li><p><strong>DecayConst</strong> (<em>float</em>) – Radioactive decay constant for the cosmogenic nuclides (1/yr)</p></li>
+<li><p><strong>FalloutRate</strong> (<em>float</em>) – Fallout rate for tracer</p></li>
+<li><p><strong>Name</strong> (<em>str</em>) – Name of tracer</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="MAST_1D.clsTracerProperties.clsTracerProperties.Lcj">
+<code class="sig-name descname">Lcj</code><em class="property"> = array([0., 0., 0.])</em><a class="headerlink" href="#MAST_1D.clsTracerProperties.clsTracerProperties.Lcj" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="MAST_1D.clsTracerProperties.clsTracerProperties.coj">
+<code class="sig-name descname">coj</code><em class="property"> = array([0., 0., 0.])</em><a class="headerlink" href="#MAST_1D.clsTracerProperties.clsTracerProperties.coj" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-MAST_1D.deleteme">
+<span id="mast-1d-deleteme-module"></span><h2>MAST_1D.deleteme module<a class="headerlink" href="#module-MAST_1D.deleteme" title="Permalink to this headline">¶</a></h2>
+<p>Created on Mon Jan  4 13:16:27 2021</p>
+<p>&#64;author: lauerj</p>
+</div>
+<div class="section" id="module-MAST_1D">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-MAST_1D" title="Permalink to this headline">¶</a></h2>
+<p>Created on Wed Feb 10 10:21:47 2016</p>
+<p>&#64;author: geography</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="README.html" class="btn btn-neutral float-right" title="Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Hydrology.html" class="btn btn-neutral float-left" title="Hydrology package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Wes Lauer
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

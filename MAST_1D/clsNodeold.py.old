@@ -1241,7 +1241,7 @@ class clsNode(object):
         """
         
         if self.Floodplain.L-self.ActiveLayer.L < threshold:
-            print 'Avulsion!'
+            print('Avulsion!')
             print self.Floodplain.L
             # This part of the code extracts a slice of substrate that is the 
             # thickness of the user-specified original substrate spacing.  This
