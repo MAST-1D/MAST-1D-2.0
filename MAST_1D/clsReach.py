@@ -17,8 +17,6 @@ class clsReach(object):
     flow in the reach and downstream boundary conditions.  It also includes
     methods for specifying a size-specific sediment feed rate.
     
-    Note
-    ----
     Because the reach object requires many input parameters upon instantiation,
     all parameters are passed as class attributes of a user-defined "inputs" object.
     Because the nature of the inputs expected by clsReach are quite specific, they
@@ -48,20 +46,16 @@ class clsReach(object):
         Fraction of time represented by each discharge bin.
     inputs.Fa : array_like(float)
         Initial fractions for each sediment size class in active layer.
-
         Note that Presently the initial floodplain size fractions are solved for to 
         ensure that exchange between floodplain and channel is initially in
         equilibrium.
-
     inputs.Bc : float
         Initial channel width (m).
     inputs.Bf : float
-        Initial valley width (m).
-
+        Initial valley width (m). 
         Note that it appears that the user enters intial valley width inputs.Bf as a parameter, but 
         the node attribute Node.Bf represents the width of the floodplain, not the
         entire valley, whose width is the sum of Node.Bf + Node.Bc.
-
     inputs.Cfc : float
         Friction factor for channel. Cfc = 1/Czc^2.
     inputs.Cff : float
@@ -83,10 +77,7 @@ class clsReach(object):
         fraction of bed material flux moving across the floodplain zone
         that deposits on the floodplain as overbank deposition.
     inputs.MudFraction : float
-        ???
-
-        It appears that inputs.MudFraction still needs documentation.
-
+        STILL NEEDS DOCUMENTATION.
     inputs.FloodplainL : float
         Initial floodplain thickness (m).
     inputs.ActiveLayerL : float
@@ -115,9 +106,7 @@ class clsReach(object):
         Relates to lag deposit in nodes. NEED TO DEFINE
     inputs.FLag : float
         Relates to lag deposit in nodes. NEED TO DEFINE
-
         Note that presently, there is an elevation hard coded into node.
-
     inputs.vfunc : UNKNOWN
         NEED TO DOCUMENT: PROBABLY A VELOCITY FUNCTION.
     inputs.ReachwideBedrock : bool
@@ -134,7 +123,7 @@ class clsReach(object):
         Wilcock and Crowe used if false.
     inputs.CalibrationFactor : Float
         Multiplier applied to all computed bed material transport rates.
-
+    
     Attributes
     ----------
     Node : array_like(:obj:`MAST_1D.clsNode`, length = NNodes)
@@ -143,21 +132,22 @@ class clsReach(object):
         Number of discharge bins considered in flow duration distribution 
     NBedSizes : int 
         Number of bed material sediment size bins
-     
+       
     Notes
     -----
     Lots more to document here:
-    Qsjkfeed -- [float]
-    QsAvkFeed -- [float]
-    BoundaryConditionDownstreamEtaBed -- float
-    NTracers -- int (number of sizes)
-    NFlows -- int (number of flows in FDC)
-    NLayers -- int
-    CumulativeOutput -- [float] (Cumulative amount of sediment for each size
-        class transported from the last node) # Katie add to track reservoir filling!
-    Initialized -- bool
+    Qsjkfeed : float
+    QsAvkFeed : float
+    BoundaryConditionDownstreamEtaBed : float
+    NTracers : int (number of sizes)
+    NFlows : int (number of flows in FDC)
+    NLayers : int
+    CumulativeOutput : [float] (Cumulative amount of sediment for each size
+    class transported from the last node) # Katie add to track reservoir filling!
+    Initialized : bool
     
     """
+    
     Initialized = False
     
     def nnodes(self):

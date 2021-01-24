@@ -1,4 +1,3 @@
-
 from copy import deepcopy
 import os
 from clsReach import clsReach
@@ -12,9 +11,6 @@ import numpy as np
 from math import exp
 import math
 
-
-
-
 class clsModel(object):
     
     def __init__(self, inputs):
@@ -22,9 +18,29 @@ class clsModel(object):
         self.inputs = inputs
         
     def SetInitialConditions(self, inputs):
-        
         """
         Section I:  Load the Reach object from specifications in 'InputsMainpage...'
+        and perform initial hydraulic and sediment transport computations to 
+        fully define the initial condition.
+        
+        Parameters
+        ----------
+        inputs : :obj:`MAST_1D.clsInputs`
+            The class defining all in put parameters.
+        Returns
+        -------
+        Reach : :obj:`MAST_1D.clsReach`
+            The initialized reach.
+        ControlNode : :obj:`MAST_1D.clsNode`
+            A node with basic default input parameters.
+        ControlGSD : :obj:`MAST_1D.clsGSD`
+            A basic grain size distribution.
+        zControlBoundary : :obj:`MAST_1D.clsNode`
+            A node representing the downstreawm boundary
+        TracerProperties : :obj:`MAST_1D.clsTracerProperties`
+        CalibrationFactor : float
+            Sediment transport calibration factor (UNSURE IF IT IS BEING SET HERE).
+        
         """
             
         #  Sets reach parameters by either loading existing conditions from a 
@@ -85,11 +101,15 @@ class clsModel(object):
         return Reach, ControlNode, ControlGSD, zControlBoundary, TracerProperties, CalibrationFactor
             
     def CustomNodes(self, Reach):
-        
         """
         Section II:  Control the behavior of individual nodes if desired.
         Specify which input variables have node-specific initial or
         boundary conditions.  The user can add/remove custom variables.
+        
+        Parameters
+        ----------
+        Reach : :obj:`MAST_1D.clsReach`
+            The initialized reach.
         """
         
         #  This function is run after initial floodplain conditions and Control 
@@ -190,10 +210,12 @@ class clsModel(object):
                 Reach.Node[-1].DC.WSE[j] = Reach.Node[-1].etabav + self.inputs.BoundaryFactor[0]
         
     def RunModel(self):
-        
         """
-        Section III:  Set initial conditions.
+        Perform the model run.
         """        
+        #**********************************************************************
+        #Section III:  Set initial conditions.
+                
         #  Loads reach inputs and sets initial bed and floodplain conditions.
         Reach, ControlNode, ControlGSD, zControlBoundary, TracerProperties, CalibrationFactor = \
             self.SetInitialConditions(self.inputs)
@@ -216,13 +238,12 @@ class clsModel(object):
         #for Node in Reach.Node:
          #   Node.Flmud = .05
             
-        """
-        Section IV:  Set boundary conditions.  Only simple changes to the feed rate
-        and downstream water surface elevation are set here.  More complicated 
-        algorithms can be hard-coded in Section VI, although some may require
-        global variables to be defined here.
-        """
-        
+        #**********************************************************************
+        #Section IV:  Set boundary conditions.  Only simple changes to the feed rate
+        #and downstream water surface elevation are set here.  More complicated 
+        #algorithms can be hard-coded in Section VI, although some may require
+        #global variables to be defined here.
+         
         #  Load factor sets the timing of changes in upstream sediment feed.
         #  If you provide integers, it will use the timestep number to determine
         #  when to switch sediment load.  If a tuple is provided, it will convert 
@@ -260,9 +281,9 @@ class clsModel(object):
         BoundaryTrigger = False # Trigger that determines whether nodes are added in a Dam Removal situation      
         NodeTrigger = False        
         
-        """
-        Section V:  Define time-keeping counters and set up output
-        """        
+        #**********************************************************************
+        #Section V:  Define time-keeping counters and set up output
+        
         
         #  Timesteps elapsed for number flow duration curves or the number of 
         #  days elapsed for hydrographs
@@ -315,9 +336,8 @@ class clsModel(object):
         ValidateDates = list(map(lambda x: datetime.date(*x[:6]), self.inputs.ValidateDates)) # List of dates to output data
         VarPrintstep = 0 # Locator for performance-testing output files  
 
-        """
-        Section VI:  Iterate through timesteps.
-        """        
+        #**********************************************************************
+        #Section VI:  Iterate through timesteps.        
         
         if self.inputs.Hydrograph == True:
             Reach.Node[0].Load.QsAvkFeed, Reach.Node[0].Load.Qsjkfeed = Reach.Node[0].Load.UpdateElwhaFeedRatingCurve(ControlNode, LoadFactor[n],\
@@ -327,15 +347,14 @@ class clsModel(object):
         print('Model setup complete!  Starting timesteps...')
 
         while counter < MaxSteps and Reach.Node[3].ActiveLayer.GSD.D50 == Reach.Node[3].ActiveLayer.GSD.D50:
-            """
-            VI.A:  Record output if at the proper timestep
-            """
+            #************************************************
+            #VI.A:  Record output if at the proper timestep
 
             #  If time tracker is at the defined interval, write 'standard' output
             #  to file and save a copy of Reach in case of model crashing.
             #if Tyear == 0 or date.month == 10 and date.day == 1 and subdaycount == 1:
-#            if counter % 1 == 0: # To print every timestep for debugging purposes
-#            if subdaycount == Tmult: # To output every day for debugging purposes
+            #if counter % 1 == 0: # To print every timestep for debugging purposes
+            #if subdaycount == Tmult: # To output every day for debugging purposes
             if counter == int(NextCount):
                 NextCount = NextCount + Interval
                 year = 0                
@@ -358,8 +377,8 @@ class clsModel(object):
                 #print 'nc'
                 #print Reach.Node[0].nc()
                 #print Reach.Node[-3].nc()
-#                pickle.dump(Reach, open(os.path.join(os.pardir, self.inputs.Outputfolder, "save.Reach"), "wb" )) 
-#                pickle.dump(self.inputs, open(os.path.join(os.pardir, self.inputs.Outputfolder, "inputparams.inputs"), "wb"))
+                #pickle.dump(Reach, open(os.path.join(os.pardir, self.inputs.Outputfolder, "save.Reach"), "wb" )) 
+                #pickle.dump(self.inputs, open(os.path.join(os.pardir, self.inputs.Outputfolder, "inputparams.inputs"), "wb"))
                 
             #  If date is one specified for performance testing, write output.
             if date in ValidateDates and subdaycount == 1:
@@ -369,10 +388,9 @@ class clsModel(object):
                         VarPrintstep, float(date.year))
                 VarPrintstep += 1
             
-            """
-            VI.B:  Perform mass conservation (for more details, see the 'Step Downstream'
-            function in the Reach class)
-            """
+            #************************************************
+            #VI.B:  Perform mass conservation (for more details, see the 'Step Downstream'
+            #function in the Reach class)
             
             #  If the model is running a hydrograph, the discharge is updated
             #  here at the start of each day and daily output variables are 
@@ -437,10 +455,9 @@ class clsModel(object):
             Reach.UpdateOutput(dt)
             Tyear = Tyear + dt/ 365.25 / 24. / 60. /60.
 
-            """
-            VI.C:  Check for bedrock and perform partly-alluvial computations if
-            activated
-            """
+            #************************************************
+            #VI.C:  Check for bedrock and perform partly-alluvial computations if
+            #activated
     
             #This section of code is experimental and is intended to crudely 
             #represent the exposure of bedrock, which would result in a partly 
@@ -458,16 +475,15 @@ class clsModel(object):
             #if Reach.Node[-1].CumulativeBedChange < .5: # Katie add
             #    Reach.Node[-1].etabav = Reach.Node[-1].InitialBedElev -.5
 
-            """
-            VI.D:  EXAMPLE CUSTOMIZATION:  Activate dam removal.  This piece of
-            the model was added to trigger the sediment feed and downstream boundary
-            changes associated with dam removal in the Middle Elwha River. A boolean
-            variable called 'Removal' was added to the inputs class to trigger 
-            this section of code if set to True.  If this section is unwanted,
-            the user can either set inputs.Removal to False or comment out this
-            section.
-            """            
-        
+            #************************************************
+            #VI.D:  EXAMPLE CUSTOMIZATION:  Activate dam removal.  This piece of
+            #the model was added to trigger the sediment feed and downstream boundary
+            #changes associated with dam removal in the Middle Elwha River. A boolean
+            #variable called 'Removal' was added to the inputs class to trigger 
+            #this section of code if set to True.  If this section is unwanted,
+            #the user can either set inputs.Removal to False or comment out this
+            #section.
+              
             # There are two processes--emptying of Lake Aldwell and the consequent 
             # boundary lowering, and the pulse of sediment from Lake Mills.            
             
@@ -584,10 +600,9 @@ class clsModel(object):
                     # Counter at feed change for feed code below
                     #startcounter = counter
                     
-            """
-            VI.E:  Update sediment feed.  Custom sediment feed regimes can be called
-            here, but they should be written in the Load class.
-            """
+            #************************************************
+            #VI.E:  Update sediment feed.  Custom sediment feed regimes can be called
+            #here, but they should be written in the Load class.
             
             # Trigger a change in feed at the proper time--used for the 'default'
             # feed function.
@@ -755,9 +770,9 @@ class clsModel(object):
                 
             # ************End ELWHA DAM REMOVAL:  Rating CURVE ****************
             
-            """
-            VI.F:  Update the downstream boundary condition if it is user-defined.
-            """
+            #************************************************
+            #VI.F:  Update the downstream boundary condition if it is user-defined.
+
             BoundaryGauge = ""
             if BoundaryType == 'counter':
                 BoundaryGauge = counter
@@ -770,13 +785,12 @@ class clsModel(object):
                     Reach.BoundaryHc = BoundaryFactor[NextBoundary]                
                     if NextBoundary < len(BoundaryFactorCount) - 1: NextBoundary += 1
                         
-            """
-            VI.G:  Adjust lateral exchange parameters.  This section of code is a 
-            relic from a previous version and is a way to adjust the migration 
-            rate as a function of the sediment supply rate.  It is currently
-            commented out but could be used as an alternative to the width change
-            function.
-            """            
+            #************************************************
+            #VI.G:  Adjust lateral exchange parameters.  This section of code is a 
+            #relic from a previous version and is a way to adjust the migration 
+            #rate as a function of the sediment supply rate.  It is currently
+            #commented out but could be used as an alternative to the width change
+            #function.         
 
             # In this section, the bank migration rate, width, etc can be adjusted.
             # For now, bank migration rate is a function of load.  It would also be
@@ -792,9 +806,9 @@ class clsModel(object):
             #        Node.cbank = InitialMigrationRate
             # *********************************************************************
             
-            """
-            VI.H:  Update time trackers
-            """
+            #************************************************
+            #VI.H:  Update time trackers
+
             #  Print record of time--every 10 timesteps for duration curve and 
             #  every month for hydrographs
             if date.day == 1 and subdaycount == 0 and self.inputs.Hydrograph == True and self.inputs.CyclingHydrograph == False:
@@ -824,9 +838,9 @@ class clsModel(object):
                 counter = 0
                 NextCount = Interval
         
-        """
-        VII:  Save final output
-        """
+        #**********************************************************************
+        #VII:  Save final output
+
         #  Save final objects
 #        pickle.dump(Reach, open(os.path.join(os.pardir, self.inputs.Outputfolder, "save.Reach"), "wb" )) 
 #        pickle.dump(self.inputs, open(os.path.join(os.pardir, self.inputs.Outputfolder, "inputparams.inputs"), "wb"))         

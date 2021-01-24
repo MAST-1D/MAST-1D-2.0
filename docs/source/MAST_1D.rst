@@ -100,13 +100,6 @@ MAST\_1D.clsModel module
    :undoc-members:
    :show-inheritance:
 
-MAST\_1D.clsModelData module
-----------------------------
-
-.. automodule:: MAST_1D.clsModelData
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 MAST\_1D.clsNode module
 -----------------------
