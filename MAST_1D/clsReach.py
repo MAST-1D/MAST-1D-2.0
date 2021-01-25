@@ -17,6 +17,8 @@ class clsReach(object):
     flow in the reach and downstream boundary conditions.  It also includes
     methods for specifying a size-specific sediment feed rate.
     
+    Note
+    ----
     Because the reach object requires many input parameters upon instantiation,
     all parameters are passed as class attributes of a user-defined "inputs" object.
     Because the nature of the inputs expected by clsReach are quite specific, they
@@ -118,11 +120,12 @@ class clsReach(object):
         NEED TO DOCUMENT: PROBABLY ADJUSTS BOUNDARY CONDITION
     inputs.TransFunc : UNKOWN
         NEED TO DOCUMENT
-    inputs.TrinityFit : Bool
+    inputs.TrinityFit : bool
         Flag that determines if Gaeuman fit to Wilcock & Crowe is used.  Regular
         Wilcock and Crowe used if false.
-    inputs.CalibrationFactor : Float
-        Multiplier applied to all computed bed material transport rates.
+    inputs.CalibrationFactor : float
+        Sediment transport calibration factor. Used to adjust
+        reference Shields stress in Wilcock Crowe type calculation.
     
     Attributes
     ----------
@@ -985,7 +988,8 @@ class clsReach(object):
             Flag that determines if Gaeuman fit to Wilcock & Crowe is used.  Regular
             Wilcock and Crowe used if false.
         CalibrationFactor : float
-            Multiplier applied to all computed bed material transport rates.
+            Sediment transport calibration factor. Used to adjust
+            reference Shields stress in Wilcock Crowe type calculation.
         W : float (optional)
             Parameter for width change function.
         ErodeT : float (optional)

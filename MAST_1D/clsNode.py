@@ -1581,11 +1581,12 @@ class clsNode(object):
         ----------
         Manning : bool
             APPEARS TO BE UNUSED
-        TrinityFit : Bool
+        TrinityFit : bool
             Flag that determines if Gaeuman fit to Wilcock & Crowe is used.  Regular
             Wilcock and Crowe used if false.
-        CalibrationFactor : Float
-            Multiplier applied to all computed bed material transport rates.
+        CalibrationFactor : float
+            Sediment transport calibration factor. Used to adjust reference Shields
+            stress in Wilcock Crowe type sediment transport computation.
         SG : float
             Specific gravity of sediment.
         rho_w : float

@@ -39,7 +39,9 @@ class clsModel(object):
             A node representing the downstreawm boundary
         TracerProperties : :obj:`MAST_1D.clsTracerProperties`
         CalibrationFactor : float
-            Sediment transport calibration factor (UNSURE IF IT IS BEING SET HERE).
+            Sediment transport calibration factor. Used to adjust
+            reference Shields stress in Wilcock Crowe type calculation.
+            (UNSURE IF IT IS BEING SET HERE).
         
         """
             

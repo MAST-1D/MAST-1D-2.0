@@ -327,19 +327,49 @@ U – float</p>
 <dt id="MAST_1D.clsExchangeTypes.clsExchangeTypes">
 <em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsExchangeTypes.</code><code class="sig-name descname">clsExchangeTypes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">NSizes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsExchangeTypes.clsExchangeTypes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>This defines the main types of even boundary-movement exchanges.
-Non-boundary movement exchanges are handled elsewhere.
-This can be used for storing either sediment volume fluxes or sediment
-tracer concentrations.</p>
-<dl class="simple">
-<dt>Attributes:</dt><dd><p>OutMigration – [float]
-OutWidthChange – [float]
-OutVerticalChange – [float]
-InMigration – [float]
-InWidthChange – [float]
-InVerticalChange – [float]
-NSizes – int
-Initialized – bool</p>
+<blockquote>
+<div><p>Defines the main types of boundary-movement exchanges.</p>
+<p>Stores size-specific fluxes of sediment volume or tracer associated with</p>
+</div></blockquote>
+<p>lateral exchange in a reservoir.  Non-boundary movement exchanges
+are handled elsewhere. Can be used for storing either sediment
+volume fluxes or sediment tracer concentrations.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul>
+<li><p><strong>NSizes</strong> (<em>int</em>) – Number of bed material sediment size classes. CONSIDER
+RENAMING AS NBedSizes FOR CONSISTENCY WITH GSD.</p>
+<p>Attributes</p>
+</li>
+<li><p><strong>———-</strong> – OutMigration : array_like(float, length = NSizes + 1)
+Movement out of reservoir associated with lateral channel
+movement that does not lead to net width change. Size
+with index k = 0 represents washload.
+OutWidthChange : array_like(float, length = NSizes + 1)</p>
+<blockquote>
+<div><p>Movement out of reservoir associated with with net widening</p>
+</div></blockquote>
+<p>or narrowing. Size with index k = 0 represents washload.</p>
+</li>
+<li><p><strong>OutVerticalChange</strong> (<em>array_like(float, length = NSizes + 1)</em>) – Movement out of reservoir associated with vertical
+movement of one of the reservoir boundaries. Size
+with index k = 0 represents washload.
+InMigration : array_like(float, length = NSizes + 1)
+Movement into reservoir associated with lateral channel
+movement that does not lead to net width change. Size
+with index k = 0 represents washload.</p></li>
+<li><p><strong>InWidthChange</strong> (<em>array_like(float, length = NSizes + 1)</em>) – Movement into reservoir associated with lateral channel
+movement that does not lead to net width change. Size
+with index k = 0 represents washload.</p></li>
+<li><p><strong>InVerticalChange</strong> (<em>array_like(float, length = NSizes + 1)</em>) – Movement into reservoir associated with vertical
+movement of one of the reservoir boundaries. Size
+with index k = 0 represents washload.
+NSizes : int
+Number of bed material sediment size classes. CONSIDER
+RENAMING AS NBedSizes FOR CONSISTENCY WITH GSD.
+Initialized : bool.
+Flag indicating if object has been initialized.</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py attribute">
@@ -368,69 +398,108 @@ Initialized – bool</p>
 <dt id="MAST_1D.clsGSD.clsGSD">
 <em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsGSD.</code><code class="sig-name descname">clsGSD</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">BinBdySizes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl>
-<dt>Attributes:</dt><dd><p>D_lower – [float] (size (mm) at bin lower bin boundary)
-D_upper – [float] (size (mm) at upper bin boundary)
-FfinerThanD_upper – [float] (cumulative fraction finer than upper</p>
-<blockquote>
-<div><p>limit of bin boundary)</p>
-</div></blockquote>
-<p>D – [float] (geometric mean size in bin (mm))
-F – [float] (fraction in bin)
-Vs – [float] (Settling velocity of geometric mean size in bin (m/s))
-D84 – float (Size (mm) for which 84% is finer)
-D64 – float (Size (mm) for which 64% is finer)
-D50 – float (median diameter (mm))
-Dg – float (geometric mean diameter (mm))
-SigmaG – float (geometric standard deviation (no units))
-SigmaSG – float (standard deviation on psi scale (no units))
-Initialized – bool
-NBedSizes – int
-UpToDate – bool (flag that determines whether statistics need to be</p>
-<blockquote>
-<div><p>recomputed.  Set to false if F or D are changed.)</p>
-</div></blockquote>
+<p>Defines a grain size distribution.</p>
+<p>Stores grain size boundaries, representative sizes, and grain size
+fractions in each bin of the distribution.  Provides methods for
+computing various parameters and moments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>BinBdySizes</strong> (<em>array_like(float)</em>) – Sediment grain size at each bin boundary.</p>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#MAST_1D.clsGSD.clsGSD.NBedSizes" title="MAST_1D.clsGSD.clsGSD.NBedSizes"><strong>NBedSizes</strong></a> (<em>int</em>) – Number of bed material size classes. Note that the distribution
+includes the possibility of storing sediment in a size finer
+than the finest bed material size.</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsGSD.clsGSD.F" title="MAST_1D.clsGSD.clsGSD.F"><strong>F</strong></a> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NBedSizes + 1</em><em>)</em>) – Fraction of distribution in bin.</p></li>
+<li><p><strong>D</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NBedSizes + 1</em><em>)</em>) – Representative diameter (mm) for bin.  Uses geometric mean
+of bin boundary sizes.</p></li>
+<li><p><strong>Vs</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NBedSizes + 1</em><em>)</em>) – Settling velocity for representative size (m/s).</p></li>
+<li><p><strong>D_lower</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NBedSizes + 1</em><em>)</em>) – Diameter (mm) at lower bin boundary.</p></li>
+<li><p><strong>D_upper</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NBedSizes + 1</em><em>)</em>) – Diameter (mm) at upper bin boundary.</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsGSD.clsGSD.FfinerThanD_upper" title="MAST_1D.clsGSD.clsGSD.FfinerThanD_upper"><strong>FfinerThanD_upper</strong></a> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NBedSizes + 1</em><em>)</em><em>, </em><em>read only</em>) – Fraction of distribution finer than the upper boundary
+for the bin.</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsGSD.clsGSD.D95" title="MAST_1D.clsGSD.clsGSD.D95"><strong>D95</strong></a> (<em>float</em><em>, </em><em>read only</em>) – Diameter (mm) for which 95% is finer.</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsGSD.clsGSD.D90" title="MAST_1D.clsGSD.clsGSD.D90"><strong>D90</strong></a> (<em>float</em><em>, </em><em>read only</em>) – Diameter (mm) for which 90% is finer.</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsGSD.clsGSD.D84" title="MAST_1D.clsGSD.clsGSD.D84"><strong>D84</strong></a> (<em>float</em><em>, </em><em>read only</em>) – Diameter (mm) for which 84% is finer.</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsGSD.clsGSD.D65" title="MAST_1D.clsGSD.clsGSD.D65"><strong>D65</strong></a> (<em>float</em><em>, </em><em>read only</em>) – Diameter (mm) for which 65% is finer.</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsGSD.clsGSD.D50" title="MAST_1D.clsGSD.clsGSD.D50"><strong>D50</strong></a> (<em>float</em><em>, </em><em>read only</em>) – Diameter (mm) for which 50% is finer.</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsGSD.clsGSD.Dg" title="MAST_1D.clsGSD.clsGSD.Dg"><strong>Dg</strong></a> (<em>float</em><em>, </em><em>read only</em>) – Geometric mean diameter (mm).</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsGSD.clsGSD.Sigmag" title="MAST_1D.clsGSD.clsGSD.Sigmag"><strong>Sigmag</strong></a> (<em>float</em><em>, </em><em>read only</em>) – Geometric standard deviation (mm).</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsGSD.clsGSD.SigmaSG" title="MAST_1D.clsGSD.clsGSD.SigmaSG"><strong>SigmaSG</strong></a> (<em>float</em><em>, </em><em>read only</em>) – Standard deviation on psi scale (no units).</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsGSD.clsGSD.Initialized" title="MAST_1D.clsGSD.clsGSD.Initialized"><strong>Initialized</strong></a> (<em>bool</em>) – Flag to indicate if class is initialized.</p></li>
+<li><p><strong>UpToDate</strong> (<em>bool</em>) – Flag that determines whether statistics are updated and thus
+do not need to be recomputed.  Set to false if F or D are changed.</p></li>
+</ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>POTENTIAL CODE UPDATE: In code profiling, it appears as though
+a significant fraction of MAST-1D’s computational time
+is spent in the clsGSD class. There may be opportunities to
+optimize the time used by the code.  The present approach assumes
+that certain statistics from a distribution will be needed many times,
+so it would save time to simply compute the statistic once and stores
+in memory, recalling the previosuly computed value when needed,
+and not re-computing each time it is needed.  This is implemented
+by setting a status flag whenever the bin
+probablities are changed. The flag indicates that statistics are
+not up to date. Then, if a statistic is needed, all common statistics are
+updated, and the flag tracking whether the statistics are up to date
+is set to True.  Then, if another statistic is called, it does not
+need to be recomputed until the size distribution changes again.
+The hope was that this would ultimately save time, but it is possible
+that it would be faster simply to compute statistics on an as-needed basis,
+for example by using the D(x) method. It may also be possible
+to include some C code snippets to speed some of the computations.
+Optimizing the way size distribution statistics are computed in
+this class may reprsent the largest opportunity for reducing
+execution time for MAST-1D.</p>
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.D50">
 <em class="property">property </em><code class="sig-name descname">D50</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.D50" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+<dd><p>Median diameter (mm).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.D65">
 <em class="property">property </em><code class="sig-name descname">D65</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.D65" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+<dd><p>D65 (mm).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.D84">
 <em class="property">property </em><code class="sig-name descname">D84</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.D84" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+<dd><p>D84 (mm).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.D90">
 <em class="property">property </em><code class="sig-name descname">D90</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.D90" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+<dd><p>D90 (mm).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.D95">
 <em class="property">property </em><code class="sig-name descname">D95</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.D95" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+<dd><p>D95 (mm).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.D_x">
 <code class="sig-name descname">D_x</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.D_x" title="Permalink to this definition">¶</a></dt>
-<dd><p>Geometrically interpolates the kth percentile of a grain size
-distribution Uses a grain size distribution and the kth percentila
-Provides as output the diameter for which k percent of the distribution
-is finer, as interpolated in log space</p>
-<dl class="simple">
-<dt>Arguments:</dt><dd><p>x – float</p>
+<dd><p>Compute sediment diameter finer than a given percentile x.</p>
+<p>Geometrically interpolates a percentile of a grain size
+distribution. Performs interpolation in log space (so in psi space).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>float</em>) – Percentile to compute.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Percentile</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -438,19 +507,28 @@ is finer, as interpolated in log space</p>
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.Dg">
 <em class="property">property </em><code class="sig-name descname">Dg</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.Dg" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+<dd><p>Geometric mean diameter (mm).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.DietrichSettlingVelocity">
 <code class="sig-name descname">DietrichSettlingVelocity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">D</span></em>, <em class="sig-param"><span class="n">nu</span></em>, <em class="sig-param"><span class="n">g</span></em>, <em class="sig-param"><span class="n">rho</span></em>, <em class="sig-param"><span class="n">rhos</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.DietrichSettlingVelocity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns settling velocity in m/s</p>
-<dl class="simple">
-<dt>Arguments:</dt><dd><p>D – float (particle diameter in mm)
-nu – float (kinematic viscosity (m2/s))
-g – float (gravity (m/s2))
-rho – float (water density (kg/m3))
-rhos – float (sediment density (kg/m3))</p>
+<dd><p>Computes particle settling velocity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>D</strong> (<em>float</em>) – Particle diameter (mm).</p></li>
+<li><p><strong>nu</strong> (<em>float</em>) – Kinematic viscosity (m2/s).</p></li>
+<li><p><strong>g</strong> (<em>float</em>) – Gravitational constant (m/s2)</p></li>
+<li><p><strong>rho</strong> (<em>float</em>) – Water density (kg/m3).</p></li>
+<li><p><strong>rhos</strong> (<em>float</em>) – Sediment density (kg/m3).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Settling Velocity (m/s)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -458,12 +536,13 @@ rhos – float (sediment density (kg/m3))</p>
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.F">
 <em class="property">property </em><code class="sig-name descname">F</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.F" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Fraction in bin.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.FfinerThanD_upper">
 <em class="property">property </em><code class="sig-name descname">FfinerThanD_upper</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.FfinerThanD_upper" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+<dd><p>Cumulative fraction finer than upper bin boundary.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -479,8 +558,7 @@ rhos – float (sediment density (kg/m3))</p>
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.SigmaSG">
 <em class="property">property </em><code class="sig-name descname">SigmaSG</code><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.SigmaSG" title="Permalink to this definition">¶</a></dt>
-<dd><p>Standard deviation of sediment on psi scale (no units)</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.Sigmag">
@@ -491,7 +569,7 @@ rhos – float (sediment density (kg/m3))</p>
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.UpdateDg">
 <code class="sig-name descname">UpdateDg</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.UpdateDg" title="Permalink to this definition">¶</a></dt>
-<dd><p>computes and stores geometric mean grain size</p>
+<dd><p>Computes and stores geometric mean grain size.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -505,61 +583,67 @@ across all bins is 1.</p>
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.UpdateSigmaSG">
 <code class="sig-name descname">UpdateSigmaSG</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.UpdateSigmaSG" title="Permalink to this definition">¶</a></dt>
-<dd><p>computes and stores geometric standard deviation of grain size on psi
-scale – and transforms back to length scale</p>
+<dd><p>Computes and stores geometric standard deviation of grain size on psi
+scale – and transforms back to length scale and stores that.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.UpdateStatistics">
 <code class="sig-name descname">UpdateStatistics</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.UpdateStatistics" title="Permalink to this definition">¶</a></dt>
 <dd><p>Populates basic statistics of the size distribution.</p>
+<p>The method updates cumulative fractions finer, geometric
+mean size, geometric standard deviation, and
+D50, D65, D84, D90, and D95.  Once complete, sets a flag
+indicating that statistics are OK and can be used without
+recomputation.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.getD50">
 <code class="sig-name descname">getD50</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getD50" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+<dd><p>Median diameter (mm).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.getD65">
 <code class="sig-name descname">getD65</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getD65" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+<dd><p>D65 (mm).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.getD84">
 <code class="sig-name descname">getD84</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getD84" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+<dd><p>D84 (mm).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.getD90">
 <code class="sig-name descname">getD90</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getD90" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+<dd><p>D90 (mm).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.getD95">
 <code class="sig-name descname">getD95</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getD95" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+<dd><p>D95 (mm).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.getDg">
 <code class="sig-name descname">getDg</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getDg" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+<dd><p>Geometric mean diameter (mm).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.getF">
 <code class="sig-name descname">getF</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getF" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Fraction in bin.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.getFfinerThanD_upper">
 <code class="sig-name descname">getFfinerThanD_upper</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getFfinerThanD_upper" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a read only property to ensure consistency with rest of GSD</p>
+<dd><p>Cumulative fraction finer than upper bin boundary.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -570,8 +654,7 @@ scale – and transforms back to length scale</p>
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.getSigmaSG">
 <code class="sig-name descname">getSigmaSG</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsGSD.clsGSD.getSigmaSG" title="Permalink to this definition">¶</a></dt>
-<dd><p>Standard deviation of sediment on psi scale (no units)</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsGSD.clsGSD.getSigmag">
@@ -604,6 +687,7 @@ scale – and transforms back to length scale</p>
 <dt id="MAST_1D.clsLoad.clsLoad">
 <em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsLoad.</code><code class="sig-name descname">clsLoad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">NFlows</span></em>, <em class="sig-param"><span class="n">BinBdySizes</span></em>, <em class="sig-param"><span class="n">NTracers</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Provides tools for computing and representing sediment load.</p>
 <p>This class defines the sediment load and feed for a given node in all sizes
 and provides methods for computing bed material load.  It also provides
 methods conserving mass and tracer in suspended washload sediment for a
@@ -612,99 +696,123 @@ concentration across the flow duration curve. Right now, only Wilcock and
 Crowe is implemented for sediment transport, but new features can be added
 in the future as separate methods that modify the basic data elements in
 this class, the Qsjk(j,k) and TMudj(j,k) arrays.</p>
+<p class="rubric">Notes</p>
 <p>This class does not provide rubust methods for tracking bed material tracer
-concentration in the load.  Instead, in class node, it is assumed that bed
+concentration in the load.  Instead, in class clsNode, it is assumed that bed
 material tracer concentration in the load is the same as in the bed.  A
-variable is provided in load to track duration-averaged tracer
+variable is provided in clsLoad to track duration-averaged tracer
 concentration.</p>
 <p>In principle, it would be possible to track tracer concentration in the
-load in each size class and to allow this to differ from tracer
+load in each size class and to allow these concentrations to differ from tracer
 concentration in the active layer.  This would require the specification of
 an exchange rate between the active layer and the load, which could be
 determined for a given bin of the duration curve as a function of near bed
-concentration, and settling velocity (or entrainment rate could be solved
-as a function of particle step length–a function of hydraulics–and
-computed load).  For now, it is assumed that all bed material classes
+concentration and settling velocity. Alternatively, entrainment rate could
+be solved as a function of particle step length, itself a function of hydraulics, and
+computed load.  For now, it is assumed that all bed material classes
 undergo step lengths that are short relative the spacing between nodes, so
 that a large amount of mixing occurs between the active layer and load over
 the distance dxc and very little bypassing occurs.  For this reason, tracer
 concentration in the load is only tracked for mud. Elsewhere in the code,
 tracer concentration in the load is set to that of the active layer.</p>
 <p>Not sure that ExSED and ExTracer are needed since mass conservation due to
-morphodynamic movement occurs at node level.</p>
-<dl>
-<dt>Attributes:</dt><dd><dl class="simple">
-<dt>TMudj – [float] (Tracer concentration in flow j for size k=0 for</dt><dd><p>tracer type l)</p>
+morphodynamic movement occurs at node level. NEED TO TRACE USE OF THESE
+ATTRIBUTES THROUGH CODE AND REMOVE IF NOT USED.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>NFlows</strong> (<em>int</em>) – Number of bins in discharge distribution.</p></li>
+<li><p><strong>BinBdySizes</strong> (<em>array_like(float)</em>) – Sediment grain size at each bin boundary. Size at index
+0 should represent the lower limit of the washload size
+class.</p></li>
+<li><p><strong>NTracers</strong> (<em>int</em>) – Number of tracers.</p></li>
+</ul>
 </dd>
-<dt>TMudFeedj – [float] (Tracer concentration of tracer type l in size k=0</dt><dd><p>in feed for bin j of duration curve)</p>
-</dd>
-<dt>TBedFeedk – [float] (Tracer concentration of tracer type l in size k.</dt><dd><p>Should be set equal to T of upstream active layer or feed
-for reach.)</p>
-</dd>
-<dt>ExSed – clsExchangeTypes (Size specific sediment fluxes into and out</dt><dd><p>of reservoir (units of volume/time))</p>
-</dd>
-<dt>ExTracer – [clsExchangeTypes] (Size specific tracer concentrations for</dt><dd><p>sediment moving into and out of reservoir)</p>
-</dd>
-<dt>LatSed – [float] (Volumetric lateral sediment source for reservoir</dt><dd><p>(units of volume/time))</p>
-</dd>
-<dt>LatTracer – [float] (Concentration of tracers in lateral sediment</dt><dd><p>source)</p>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>NFlows</strong> (<em>int</em>) – Number of bins in discharge distribution.</p></li>
+<li><p><strong>NSizes</strong> (<em>int</em>) – Number of bed material sediment size classes. Note that when referring
+to arrays of load, in general, the first size class refers to the smallest
+size present on the bed (so not washload).  Corresponds to NBedSizes in
+clsGSD. CONSIDER RENAMING THIS ATTRIBUTE TO NBedSizes IN THIS CLASS
+TO MAINTAIN CONSISTENCY WITH GSD CLASS.</p></li>
+<li><p><strong>NTracers</strong> (<em>int</em>) – Number of tracers.</p></li>
+<li><p><strong>TMudj</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>dim = 3</em><em>, </em><em>length =</em><em> (</em><em>NFlows</em><em>,</em><em>1</em><em>,</em><em>NTracers</em><em>)</em><em>)</em>) – Tracer concentration in flow j for size k=0 for tracer type l.</p></li>
+<li><p><strong>TMudFeedj</strong> (<em>array_like</em><em> (</em><em>float</em><em>, </em><em>dim = 1</em><em>, </em><em>length = NFlows</em><em>)</em>) – Tracer concentration of tracer type l in size k=0 in feed for bin j
+of duration curve.</p></li>
+<li><p><strong>TBedFeedk</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>dim = 2</em><em>, </em><em>length =</em><em> (</em><em>NBedSizes</em><em>, </em><em>NTracers</em><em>)</em><em>)</em>) – Tracer concentration of tracer type l in size k. Should be set equal
+to T of upstream active layer or feed for reach.</p></li>
+<li><p><strong>ExSed</strong> (<a class="reference internal" href="#module-MAST_1D.clsExchangeTypes" title="MAST_1D.clsExchangeTypes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsExchangeTypes</span></code></a>) – Size specific volumetric sediment fluxes into and out of the reservoir
+(units of volume/time).</p></li>
+<li><p><strong>ExTracer</strong> (array_like(<a class="reference internal" href="#module-MAST_1D.clsExchangeTypes" title="MAST_1D.clsExchangeTypes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsExchangeTypes</span></code></a>, length = NTracers)) – Size specific tracer concentrations for sediment moving into and
+out of reservoir, for each tracer type.</p></li>
+<li><p><strong>LatSed</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>dim = 2</em><em>, </em><em>length =</em><em> (</em><em>NFlows</em><em>, </em><em>NSizes + 1</em><em>)</em>) – Volumetric lateral sediment source for reservoir for each sediment
+size class and discharge bin (units of volume/time).</p></li>
+<li><p><strong>LatTracer</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>dim = 3</em><em>, </em><em>length = NFlows</em><em>, </em><em>NSizes + 1</em><em>, </em><em>NTracers</em><em>)</em>) – Concentration of tracers in lateral sediment source.</p></li>
+<li><p><strong>SinkSed</strong> (<em>array_like</em><em>(</em><em>float</em><em>,</em><em>dim = 2</em><em>, </em><em>length = NFlows</em><em>, </em><em>NSizes + 1</em><em>)</em>) – Volumetric sediment sink (i.e., outflux from load) term in each
+discharge bin for each sediment size class.</p></li>
+<li><p><strong>GSDBedloadj</strong> (array_like(<a class="reference internal" href="#module-MAST_1D.clsGSD" title="MAST_1D.clsGSD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsGSD</span></code></a>, length = NFlows)) – Grain size distribution of load for bin j of FDC.</p></li>
+<li><p><strong>GSDBedloadAv</strong> (<a class="reference internal" href="#module-MAST_1D.clsGSD" title="MAST_1D.clsGSD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsGSD</span></code></a>) – Grain size distribution for load averaged accross discharge distribution.</p></li>
+<li><p><strong>Qsjk</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>dim = 2</em><em>, </em><em>length =</em><em> (</em><em>NFlows</em><em>, </em><em>NSizes + 1</em><em>)</em><em>)</em>) – Sediment load in bin j of discharge distribution and size k of GSD. Size
+with index k = 0 represents washload.</p></li>
+<li><p><strong>Qsjkfeed</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>dim = 2</em><em>, </em><em>length =</em><em> (</em><em>NFlows</em><em>, </em><em>NSizes + 1</em><em>)</em><em>)</em>) – Sediment load for feed in bin j of discharge distribution and size k of GSD.
+Size with index k = 0 represents washload.</p></li>
+<li><p><strong>QsjTot</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length =</em><em> (</em><em>NFlows</em><em>)</em>) – Total sediment load in bin j of discharge distribution, summed across all
+grain sizes.</p></li>
+<li><p><strong>QsAvkLoad</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NSizes + 1</em><em>)</em>) – Sediment load capacity averaged across all bins of FDC in size k.
+Size with index k = 0 represents washload.</p></li>
+<li><p><strong>QsAvkFeed</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NSizes + 1</em><em>)</em>) – Sediment feed averaged across all bins of FDC in size k. Size with
+index k = 0 represents washload.</p></li>
+<li><p><strong>TVolumeAvMudFeed</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NTracers</em><em>)</em>) – Sediment feed tracer concentration in size k=0 for tracer l
+averaged across volumetric sediment flux in all discharge bins.</p></li>
+<li><p><strong>TTemporalAvMudFeed</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NTracers</em><em>)</em>) – Sediment feed tracer concentration in size k=0 for tracer l
+averaged across all time in discharge distribution.</p></li>
+<li><p><strong>TVolumeAvMudLoad</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length =  NTracers</em><em>)</em>) – Sediment load tracer concentration in size k=0 for tracer l
+averaged across volumetric sediment flux in all discharge bins.</p></li>
+<li><p><strong>TTemporalAvMudLoad</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NTracers</em><em>)</em>) – Sediment load tracer concentration in size k=0 for tracer l
+averaged across all time in discharge distribution.</p></li>
+<li><p><strong>TDepositionAvMudFeed</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NTracers</em><em>)</em>) – Sediment feed tracer concentration in size k = 0 and tracer l
+averaged across all overbank mud deposition and duration curve.</p></li>
+<li><p><strong>TDepositionAvMudLoad</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NTracers</em><em>)</em>) – Sediment load tracer concentration in size k = 0 and tracer l
+averaged across all overbank mud deposition and duration curve.</p></li>
+<li><p><strong>TauPrime</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NFlows</em><em>)</em>) – Channel-averaged shear stress. CHECK IF REALLY GRAIN SHEAR.</p></li>
+<li><p><strong>TauRm</strong> (<em>float</em>) – Critical shear stress for the median particle size.</p></li>
+<li><p><strong>= array_like</strong><strong>(</strong><strong>length = NSizes + 1</strong><strong>)</strong> (<em>Eshear</em>) – Katie add–size-specific excess shear stress. May not be meaninful
+for washload (index k = 0).</p></li>
+<li><p><strong>= float</strong> (<em>MudEnt</em>) – Katie add–NEEDS DOCUMENTATION</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsLoad.clsLoad.Initialized" title="MAST_1D.clsLoad.clsLoad.Initialized"><strong>Initialized</strong></a> (<em>bool</em>) – Flag to indicate if object has been initialized.</p></li>
+</ul>
 </dd>
 </dl>
-<p>SinkSed – [float] (Volumetric sediment sink term.)
-NTracers – int (number of tracers)
-NSizes – int (number of bed material grain sizes.  note that k = 0</p>
-<blockquote>
-<div><p>represents washload.)</p>
-</div></blockquote>
-<p>NFlows – int (number of flows in flow duration curve)
-GSDBedloadj – [clsGSD] (grain size distribution of load for bin j of</p>
-<blockquote>
-<div><p>FDC)</p>
-</div></blockquote>
-<dl class="simple">
-<dt>GSDBedloadAv – clsGSD (grain size distribution for annual average</dt><dd><p>load)</p>
-</dd>
-</dl>
-<p>Qsjk – [float] (Sediment load in bin j and size k)
-Qsjkfeed – [float] (Sediment load in bin j and size k)
-QsjTot – [float] (Sediment load in bin j of flow duration curve,</p>
-<blockquote>
-<div><p>summed across all grain sizesL)</p>
-</div></blockquote>
-<dl class="simple">
-<dt>QsAvkLoad – [float] (Sediment load capacity averaged across all bins</dt><dd><p>of FDC in size k.)</p>
-</dd>
-<dt>QsAvkFeed – [float] (Sediment feed averaged across all bins of FDC in</dt><dd><p>size k)</p>
-</dd>
-<dt>TVolumeAvMudFeed – [float] (Sediment feed tracer concentration in size</dt><dd><p>k=0 and tracer l averaged across all volume
-(including weighting by duration curve))</p>
-</dd>
-<dt>TTemporalAvMudFeed – [float] (Sediment feed tracer concentration in</dt><dd><p>size k=0 and tracer l averaged across all time in
-duration curve)</p>
-</dd>
-<dt>TVolumeAvMudLoad – [float] (Sediment load tracer concentration in size</dt><dd><p>k=0 and tracer l averaged across all volume
-(including weighting by duration curve))</p>
-</dd>
-<dt>TTemporalAvMudLoad – [float] (Sediment load tracer concentration in</dt><dd><p>size k=0 and tracer l averaged across all time in
-duration curve)</p>
-</dd>
-<dt>TDepositionAvMudFeed – [float] (Sediment feed tracer concentration in</dt><dd><p>size k = 0 and tracer l averaged across all
-overbank mud deposition and duration curve)</p>
-</dd>
-<dt>TDepositionAvMudLoad – [float] (Sediment load tracer concentration in</dt><dd><p>size k = 0 and tracer l averaged across all
-overbank mud deposition and duration curve)</p>
-</dd>
-</dl>
-<p>TauPrime – float (channel-averaged shear stress)
-TauRm – float (critical shear stress for the median particle size)
-Initialized – bool</p>
-</dd>
-</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It may be worth considering whether parameters like TauPrime, TauRm, Eshear,
+and MudEnt are really properties of a node rather than properties
+of the load.</p>
+</div>
 <dl class="py method">
 <dt id="MAST_1D.clsLoad.clsLoad.ApplyMassConservationToMudLoad">
 <code class="sig-name descname">ApplyMassConservationToMudLoad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">DC</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.ApplyMassConservationToMudLoad" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Arguments:</dt><dd><p>DC – clsDurationCurve</p>
+<dd><p>Method to adjust mud load based on amount of mud added or removed because
+through exchange with sediment reservoirs adjacent to channel.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There has been debate about whether this should be applied for every
+bin of discharge distribution or just based on long-term
+averages.  If done for each bin of distribution, and if lateral exchange is
+assumed to occur when the channel has very little sediment
+supplied to it, this can remove too much sediment, causing
+numerical problems. The Migrationfactor parameter of the
+duration curve object weights the lateral exchange fluxes
+based on upstream supply to avoid this problem.</p>
+<p>POTENTIAL CODE MODIFICATION:  It may make more sense
+for this computation to be a method of the node, rather than of
+the load, since downstream fluxes in all bed material sizes
+is computed as a method in the node class.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>DC</strong> (<a class="reference internal" href="#module-MAST_1D.clsNode" title="MAST_1D.clsNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsNode</span></code></a>) – Discharge distribution object.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -712,7 +820,14 @@ Initialized – bool</p>
 <dl class="py method">
 <dt id="MAST_1D.clsLoad.clsLoad.ApplyTracerConservationToMudLoad">
 <code class="sig-name descname">ApplyTracerConservationToMudLoad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">DC</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.ApplyTracerConservationToMudLoad" title="Permalink to this definition">¶</a></dt>
-<dd><p>WL May 5, 2013: Note that it should also be possible to apply tracer
+<dd><p>Method for updating tracer concentration in the mud load for all flows.</p>
+<p>Assumes that the sediment tracer concentration in the water column
+is always in steady state for a given flow
+This should be reasonable since the volume of suspended sediment in the
+water column at any given time is small relative to the exchange rates.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>WL May 5, 2013: It should also be possible to apply tracer
 concentration to the long-term average bedload as long as an exchange
 rate is known between the active layer and the load.  This can be
 specified as a function of suspended sediment transport rate and
@@ -731,13 +846,10 @@ it is pulling the correct amount of traver gravel from the active
 layer. In other words, if there is minimal bed change, it is possible
 for tracer particles to move too far downstream since there is no
 exchange between load and active layer.</p>
-<p>This routine sets Tjk in the load for k = 0</p>
-<p>This assumes that the sediment tracer concentration in the water column
-is always in steady state for a given flow
-This should be reasonable since the volume of suspended sediment in the
-water column at any given time is small relative to the exchange rates.</p>
-<dl class="simple">
-<dt>Arguments:</dt><dd><p>DC – clsDuratinCurve</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>DC</strong> (<a class="reference internal" href="#module-MAST_1D.clsNode" title="MAST_1D.clsNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsNode</span></code></a>) – Discharge distribution object.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -745,17 +857,28 @@ water column at any given time is small relative to the exchange rates.</p>
 <dl class="py method">
 <dt id="MAST_1D.clsLoad.clsLoad.CurranLoad">
 <code class="sig-name descname">CurranLoad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Q</span></em>, <em class="sig-param"><span class="n">Section</span><span class="o">=</span><span class="default_value">'Middle'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.CurranLoad" title="Permalink to this definition">¶</a></dt>
-<dd><p>Katie add!</p>
+<dd><p>Katie addition. Computes load from a rating curve specific to Elwha River.</p>
 <p>Calculates suspended sediment load for feed based on Curran’s rating curve
 calibrated to the reservoir sediment presented in Konrad’s pre-removal
 modeling paper.  Includes the discharge correction that needs to be applied
 when using the gauge at McDonald Bridge.</p>
-<dl>
-<dt>Arguments:</dt><dd><p>Q – float
-Section – str (determines whether or not to normalize the discharge because feed</p>
-<blockquote>
-<div><p>is determined by the Upper River discharge)</p>
-</div></blockquote>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul>
+<li><p><strong>Q</strong> (<em>float</em>) – Discharge (m3/s)</p></li>
+<li><p><strong>Section</strong> (<em>{‘Middle’, ‘Upper’}</em>) –</p>
+<dl class="simple">
+<dt>Determines whether or not to normalize the discharge because feed</dt><dd><p>is determined by the Upper River discharge.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>float</strong> – Suspended sediment transport rate (m^3/s)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Qssc</p>
 </dd>
 </dl>
 </dd></dl>
@@ -768,25 +891,50 @@ Section – str (determines whether or not to normalize the discharge because fe
 <dl class="py method">
 <dt id="MAST_1D.clsLoad.clsLoad.QWashloadAnnual">
 <code class="sig-name descname">QWashloadAnnual</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">DC</span></em>, <em class="sig-param"><span class="n">Qsjk</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.QWashloadAnnual" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Arguments:</dt><dd><p>DC – clsDurationCurve
-Qsjk – float</p>
+<dd><p>Applies duration-based weighting to compute long-term average mud transport.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>DC</strong> (<a class="reference internal" href="#module-MAST_1D.clsDurationCurve" title="MAST_1D.clsDurationCurve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsDurationCurve</span></code></a>) – Discharge distribution</p></li>
+<li><p><strong>Qsjk</strong> (<em>array_like(float, dim = 2, length = (NFlows, NSizes + 1))</em>)</p></li>
+<li><p><strong>Sediment load in bin j of discharge distribution and size k of GSD. Size</strong></p></li>
+<li><p><strong>with index k = 0 represents washload.</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Duration-weighted transport of mud.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
-<p>Return: [float]</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsLoad.clsLoad.UpdateElwhaDamRemovalDurationCurve">
 <code class="sig-name descname">UpdateElwhaDamRemovalDurationCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ControlNode</span></em>, <em class="sig-param"><span class="n">Multiplier</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.UpdateElwhaDamRemovalDurationCurve" title="Permalink to this definition">¶</a></dt>
-<dd><p>An exponential decay function to estimate sediment exported from Lake
+<dd><p>CURRENTLY OBSOLETE FUNCTION: An exponential decay function to estimate sediment exported from Lake
 Mills.</p>
-<p>Attributes:
--ControlNode-clsNode (Node with original feed characteristics)
--C–float (Decay multiplier)
--t–float (Time since dam removal)
--tau–float (Exponent that determines time to recovery–same unit as t)</p>
-<p>Currently obsolete function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ControlNode</strong> (<a class="reference internal" href="#module-MAST_1D.clsNode" title="MAST_1D.clsNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsNode</span></code></a>) – Node object that holds sediment feed.</p></li>
+<li><p><strong>Multiplier</strong> (<em>float</em>) – Multiplier for feed supplied by this node.</p></li>
+<li><p><strong>C</strong> (<em>float</em>) – Decay multiplier.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Time since dam removal.</p></li>
+<li><p><strong>tau</strong> (<em>float</em>) – Exponent that determines time to recovery–same unit as t.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>array_like(length = NSizes + 1)</strong> (<em>KFeed</em>) – Modified sediment feed averaged across all bins of FDC in size k. Size with
+index k = 0 represents washload.</p></li>
+<li><p><strong>array_like(dim = 2, length = (NFlows, NSizes + 1))</strong> (<em>JKFeed</em>) – Modified sediment load for feed in bin j of discharge distribution and size k of GSD.
+Size with index k = 0 represents washload.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -794,13 +942,86 @@ Mills.</p>
 <code class="sig-name descname">UpdateElwhaDamRemovalRatingCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ControlNode</span></em>, <em class="sig-param"><span class="n">C</span></em>, <em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">tau</span></em>, <em class="sig-param"><span class="n">MudFraction</span></em>, <em class="sig-param"><span class="n">Q</span></em>, <em class="sig-param"><span class="n">vfunc</span></em>, <em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">CalibrationFactor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.UpdateElwhaDamRemovalRatingCurve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Applies a multiplier to the sediment rating curve for the Elwha that decays
 exponentially.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>POTENTIAL CODE MODIFICATION: It may be worth moving simulation specific computations
+outside of the Load class. It may make more sense to create a method
+that allows the clsModel to modify a clsLoad or clsNode array that represents
+the feed in arbitary ways at arbitrary times, but to then always use this feed
+as the input for the sediment transport computations for the reach. The same
+applies for potential tributary inputs.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ControlNode</strong> (<a class="reference internal" href="#module-MAST_1D.clsNode" title="MAST_1D.clsNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsNode</span></code></a>) – Node object that holds sediment feed.</p></li>
+<li><p><strong>C</strong> (<em>float</em>) – Decay multiplier.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Time since dam removal.</p></li>
+<li><p><strong>tau</strong> (<em>float</em>) – Exponent that determines time to recovery–same unit as t.</p></li>
+<li><p><strong>MudFraction</strong> (<em>float</em>) – Ratio of mud to next finest size class.</p></li>
+<li><p><strong>Q</strong> (<em>float</em>) – Discharge (m3/s).</p></li>
+<li><p><strong>vfunc</strong> (<em>bool</em>) – Used to specify which friction formula to use.
+True for Manning, False for Chezy.</p></li>
+<li><p><strong>TrinityFit</strong> (<em>bool</em>) – Flag that determines if Gaeuman fit to Wilcock &amp; Crowe is used.  Regular
+Wilcock and Crowe used if false.</p></li>
+<li><p><strong>CalibrationFactor</strong> (<em>float</em>) – Sediment transport calibration factor. Used to adjust reference Shields stress.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>array_like(length = NSizes + 1)</strong> (<em>KFeed</em>) – Modified sediment feed averaged across all bins of FDC in size k. Size with
+index k = 0 represents washload.</p></li>
+<li><p><strong>array_like(dim = 2, length = (NFlows, NSizes + 1))</strong> (<em>JKFeed</em>) – Modified sediment load for feed in bin j of discharge distribution and size k of GSD.
+Size with index k = 0 represents washload.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsLoad.clsLoad.UpdateElwhaFeedFineRatingCurve">
 <code class="sig-name descname">UpdateElwhaFeedFineRatingCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ControlNode</span></em>, <em class="sig-param"><span class="n">Multiplier</span></em>, <em class="sig-param"><span class="n">MudFraction</span></em>, <em class="sig-param"><span class="n">Q</span></em>, <em class="sig-param"><span class="n">vfunc</span></em>, <em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">CalibrationFactor</span></em>, <em class="sig-param"><span class="n">ControlGSD</span></em>, <em class="sig-param"><span class="n">FineGSD</span></em>, <em class="sig-param"><span class="n">Section</span><span class="o">=</span><span class="default_value">'Middle'</span></em>, <em class="sig-param"><span class="n">Removal</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">PercSus</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">FixedCapacity</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">FirstPulse</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.UpdateElwhaFeedFineRatingCurve" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
-<dt>Like UpdateElwhaRatingCurve but for alternate removal scenario.  All sizes</dt><dd><p>are supplied at capacity and an additional pulse consists of just fine sediment</p>
+<dt>Like UpdateElwhaRatingCurve but for alternate removal scenario.  All sizes</dt><dd><p>are supplied at capacity and an additional pulse consists of just fine sediment.</p>
+</dd>
+</dl>
+<p>POTENTIAL CODE MODIFICATION: It may be worth moving simulation specific computations
+outside of the Load class. It may make more sense to create a method
+that allows the clsModel to modify a clsLoad or clsNode array that represents
+the feed in arbitary ways at arbitrary times, but to then always use this feed
+as the input for the sediment transport computations for the reach. The same
+applies for potential tributary inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ControlNode</strong> (<a class="reference internal" href="#module-MAST_1D.clsNode" title="MAST_1D.clsNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsNode</span></code></a>) – Node object whose attributes are used to compute sediment feed.</p></li>
+<li><p><strong>Multiplier</strong> (<em>float</em>) – Multiplier for feed supplied by this node.</p></li>
+<li><p><strong>MudFraction</strong> (<em>float</em>) – Ratio of mud to next finest size class.</p></li>
+<li><p><strong>Q</strong> (<em>float</em>) – Discharge (m3/s).</p></li>
+<li><p><strong>vfunc</strong> (<em>bool</em>) – Used to specify which friction formula to use.
+True for Manning, False for Chezy.</p></li>
+<li><p><strong>TrinityFit</strong> (<em>bool</em>) – Flag that determines if Gaeuman fit to Wilcock &amp; Crowe is used.  Regular
+Wilcock and Crowe used if false.</p></li>
+<li><p><strong>CalibrationFactor</strong> (<em>float</em>) – Sediment transport calibration factor. Used to adjust reference Shields stress.ControlNode</p></li>
+<li><p><strong>Bc</strong> (<em>float</em>) – Channel width (m)</p></li>
+<li><p><strong>ControlGSD</strong> (<a class="reference internal" href="#module-MAST_1D.clsGSD" title="MAST_1D.clsGSD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsGSD</span></code></a>) – Grain size distribution used to compute feed transport capacity.</p></li>
+<li><p><strong>Section</strong> (<em>{‘Middle’, ‘Upper’}</em>) – Determines whether or not to normalize the discharge because feed
+is determined by the Upper River discharge.</p></li>
+<li><p><strong>Removal</strong> (<em>bool</em>) – Flag indicating whether dam removal had ocurred.</p></li>
+<li><p><strong>PercSus</strong> (<em>float</em>) – Percentage of total load that is suspended.</p></li>
+<li><p><strong>FixedCapacity</strong> (<em>bool</em>) – Flag used to indicatee if the capacity is fixed.</p></li>
+<li><p><strong>FirstPulse</strong> (<em>bool</em>) – Flag used to determine if only sand/fine gravel is present in load.
+Represents period before Glines Canyon Dam was totally removed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>array_like(length = NSizes + 1)</strong> (<em>KFeed</em>) – Modified sediment feed averaged across all bins of FDC in size k. Size with
+index k = 0 represents washload.</p></li>
+<li><p><strong>array_like(dim = 2, length = (NFlows, NSizes + 1))</strong> (<em>JKFeed</em>) – JKFeed[0,:] is same as KFeed[:].  Only works when there is one flow bin.</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -808,51 +1029,142 @@ exponentially.</p>
 <dl class="py method">
 <dt id="MAST_1D.clsLoad.clsLoad.UpdateElwhaFeedRatingCurve">
 <code class="sig-name descname">UpdateElwhaFeedRatingCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ControlNode</span></em>, <em class="sig-param"><span class="n">Multiplier</span></em>, <em class="sig-param"><span class="n">MudFraction</span></em>, <em class="sig-param"><span class="n">Q</span></em>, <em class="sig-param"><span class="n">vfunc</span></em>, <em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">CalibrationFactor</span></em>, <em class="sig-param"><span class="n">ControlGSD</span></em>, <em class="sig-param"><span class="n">Section</span><span class="o">=</span><span class="default_value">'Middle'</span></em>, <em class="sig-param"><span class="n">Removal</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">PercSus</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">FixedCapacity</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">FirstPulse</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.UpdateElwhaFeedRatingCurve" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses the UpdateFeedRatingCurve in this object to calculate the bed material
-feed, then uses Curran’s emperical rating curve for the mudload.</p>
-<p>Section determines whether the discharge needs to be normalized for the Curran
+<dd><p>Uses the UpdateFeedRatingCurve to calculate the bed material
+feed, then uses Curran’s emperical rating curve for the Elwha for the mudload.</p>
+<p>Determines whether the discharge needs to be normalized for the Curran
 relation.  See UpdateFeedRatingCurve for other attributes.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>POTENTIAL CODE MODIFICATION: It may be worth moving simulation specific computations
+outside of the Load class. It may make more sense to create a method
+that allows the clsModel to modify a clsLoad or clsNode array that represents
+the feed in arbitary ways at arbitrary times, but to then always use this feed
+as the input for the sediment transport computations for the reach. The same
+applies for potential tributary inputs.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ControlNode</strong> (<a class="reference internal" href="#module-MAST_1D.clsNode" title="MAST_1D.clsNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsNode</span></code></a>) – Node object whose attributes are used to compute sediment feed.</p></li>
+<li><p><strong>Multiplier</strong> (<em>float</em>) – Multiplier for feed supplied by this node.</p></li>
+<li><p><strong>MudFraction</strong> (<em>float</em>) – Ratio of mud to next finest size class.</p></li>
+<li><p><strong>Q</strong> (<em>float</em>) – Discharge (m3/s).</p></li>
+<li><p><strong>vfunc</strong> (<em>bool</em>) – Used to specify which friction formula to use.
+True for Manning, False for Chezy.</p></li>
+<li><p><strong>TrinityFit</strong> (<em>bool</em>) – Flag that determines if Gaeuman fit to Wilcock &amp; Crowe is used.  Regular
+Wilcock and Crowe used if false.</p></li>
+<li><p><strong>CalibrationFactor</strong> (<em>float</em>) – Sediment transport calibration factor. Used to adjust reference Shields stress.ControlNode</p></li>
+<li><p><strong>Bc</strong> (<em>float</em>) – Channel width (m)</p></li>
+<li><p><strong>ControlGSD</strong> (<a class="reference internal" href="#module-MAST_1D.clsGSD" title="MAST_1D.clsGSD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsGSD</span></code></a>) – Grain size distribution used to compute feed transport capacity.</p></li>
+<li><p><strong>Section</strong> (<em>{‘Middle’, ‘Upper’}</em>) – Determines whether or not to normalize the discharge because feed
+is determined by the Upper River discharge.</p></li>
+<li><p><strong>Removal</strong> (<em>bool</em>) – Flag indicating whether dam removal had ocurred.</p></li>
+<li><p><strong>PercSus</strong> (<em>float</em>) – Percentage of total load that is suspended.</p></li>
+<li><p><strong>FixedCapacity</strong> (<em>bool</em>) – Flag used to indicatee if the capacity is fixed.</p></li>
+<li><p><strong>FirstPulse</strong> (<em>bool</em>) – Flag used to determine if only sand/fine gravel is present in load.
+Represents period before Glines Canyon Dam was totally removed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>array_like(length = NSizes + 1)</strong> (<em>KFeed</em>) – Modified sediment feed averaged across all bins of FDC in size k. Size with
+index k = 0 represents washload.</p></li>
+<li><p><strong>array_like(dim = 2, length = (NFlows, NSizes + 1))</strong> (<em>JKFeed</em>) – JKFeed[0,:] is same as KFeed[:].  Only works when there is one flow bin.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsLoad.clsLoad.UpdateFeedDurationCurve">
 <code class="sig-name descname">UpdateFeedDurationCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ControlNode</span></em>, <em class="sig-param"><span class="n">Multiplier</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.UpdateFeedDurationCurve" title="Permalink to this definition">¶</a></dt>
-<dd><p>Standard method for updating feed–designed for the flow duration curve.
-Feed is a user-defined fraction of sediment transport capacity</p>
-<p>Attributes:</p>
-<p>-ControlNode–clsNode (Node object that holds sediment feed)
--Multiplier–float (Multiplier for feed)</p>
+<dd><p>Function for computing a modified feed–designed for the flow duration curve.</p>
+<p>Feed is computed as a user-defined fraction of sediment transport capacity.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>POTENTIAL CODE MODIFICATION: It appears as though this function simply multiplies
+the load in the control node by a constant, and thus it requires no knowledge
+‘self’.  Could be re-written to explicitly point out it is a function and does
+not modify attributes of the load class.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ControlNode</strong> (<a class="reference internal" href="#module-MAST_1D.clsNode" title="MAST_1D.clsNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsNode</span></code></a>) – Node object that holds sediment feed.</p></li>
+<li><p><strong>Multiplier</strong> (<em>float</em>) – Multiplier for feed supplied by this node.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>array_like(length = NSizes + 1)</strong> (<em>KFeed</em>) – Modified sediment feed averaged across all bins of FDC in size k. Size with
+index k = 0 represents washload.</p></li>
+<li><p><strong>array_like(dim = 2, length = (NFlows, NSizes + 1))</strong> (<em>JKFeed</em>) – Modified sediment load for feed in bin j of discharge distribution and size k of GSD.
+Size with index k = 0 represents washload.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsLoad.clsLoad.UpdateFeedRatingCurve">
 <code class="sig-name descname">UpdateFeedRatingCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ControlNode</span></em>, <em class="sig-param"><span class="n">Multiplier</span></em>, <em class="sig-param"><span class="n">MudFraction</span></em>, <em class="sig-param"><span class="n">Q</span></em>, <em class="sig-param"><span class="n">vfunc</span></em>, <em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">CalibrationFactor</span></em>, <em class="sig-param"><span class="n">ControlGSD</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.UpdateFeedRatingCurve" title="Permalink to this definition">¶</a></dt>
-<dd><p>Rating curve method–the standard for hydrograph runs.
-Feed is a user-defined fraction of sediment transport capacity
+<dd><p>Function for computing feed for runs driven by hydrographs.</p>
+<p>Feed is a user-defined fraction of sediment transport capacity
 for a given flow.  Mud feed is a set proportion of feed for the
 next finest size class.  Returns size specific, and flow/size specific
 feed, although the function can only be used when there is only one flow
 in the duration curve (i.e. when a hydrograph is used).</p>
-<p>Attributes:</p>
-<p>-ControlNode–clsNode (Node object that holds sediment feed)
--Multiplier–float (Multiplier for feed)
--MudFraction–float (ratio of mud to next finest size class)
--Q–float (discharge)
--vfunc–bool (True for Manning, False for Chezy)
--TrinityFit–bool (True for Trinity River sed transport calc, False for</p>
-<blockquote>
-<div><p>Wilcock and Crowe)</p>
-</div></blockquote>
-<p>-CalibrationFactor-float (calibration for sediment transport equation)</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>POTENTIAL CODE MODIFICATION: It may be worth looking at whether the
+hydrograph and duration curve methods can be combined.  In principle,
+there is no reason why flow over any period of time can’t be represented
+by a distribtion representing the variability during that time. This
+could allow the duration curve method to be useful for characterizing
+long-term changes in hydrology, perhaps by specifying timeseries
+representing mean flow and perhaps parameters related to the
+distribution of flows.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ControlNode</strong> (<a class="reference internal" href="#module-MAST_1D.clsNode" title="MAST_1D.clsNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsNode</span></code></a>) – Node object whose attributes are used to compute sediment feed.</p></li>
+<li><p><strong>Multiplier</strong> (<em>float</em>) – Multiplier for feed supplied by this node.</p></li>
+<li><p><strong>MudFraction</strong> (<em>float</em>) – Ratio of mud to next finest size class.</p></li>
+<li><p><strong>Q</strong> (<em>float</em>) – Discharge (m3/s).</p></li>
+<li><p><strong>vfunc</strong> (<em>bool</em>) – Used to specify which friction formula to use.
+True for Manning, False for Chezy.</p></li>
+<li><p><strong>TrinityFit</strong> (<em>bool</em>) – Flag that determines if Gaeuman fit to Wilcock &amp; Crowe is used.  Regular
+Wilcock and Crowe used if false.</p></li>
+<li><p><strong>CalibrationFactor</strong> (<em>float</em>) – Sediment transport calibration factor. Used to adjust reference Shields stress.</p></li>
+<li><p><strong>ControlGSD</strong> (<a class="reference internal" href="#module-MAST_1D.clsGSD" title="MAST_1D.clsGSD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsGSD</span></code></a>) – Grain size distribution used to compute feed transport capacity.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>array_like(length = NSizes + 1)</strong> (<em>KFeed</em>) – Modified sediment feed averaged across all bins of FDC in size k. Size with
+index k = 0 represents washload.</p></li>
+<li><p><strong>array_like(dim = 2, length = (NFlows, NSizes + 1))</strong> (<em>JKFeed</em>) – JKFeed[0,:] is same as KFeed[:].  Only works when there is one flow bin.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsLoad.clsLoad.UpdateMudTracerAverages">
 <code class="sig-name descname">UpdateMudTracerAverages</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Dj</span></em>, <em class="sig-param"><span class="n">DC</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.UpdateMudTracerAverages" title="Permalink to this definition">¶</a></dt>
-<dd><p>for completeness, this computes Temporal, Volumetric, and         Deposition-weighted Averages for Tracer Concentrations in mud Load         and Feed for all sizes.</p>
-<dl class="simple">
-<dt>Arguments:</dt><dd><p>Dj – [float]
-DC – clsDurationCurve</p>
+<dd><p>For completeness, this computes Temporal, Volumetric, and
+Deposition-weighted Averages for Tracer Concentrations in mud Load
+and Feed for all sizes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>DC</strong> (<a class="reference internal" href="#module-MAST_1D.clsNode" title="MAST_1D.clsNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsNode</span></code></a>) – Discharge distribution object.</p></li>
+<li><p><strong>Dj</strong> (<em>float</em>) – APPEARS TO BE UNUSED.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -860,18 +1172,27 @@ DC – clsDurationCurve</p>
 <dl class="py method">
 <dt id="MAST_1D.clsLoad.clsLoad.UpdateSedimentLoadByDurationAndSize">
 <code class="sig-name descname">UpdateSedimentLoadByDurationAndSize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">DC</span></em>, <em class="sig-param"><span class="n">SurfaceGSD</span></em>, <em class="sig-param"><span class="n">rhow</span></em>, <em class="sig-param"><span class="n">SG</span></em>, <em class="sig-param"><span class="n">Bc</span></em>, <em class="sig-param"><span class="n">FractionAlluvial</span></em>, <em class="sig-param"><span class="n">TransFunc</span></em>, <em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">CalibrationFactor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.UpdateSedimentLoadByDurationAndSize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Populates sediment load array in load object with wilcock crowe loads
-(m3/s) for each bin of FDC and for each size in bed GSD.
-Requires that hydraulics of node have already been populated</p>
-<dl class="simple">
-<dt>Arguments:</dt><dd><p>DC – clsDurationCurve
-SurfaceGSD – clsGSD
-rhow – float
-SG – float
-Bc – float
-FractionAlluvial – float
-TrinityFit – bool
-CalibrationFactor – float</p>
+<dd><p>Method for updating all of load object’s loads.</p>
+<p>Populates sediment load array in load object with loads (m3/s)
+for each bin of FDC and for each size in bed GSD.
+Requires that hydraulics of node have already been populated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>DC</strong> (<a class="reference internal" href="#module-MAST_1D.clsDurationCurve" title="MAST_1D.clsDurationCurve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsDurationCurve</span></code></a>) – Discharge distribution</p></li>
+<li><p><strong>SurfaceGSD</strong> (<a class="reference internal" href="#module-MAST_1D.clsGSD" title="MAST_1D.clsGSD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsGSD</span></code></a>) – Surface grain size distribution.  Usually the distribution of the active layer.</p></li>
+<li><p><strong>rhow</strong> (<em>float</em>) – Density of water.</p></li>
+<li><p><strong>SG</strong> (<em>float</em>) – Specific gravity of sediment.</p></li>
+<li><p><strong>Bc</strong> (<em>float</em>) – Channel width (m).</p></li>
+<li><p><strong>FractionAlluvial</strong> (<em>float</em>) – Ratio of sediment storage volume in active layer to maximum
+sediment storage volume of active layer. Reduces computed transport
+capacity by this ratio.</p></li>
+<li><p><strong>TransFunc</strong> (<em>{‘WilcockCrow’, ‘WrightParker’]</em>) – Specifies the transport equation to use.</p></li>
+<li><p><strong>TrinityFit</strong> (<em>bool</em>) – Flag that determines if Gaeuman fit to Wilcock &amp; Crowe is used.  Regular
+Wilcock and Crowe used if false.</p></li>
+<li><p><strong>CalibrationFactor</strong> (<em>float</em>) – Sediment transport calibration factor. Used to adjust reference Shields
+stress in Wilcock Crowe type sediment transport computation.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -879,68 +1200,167 @@ CalibrationFactor – float</p>
 <dl class="py method">
 <dt id="MAST_1D.clsLoad.clsLoad.WilcockCroweLoadBySize">
 <code class="sig-name descname">WilcockCroweLoadBySize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">U</span></em>, <em class="sig-param"><span class="n">Sf</span></em>, <em class="sig-param"><span class="n">GSD</span></em>, <em class="sig-param"><span class="n">rho_w</span></em>, <em class="sig-param"><span class="n">SG</span></em>, <em class="sig-param"><span class="n">Bc</span></em>, <em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">CalibrationFactor</span></em>, <em class="sig-param"><span class="n">IndD</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.WilcockCroweLoadBySize" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function returns a 1d array of size specific loads of length
-GSD.nsizes (i.e. the bed material sizes in GSD).  Load is in units of
-m3/s.
-It uses the reference stress form of Wilcock and Crowe 2003 unless the
-flag TrinityFit is true, in which case it uses the reference stress of
-Guiman 2009.
-This should probably be updated to allow any calibrated reference
+<dd><p>Size specific load calculator using Wilcock Crowe form.</p>
+<p>This method returns a 1d array of size specific loads of length
+GSD.NBedSizes (i.e. the bed material sizes in GSD). It also updates the load
+object’s critical shear stress and excess shear stress properties.  Load
+is in units of m3/s. It uses the reference stress form of Wilcock and
+Crowe 2003 unless the flag TrinityFit is true, in which case it uses
+the reference stress of Guiman 2009.</p>
+<p>This could be updated to allow any calibrated reference
 stress to be used.  For now, it allows for a calibration factor that
 multiplies the reference stress from either of the above equations by a
 constant.</p>
-<dl class="simple">
-<dt>Arguments:</dt><dd><p>U – float
-Sf – float
-GSD – clsGSD
-rho_w – float
-SG – float
-Bc – float
-TrinityFit – boolean
-CalibrationFactor – float</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>POTENTIAL CODE MODIFICATION: It may be worth updating this fuction to either
+simply update loads in the object, rather than updating some and returning
+others, or to turn it into a simple function for which all arguments are
+passed, rather than requiring access to the load object.  Making it act
+as a simple function could make it more useable outside the MAST-1D framework.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>U</strong> (<em>float</em>) – Flow velocity in channel.</p></li>
+<li><p><strong>Sf</strong> (<em>float</em>) – Friction slope.</p></li>
+<li><p><strong>GSD</strong> (<a class="reference internal" href="#module-MAST_1D.clsGSD" title="MAST_1D.clsGSD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsGSD</span></code></a>) – Grain size distribution of surface–typically of the active layer.</p></li>
+<li><p><strong>rho_w</strong> (<em>float</em>) – Density of water.</p></li>
+<li><p><strong>SG</strong> (<em>float</em>) – Specific gravity of sediment.</p></li>
+<li><p><strong>Bc</strong> (<em>float</em>) – Channel width (m).</p></li>
+<li><p><strong>TrinityFit</strong> (<em>boolean</em>) – Flag that determines if Gaeuman fit to Wilcock &amp; Crowe is used.  Regular
+Wilcock and Crowe used if false.</p></li>
+<li><p><strong>CalibrationFactor</strong> (<em>float</em>) – Sediment transport calibration factor. Used to adjust reference Shields stress.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>qs</strong> (<em>array_like(float, length = NSizes + 1)</em>) – Volumetric sediment transport rate in each size class (m3/s). CONSIDER
+RENAMING as “QS” SO AS TO NOT INDICATE TRANSPORT PER UNIT WIDTH.</p></li>
+<li><p><strong>eshear</strong> (<em>array_like(float, length = NSizes + 1)</em>) – Size-specific excess shear stress. May not be meaninful
+for washload (index k = 0)</p></li>
+</ul>
+</p>
 </dd>
 </dl>
-<p>Return: [float]</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>POTENTIAL CODE MODIFICATION: Reference stress is computed both within this
+function and in a separate function return_excess_shear, which is called
+by the calc_wStar_1 method toward the end of this method.  Consequently, it
+appears that the computation of reference shear included in this method
+is not actually used to compute sediment transport rates. It would be good
+to remove the redundant lines of code once it is confirmed that they are
+not affecting results.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsLoad.clsLoad.WrightParkerLoadBySize">
 <code class="sig-name descname">WrightParkerLoadBySize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Q</span></em>, <em class="sig-param"><span class="n">H</span></em>, <em class="sig-param"><span class="n">U</span></em>, <em class="sig-param"><span class="n">Sf</span></em>, <em class="sig-param"><span class="n">GSD</span></em>, <em class="sig-param"><span class="n">rho_w</span></em>, <em class="sig-param"><span class="n">SG</span></em>, <em class="sig-param"><span class="n">Bc</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.WrightParkerLoadBySize" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function returns a 1d array of size specific loads of length
+<dd><p>Computes sediment transport rates using Wright and Parker (2004).</p>
+<p>The function is intended for large sand-bed rivers so is not appropriate
+for gravel. This function returns a 1d array of size specific loads of length
 GSD.nsizes (i.e. the bed material sizes in GSD).  Load is in units of
-m3/s.</p>
-<p>Load is calculated using the relation of Wright and Parker (2004).
-Currently, no calibration factor is included.</p>
-<dl class="simple">
-<dt>Arguments:</dt><dd><p>H – float
-U – float
-Sf – float
-GSD – clsGSD
-rho_w – float
-SG – float
-Bc – float</p>
+m3/s. Currently, no calibration factor is included.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>POTENTIAL CODE MODIFICATION: Consider removing “self” from arguments.
+This is a function, not a method, so it does not require any
+knowledge of the load object. Also consider renaming variable qsi to
+Qsi so as to not imply transport per unit width.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>H</strong> (<em>float</em>) – Flow depth (m).</p></li>
+<li><p><strong>U</strong> (<em>float</em>) – Flow velocity (m/s).</p></li>
+<li><p><strong>Sf</strong> (<em>float</em>) – Friction slope.</p></li>
+<li><p><strong>GSD</strong> (<a class="reference internal" href="#module-MAST_1D.clsGSD" title="MAST_1D.clsGSD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsGSD</span></code></a>) – Grain size distribution of surface–typically of the active layer.</p></li>
+<li><p><strong>rho_w</strong> (<em>float</em>) – Density of water.</p></li>
+<li><p><strong>SG</strong> (<em>float</em>) – Specific gravity of sediment.</p></li>
+<li><p><strong>Bc</strong> (<em>float</em>) – Channel width (m).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>array_like(length = NSizes + 1)</strong> – Volumetric sediment transport rate for each sediment size class.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>qsi</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Does not compute transport in washload size, so the first element of
+the returned array is always zero.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsLoad.clsLoad.calc_wStari">
 <code class="sig-name descname">calc_wStari</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">TauRm</span></em>, <em class="sig-param"><span class="n">D</span></em>, <em class="sig-param"><span class="n">F</span></em>, <em class="sig-param"><span class="n">GSD</span></em>, <em class="sig-param"><span class="n">TauPrime</span></em>, <em class="sig-param"><span class="n">ustar</span></em>, <em class="sig-param"><span class="n">Bc</span></em>, <em class="sig-param"><span class="n">SG</span></em>, <em class="sig-param"><span class="n">g</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.calc_wStari" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Calculates sediment trasnport rate and excess shear stress for a single size.</p>
+<p>Calculates transport using dimensionless fractional transport rate form W*_i.
+See Wilcock and Crowe (2003) or chapter 4 in Wilcock et al. sediment trasnport
+primer <a class="reference external" href="https://www.fs.usda.gov/treesearch/pubs/32966">https://www.fs.usda.gov/treesearch/pubs/32966</a>.  Then computes
+dimensioned values of load and excess shear for size D.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TrinityFit</strong> (<em>boolean</em>) – Flag that determines if Gaeuman fit to Wilcock &amp; Crowe is used.  Regular
+Wilcock and Crowe used if false.</p></li>
+<li><p><strong>TauRm</strong> (<em>float</em>) – Critical shear stress for the median particle size.</p></li>
+<li><p><strong>D</strong> (<em>float</em>) – Sediment grains size (mm)</p></li>
+<li><p><strong>F</strong> (<em>float</em>) – Fraction of sediment of size D in overall GSD.</p></li>
+<li><p><strong>GSD</strong> (<a class="reference internal" href="#module-MAST_1D.clsGSD" title="MAST_1D.clsGSD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsGSD</span></code></a>) – Grain size distribution for surface sediment (usually of active layer).</p></li>
+<li><p><strong>TauPrime</strong> (<em>float</em>) – Grain shear (N/m^2)</p></li>
+<li><p><strong>ustar</strong> (<em>float</em>) – Shear velocity (m/s)</p></li>
+<li><p><strong>Bc</strong> (<em>float</em>) – Channel width (m).</p></li>
+<li><p><strong>SG</strong> (<em>float</em>) – Sediment specific gravity.</p></li>
+<li><p><strong>g</strong> (<em>float</em>) – Gravitational constant, g = 9.81 m/s^2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>qs</strong> (<em>float</em>) – Volumetric sediment transport rate (m3/s).</p></li>
+<li><p><strong>Eshear</strong> (<em>float</em>) – Excess shear stress TauPrime/TauR for size D</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>POTENTIAL CODE MODIFICATION: Consiter renaming variable qs to Qs so as
+to indicate volumetric transport, not transport per unit width. Also
+consider renaming the method because it returns dimensioned transport
+rates, not dimensionless rate W*.</p>
+</div>
+</dd></dl>
 
 <dl class="py method">
 <dt id="MAST_1D.clsLoad.clsLoad.findWC_ReferenceShear">
 <code class="sig-name descname">findWC_ReferenceShear</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">TrinityFit</span></em>, <em class="sig-param"><span class="n">TauRm</span></em>, <em class="sig-param"><span class="n">D</span></em>, <em class="sig-param"><span class="n">Dg</span></em>, <em class="sig-param"><span class="n">D50</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.findWC_ReferenceShear" title="Permalink to this definition">¶</a></dt>
-<dd><p>Katie add.  This function calculates the
+<dd><p>Computes reference shear stress.</p>
+<p>Katie add.  This function calculates the
 the reference shear stress (TauRi,equations 3 and 4 in Wilcock and Crowe,
 2003) given inputs of the size in question, the D50, and the critical shear
 stress for the mean bed size.  It was made independent from the Wilcock
 and Crowe function to make it easier to calculate the critical shear stress
 for the D84 for the width change function.</p>
-<dl class="simple">
-<dt>Arguments:</dt><dd><p>TauRm – float
-D – float
-D50 – float</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TauRm</strong> (<em>float</em>) – Critical shear stress for the median particle size.</p></li>
+<li><p><strong>D</strong> (<em>float</em>) – Sediment diameter (mm)</p></li>
+<li><p><strong>Dg</strong> (<em>float</em>) – Geometric mean diameter (mm) of bed material size distribution.</p></li>
+<li><p><strong>D50</strong> (<em>float</em>) – Median diameter (mm) of bed material size distribution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>float</strong> – Reference Shear Stress for size D (N/m^2)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>TauRi</p>
 </dd>
 </dl>
 </dd></dl>
@@ -948,13 +1368,26 @@ D50 – float</p>
 <dl class="py method">
 <dt id="MAST_1D.clsLoad.clsLoad.findWC_TauPrime">
 <code class="sig-name descname">findWC_TauPrime</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">g</span></em>, <em class="sig-param"><span class="n">Sf</span></em>, <em class="sig-param"><span class="n">U</span></em>, <em class="sig-param"><span class="n">D65</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.findWC_TauPrime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Katie add.  Calculates the channel-averaged shear stress.  Was moved from
-the main Wilcock-Crowe function.</p>
-<dl class="simple">
-<dt>Arguments:</dt><dd><p>Sf – float
-g – float
-D65
-U – float</p>
+<dd><p>Katie add.  Calculates the channel-averaged shear stress felt by
+sediment grains.</p>
+<p>Uses eq 2.14 in Wilcock et al. BAGS primer. See
+<a class="reference external" href="https://www.fs.usda.gov/treesearch/pubs/32966">https://www.fs.usda.gov/treesearch/pubs/32966</a>
+Was moved out of the main Wilcock-Crowe function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Sf</strong> (<em>float</em>) – Friction slope.</p></li>
+<li><p><strong>g</strong> (<em>float</em>) – gravitational constant (m/s2)</p></li>
+<li><p><strong>D65</strong> (<em>float</em>) – Size (mm) for which 65% of sediment surface is finer.
+2*D65 is used to represent hydraulic roughness of grains.</p></li>
+<li><p><strong>U</strong> (<em>float</em>) – Flow velocity (m/s)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>float</strong> – Grain shear (N/m^2)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>TauPrime</p>
 </dd>
 </dl>
 </dd></dl>
@@ -962,8 +1395,8 @@ U – float</p>
 <dl class="py method">
 <dt id="MAST_1D.clsLoad.clsLoad.return_excess_shear">
 <code class="sig-name descname">return_excess_shear</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">TauPrime</span></em>, <em class="sig-param"><span class="n">TauRi</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsLoad.clsLoad.return_excess_shear" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates and returns excess shear stress for a specific size class for
-plotting purposes</p>
+<dd><p>Calculates and returns excess shear stress TauPrime/TauRi for a specific
+size class. Used for plotting purposes.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1011,7 +1444,9 @@ fully define the initial condition.</p>
 <li><p><strong>ControlGSD</strong> (<a class="reference internal" href="#module-MAST_1D.clsGSD" title="MAST_1D.clsGSD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsGSD</span></code></a>) – A basic grain size distribution.</p></li>
 <li><p><strong>zControlBoundary</strong> (<a class="reference internal" href="#module-MAST_1D.clsNode" title="MAST_1D.clsNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsNode</span></code></a>) – A node representing the downstreawm boundary</p></li>
 <li><p><strong>TracerProperties</strong> (<a class="reference internal" href="#module-MAST_1D.clsTracerProperties" title="MAST_1D.clsTracerProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsTracerProperties</span></code></a>)</p></li>
-<li><p><strong>CalibrationFactor</strong> (<em>float</em>) – Sediment transport calibration factor (UNSURE IF IT IS BEING SET HERE).</p></li>
+<li><p><strong>CalibrationFactor</strong> (<em>float</em>) – Sediment transport calibration factor. Used to adjust
+reference Shields stress in Wilcock Crowe type calculation.
+(UNSURE IF IT IS BEING SET HERE).</p></li>
 </ul>
 </p>
 </dd>
@@ -1618,9 +2053,10 @@ treated as separate, independent processes.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>Manning</strong> (<em>bool</em>) – APPEARS TO BE UNUSED</p></li>
-<li><p><strong>TrinityFit</strong> (<em>Bool</em>) – Flag that determines if Gaeuman fit to Wilcock &amp; Crowe is used.  Regular
+<li><p><strong>TrinityFit</strong> (<em>bool</em>) – Flag that determines if Gaeuman fit to Wilcock &amp; Crowe is used.  Regular
 Wilcock and Crowe used if false.</p></li>
-<li><p><strong>CalibrationFactor</strong> (<em>Float</em>) – Multiplier applied to all computed bed material transport rates.</p></li>
+<li><p><strong>CalibrationFactor</strong> (<em>float</em>) – Sediment transport calibration factor. Used to adjust reference Shields
+stress in Wilcock Crowe type sediment transport computation.</p></li>
 <li><p><strong>SG</strong> (<em>float</em>) – Specific gravity of sediment.</p></li>
 <li><p><strong>rho_w</strong> (<em>float</em>) – Density of water</p></li>
 <li><p><strong>g</strong> (<em>float</em>) – APPEARS TO BE UNUSED</p></li>
@@ -1758,6 +2194,8 @@ series.  Each node represents multiple bends of the channel.  The reach
 class includes methods for computing water level in each node given
 flow in the reach and downstream boundary conditions.  It also includes
 methods for specifying a size-specific sediment feed rate.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>Because the reach object requires many input parameters upon instantiation,
 all parameters are passed as class attributes of a user-defined “inputs” object.
 Because the nature of the inputs expected by clsReach are quite specific, they
@@ -1767,6 +2205,7 @@ as needed.  A helpful addition to the code would be to break the
 clsInput class up so that the variables required by all reaches
 are explicitly called out, perhaps as a separate sub-class or
 individual well-defined attributes.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1822,9 +2261,10 @@ the reach is assumed to always be fully alluvial.</p></li>
 <li><p><strong>inputs.SetBoundary</strong> (<em>bool</em>) – NEED TO DOCUMENT: PROBABLY HELPS SET DOWNSTREAM BOUNDARY CONDITION.</p></li>
 <li><p><strong>inputs.BoundaryFactor</strong> (<em>array_like(float)???</em>) – NEED TO DOCUMENT: PROBABLY ADJUSTS BOUNDARY CONDITION</p></li>
 <li><p><strong>inputs.TransFunc</strong> (<em>UNKOWN</em>) – NEED TO DOCUMENT</p></li>
-<li><p><strong>inputs.TrinityFit</strong> (<em>Bool</em>) – Flag that determines if Gaeuman fit to Wilcock &amp; Crowe is used.  Regular
+<li><p><strong>inputs.TrinityFit</strong> (<em>bool</em>) – Flag that determines if Gaeuman fit to Wilcock &amp; Crowe is used.  Regular
 Wilcock and Crowe used if false.</p></li>
-<li><p><strong>inputs.CalibrationFactor</strong> (<em>Float</em>) – Multiplier applied to all computed bed material transport rates.</p></li>
+<li><p><strong>inputs.CalibrationFactor</strong> (<em>float</em>) – Sediment transport calibration factor. Used to adjust
+reference Shields stress in Wilcock Crowe type calculation.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Variables</dt>
@@ -2045,7 +2485,8 @@ If too thin, the layer is removed and its sediment is mixed with the next lower 
 <li><p><strong>TracerProperties</strong> (<a class="reference internal" href="#module-MAST_1D.clsTracerProperties" title="MAST_1D.clsTracerProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAST_1D.clsTracerProperties</span></code></a>) – Properties of tracer under consideration.</p></li>
 <li><p><strong>TrinityFit</strong> (<em>bool</em>) – Flag that determines if Gaeuman fit to Wilcock &amp; Crowe is used.  Regular
 Wilcock and Crowe used if false.</p></li>
-<li><p><strong>CalibrationFactor</strong> (<em>float</em>) – Multiplier applied to all computed bed material transport rates.</p></li>
+<li><p><strong>CalibrationFactor</strong> (<em>float</em>) – Sediment transport calibration factor. Used to adjust
+reference Shields stress in Wilcock Crowe type calculation.</p></li>
 <li><p><strong>W</strong> (<em>float (optional)</em>) – Parameter for width change function.</p></li>
 <li><p><strong>ErodeT</strong> (<em>float (optional)</em>) – Parameter for width change function.</p></li>
 <li><p><strong>Bp</strong> (<em>float (optional)</em>) – Parameter for width change function.</p></li>
