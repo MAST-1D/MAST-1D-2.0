@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import os
-from Tkinter import *
+from tkinter import *
 import pandas
 
 ##################################################

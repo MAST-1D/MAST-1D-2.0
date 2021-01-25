@@ -20,6 +20,7 @@ sys.path.insert(0, os.path.abspath('../../MAST_1D'))
 sys.path.insert(0, os.path.abspath('../../Input_pages'))
 sys.path.insert(0, os.path.abspath('../../Animator'))
 sys.path.insert(0, os.path.abspath('../../Hydrology'))
+sys.path.insert(0, os.path.abspath('../Animator'))
 
 #for x in os.walk('../..'):
 #  sys.path.insert(0, x[0])

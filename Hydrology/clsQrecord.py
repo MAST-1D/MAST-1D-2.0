@@ -1,33 +1,40 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Feb 11 13:54:29 2016
-
 @author: geography
 """
 from clsTimeSeries import clsTimeSeries
 import xlrd
 import datetime
 import matplotlib.pyplot as plt
-import numpy as np
+import numpy as np 
 import math
 import matplotlib.lines as lines 
 
 class clsQrecord(object):
-    
     """
     Loads and holds data for entire time series, e.g. discharge or precipitation record.
     
-    Attributes:
-    
-    Dates--[date] (Date in time series, in matplotlib's datetime format)
-    Values--[float] (Time series values)
-    smoothed--bool (False by default; if smoothing is applied to data, becomes True)   
-    averages--[[int,int,float]] (List of averages for defined periods with their date indexes)
-    recordbreaks--[str] (List of dates to divide data)
-    timechunks--[clsTimeSeries] (list of divided data)
-    CumDep--[float] (list of stored values for cumulative departure analysis)
-    Years--[int] (list of years to correspond with CumDep)
-    indexdict--{str:int} (Matches string of record chunk in form ddmmyyyyddmmyyyy to index in timechunks list)
+    Attributes
+    ----------
+    Dates : [date]
+        Date in time series, in matplotlib's datetime format.
+    Values : [float]
+        Time series values.
+    smoothed : bool
+        False by default; if smoothing is applied to data, becomes True. 
+    averages : [[int,int,float]] 
+        List of averages for defined periods with their date indexes.
+    recordbreaks : [str] 
+        List of dates to divide data.
+    timechunks : [clsTimeSeries] 
+        List of divided data.
+    CumDep : [float]
+        List of stored values for cumulative departure analysis.
+    Years : [int]
+        List of years to correspond with CumDep.
+    indexdict : {str:int} 
+        Matches string of record chunk in form ddmmyyyyddmmyyyy to index in timechunks list.
     """
     
     def __init__(self, Path, recordbreaks=[],Qsheet='Q',smoothed=0):
@@ -46,15 +53,18 @@ class clsQrecord(object):
         else:
             self.smoothed = False
         
-    def Load_Q_data(self,Worksheet = 'Q',label="",text=""):
-        
+    def Load_Q_data(self,Worksheet = 'Q',label="",text=""):        
         """
         Loads in discharge data from the 'Q_McDonaldBridge' Excel file and fills Dates and Values lists and label
         
-        Attributes:
-        Worksheet--str (Optional name of Excel worksheet; default is 'Q')
-        label--str (name of series (for labeling y-axis of figure))
-        text -- str (optional Label for subplot)
+        Attributes
+        ----------
+        Worksheet : str 
+            Optional name of Excel worksheet; default is 'Q'.
+        label : str
+            Name of series (for labeling y-axis of figure).
+        text : str 
+            Optional Label for subplot.
         """
         
         self.label = label 
@@ -73,14 +83,17 @@ class clsQrecord(object):
 
             
     def Load_Pk_data(self,Worksheet='ForAnalysis',label="",text=""):
-        
         """
         Loads in discharge data from the 'Peak_McDonaldGauge' Excel file and fills Dates and Values lists and label
         
-        Attributes:
-        Worksheet--str (Optional name of Excel worksheet; default is 'Q')
-        label--str (name of series (for labeling y-axis of figure))
-        text -- str (optional Label for subplot)
+        Attributes
+        ----------
+        Worksheet : str 
+            Optional name of Excel worksheet; default is 'Q'.
+        label : str 
+            Name of series (for labeling y-axis of figure).
+        text : str 
+            Optional Label for subplot.
         """
         
         self.label = label
@@ -93,15 +106,18 @@ class clsQrecord(object):
         self.Values = map(lambda x: x.value, sheet.col_slice(colx=3,start_rowx = 1,end_rowx = None))
 
     def Load_SD_data(self,Worksheet='Elwha_monthly_climate_data',label="",text=""):
-        
         """
         Loads in discharge data from the 'Elwha_monthly_climate_data_with_snow_graphs' Excel file and fills Dates and Values lists and label
         Currently brings in max January snow depth
         
-        Attributes:
-        Worksheet--str (Optional name of Excel worksheet; default is 'Q')
-        label--str (name of series (for labeling y-axis of figure))
-        text -- str (optional Label for subplot)
+        Attributes
+        ----------      
+        Worksheet : str 
+            Optional name of Excel worksheet; default is 'Q'.
+        label : str 
+            Name of series (for labeling y-axis of figure)
+        text : str 
+            Optional Label for subplot.
         """
         
         self.label = label
@@ -113,15 +129,18 @@ class clsQrecord(object):
         self.Dates = map(lambda x: int(x.value), sheet.col_slice(colx=40,start_rowx = 2,end_rowx = 75))       
         self.Values = map(lambda x: x.value, sheet.col_slice(colx=41,start_rowx = 2,end_rowx = 75))
 
-    def Load_P_data(self,Worksheet='646810',label="",text=""):
-        
+    def Load_P_data(self,Worksheet='646810',label="",text=""):     
         """
         Loads in precip data from 'Elwha_daily_climate_data' spreadsheet and fills Dates and Values lists and label
         
-        Attributes:
-        Worksheet--str (Optional name of Excel worksheet; default is 'Q')
-        label--str (name of series (for labeling y-axis of figure))
-        text -- str (optional Label for subplot)
+        Attributes
+        ----------
+        Worksheet : str 
+            Optional name of Excel worksheet; default is 'Q')
+        label : str 
+            Name of series (for labeling y-axis of figure.
+        text : str 
+            Optional Label for subplot.
         """
         
         self.label = label
@@ -172,13 +191,14 @@ class clsQrecord(object):
             self.timechunks.append(TS)
             
     def Smooth_data(self,x):
-
         """
         Calculates a moving average of a smoothing value for a given Values dataset and
-            adjusts Values and Date set        
+        adjusts Values and Date set        
         
-        Attributes:
-        x--int (Smoothing value--must be an odd number)
+        Attributes
+        ----------
+        x : int 
+            Smoothing value--must be an odd number.
         """     
         
         smoothedvals = []        
@@ -205,17 +225,18 @@ class clsQrecord(object):
         -Sets Values list to cumulative departure from this mean.
         Method is adapted from the USGS (Kresch, 1994)
         
-        Attributes:
-        startyear--int
-        endyear--int
+        Attributes
+        ----------
+        startyear : int
+        endyear : int
         """
 
         yearlist = []
         datelist = []
         
         #  Extract discharge values for each year and sum them.
-        index1 = self.Dates.index(datetime.date(startyear,10,01))
-        index2 = self.Dates.index(datetime.date(endyear,10,01))
+        index1 = self.Dates.index(datetime.date(startyear,10,1))
+        index2 = self.Dates.index(datetime.date(endyear,10,1))
         meanflow = sum(map(lambda x: x*86400*1,self.Values[index1:index2+1]))/len(self.Dates[index1:index2+1]) # Equation 1 in Kresch:  ((m^3/s)*(s/day)*(day)/((day)*(yr/d)) = m^3
         i = startyear
         Dxt_old = 0.
@@ -227,7 +248,7 @@ class clsQrecord(object):
             if type(self.Dates[0])==int:
                 index1 = self.Dates.index(i)
             else:
-                index1 = self.Dates.index(datetime.date(i,10,01)) # Water new-years
+                index1 = self.Dates.index(datetime.date(i,10,1)) # Water new-years
             
             if i == endyear:
                 yearsum = sum(map(lambda x: x*86400*1,self.Values[index1:]))/len(self.Dates[index1:])
@@ -235,7 +256,7 @@ class clsQrecord(object):
                 if type(self.Dates[0])==int:
                     index2 = self.Dates.index(i+1)
                 else:
-                    index2 = self.Dates.index(datetime.date(i+1,10,01)) # One past Water new-years eve
+                    index2 = self.Dates.index(datetime.date(i+1,10,1)) # One past Water new-years eve
                 yearsum = sum(map(lambda x: x*86400*1,self.Values[index1:index2]))/len(self.Dates[index1:index2])
                         
             Dx = (yearsum-meanflow) # Equation 2 in Kresch (m^3)
@@ -250,10 +271,13 @@ class clsQrecord(object):
         self.Years = datelist  
         
     def PlotDurationCurve(self,bins,feet,export=False):
-        
         """
         Runs the CreateDurationCurve method in clsTimeSeries for each timechunk
-        feet--bool (denotes whether discharge data is in cubic meters per second (False)
+        
+        Parameters
+        ----------
+        feet : bool 
+            Denotes whether discharge data is in cubic meters per second (False)
             or cubic feet per second (True))
         """
         fig = plt.figure(figsize = (10,8))
@@ -332,7 +356,7 @@ class clsQrecord(object):
   
         plt.rcParams.update({'font.size': 16})
         ax.legend(handles=legendinfo)
-#        plt.show()
+        #plt.show()
         
         if export == True:
             return fig, ax, exportDC, exportQ

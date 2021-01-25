@@ -12,42 +12,10 @@ MAST\_1D.Animator module
    :undoc-members:
    :show-inheritance:
 
-MAST\_1D.AnimatorComparison module
-----------------------------------
-
-.. automodule:: MAST_1D.AnimatorComparison
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-MAST\_1D.GUI module
--------------------
-
-.. automodule:: MAST_1D.GUI
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-MAST\_1D.InputsChecker module
------------------------------
-
-.. automodule:: MAST_1D.InputsChecker
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 MAST\_1D.clsDurationCurve module
 --------------------------------
 
 .. automodule:: MAST_1D.clsDurationCurve
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-MAST\_1D.clsDurationCurveTest module
-------------------------------------
-
-.. automodule:: MAST_1D.clsDurationCurveTest
    :members:
    :undoc-members:
    :show-inheritance:
@@ -153,14 +121,6 @@ MAST\_1D.clsTracerProperties module
 -----------------------------------
 
 .. automodule:: MAST_1D.clsTracerProperties
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-MAST\_1D.deleteme module
-------------------------
-
-.. automodule:: MAST_1D.deleteme
    :members:
    :undoc-members:
    :show-inheritance:

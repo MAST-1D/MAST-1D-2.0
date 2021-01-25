@@ -3,10 +3,10 @@ import numpy as np
 class clsDurationCurve:
     """
     Defines discharge distribution.
-
+   
     Stores total discharge and various hydraulic parameters associated with
     various discharge bins.
-
+    
     Parameters
     ----------
     NFlows : int
@@ -48,8 +48,12 @@ class clsDurationCurve:
         Flag to determine if object was initialized.
     """
     Initialized = False
-
+    
     def __init__(self, NFlows):
+        """
+        Arguments:
+            NFlows -- float
+        """
         if not self.Initialized:
             self.Qw = np.zeros(NFlows)
             self.p = np.zeros(NFlows)
@@ -63,14 +67,15 @@ class clsDurationCurve:
             self.Dfloodplain = np.zeros(NFlows)
             self.WSE = np.zeros(NFlows)
             self.Sf = np.zeros(NFlows)
+            self.TauPrime = np.zeros(NFlows)
             self.Migrationfactor = np.zeros(NFlows)
             self.Initialized = True
         else:
             raise RuntimeError('Tried to initiate clsDurationCurve twice.')
-
+    
     def NFlows(self):
         return len(self.p)
-
+    
     def FroudChannel(self, j):
         """
         Froude number in channel in jth discharge bin.
@@ -87,7 +92,7 @@ class clsDurationCurve:
         """
         g = 9.81
         return self.Uc[j] / (g * self.Hc[j]) ** 0.5
-
+    
     def WeightByFDC(self, x):
         """
         Weights a variable defined at all flows in the discharge distribution
@@ -107,3 +112,29 @@ class clsDurationCurve:
         for i in range(len(p)):
             WeightByFDC = x[j] * self.p[j] + WeightByFDC
         return WeightByFDC
+  
+    def find_TauPrime(self, NFlows, g, D65): # Katie move from WC function in clsLoad
+        """
+        Katie add.  Calculates the channel-averaged shear stress.  Was moved from
+        the main Wilcock-Crowe function.
+        
+        Parameters
+        ----------
+        NFlows : int
+            Number of discharge bins.
+        g : float
+            Gravitational constant, 9.81 m/s2.
+        D65 : float
+            Sediment diameter (mm) for which 65% of sediment is finer.
+        
+        Note
+        ----
+        POTENTIAL CODE UPDATE: It may not be necessary to include this method in the
+        flow duration distribution class.  If discharge weighting is needed, tauprime
+        should be made an attribute of th class, not a method.
+        """
+        for j in range(NFlows):
+            TauPrime = 1000. * g * (0.013) ** 1.5 * (self.Sf[j] * 2 * D65) ** 0.25 * \
+                self.Uc[j] ** 1.5 # eq 2.14 in BAGS primer: n = 0.0146D65 for D65 in mm
+                
+            self.TauPrime[j] = TauPrime

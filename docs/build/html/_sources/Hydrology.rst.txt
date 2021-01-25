@@ -52,14 +52,6 @@ Hydrology.clsTimeSeries module
    :undoc-members:
    :show-inheritance:
 
-Hydrology.clsTimeSeriesOld module
----------------------------------
-
-.. automodule:: Hydrology.clsTimeSeriesOld
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Module contents
 ---------------
 

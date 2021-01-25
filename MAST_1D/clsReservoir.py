@@ -3,7 +3,7 @@ from clsGSD import clsGSD
 import numpy as np
 from copy import deepcopy
 
-class clsReservoir:
+class clsReservoir: 
     """
     A class defining a sediment storage reservoir.
     

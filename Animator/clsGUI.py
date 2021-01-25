@@ -5,8 +5,9 @@ Created on Mon May 08 20:14:23 2017
 @author: geography
 """
 import os
-import Tkinter as T
-import tkFileDialog
+import tkinter as T
+#import tkFileDialog
+from tkinter import filedialog
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.animation as animation
 from clsAnimation import clsAnimation
@@ -99,7 +100,7 @@ class clsGUI(object):
             self.PlotlabelOptions()
     
     def chooserun(self):
-        filename = tkFileDialog.askdirectory(**self.dir_opt)
+        filename = filedialog.askdirectory(**self.dir_opt)
         
         # Write new current path
         pathfile = open(os.path.join('Animator', 'PathLastOpened.txt'), 'w')

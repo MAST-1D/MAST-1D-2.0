@@ -24,7 +24,6 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -83,17 +82,12 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">MAST-1D-2.0</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="AnimateResults.html">AnimateResults module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Animator.html">Animator package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Hydrology.html">Hydrology package</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">MAST_1D package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#mast-1d-animator-module">MAST_1D.Animator module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#mast-1d-animatorcomparison-module">MAST_1D.AnimatorComparison module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#mast-1d-gui-module">MAST_1D.GUI module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#mast-1d-inputschecker-module">MAST_1D.InputsChecker module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.Animator">MAST_1D.Animator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsDurationCurve">MAST_1D.clsDurationCurve module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsDurationCurveTest">MAST_1D.clsDurationCurveTest module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsExchangeTypes">MAST_1D.clsExchangeTypes module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsExport_object">MAST_1D.clsExport_object module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsGSD">MAST_1D.clsGSD module</a></li>
@@ -107,7 +101,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsReservoir">MAST_1D.clsReservoir module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsSubstratePairClass">MAST_1D.clsSubstratePairClass module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.clsTracerProperties">MAST_1D.clsTracerProperties module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D.deleteme">MAST_1D.deleteme module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-MAST_1D">Module contents</a></li>
 </ul>
 </li>
@@ -185,17 +178,10 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="mast-1d-animator-module">
-<h2>MAST_1D.Animator module<a class="headerlink" href="#mast-1d-animator-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="mast-1d-animatorcomparison-module">
-<h2>MAST_1D.AnimatorComparison module<a class="headerlink" href="#mast-1d-animatorcomparison-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="mast-1d-gui-module">
-<h2>MAST_1D.GUI module<a class="headerlink" href="#mast-1d-gui-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="mast-1d-inputschecker-module">
-<h2>MAST_1D.InputsChecker module<a class="headerlink" href="#mast-1d-inputschecker-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-MAST_1D.Animator">
+<span id="mast-1d-animator-module"></span><h2>MAST_1D.Animator module<a class="headerlink" href="#module-MAST_1D.Animator" title="Permalink to this headline">¶</a></h2>
+<p>Created on Tue Apr 21 13:39:45 2015</p>
+<p>&#64;author: geography</p>
 </div>
 <div class="section" id="module-MAST_1D.clsDurationCurve">
 <span id="mast-1d-clsdurationcurve-module"></span><h2>MAST_1D.clsDurationCurve module<a class="headerlink" href="#module-MAST_1D.clsDurationCurve" title="Permalink to this headline">¶</a></h2>
@@ -203,36 +189,52 @@
 <dt id="MAST_1D.clsDurationCurve.clsDurationCurve">
 <em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsDurationCurve.</code><code class="sig-name descname">clsDurationCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">NFlows</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsDurationCurve.clsDurationCurve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl>
-<dt>Attributes:</dt><dd><p>Qw – [float] Water Discharge in bin
-p – [float] Fraction of time bin occurs
-Uc – [float] Water velocity in channel in bin
-Uf – [float] Water velocity on floodplain in bin
-Hc – [float] Water depth in channel in bin
-Hf – [float] Water depth on floodplain in bin
-Qwc – [float] Discharge of water in the channel in bin
-Qwf – [float] Discharge of water on the floodplain in bin
-Qs – [float] Sediment discharge in bin – probably should remove</p>
-<blockquote>
-<div><p>this since all load is handled in clsLoad</p>
-</div></blockquote>
-<p>WSE – [float] Water surface elevation
-Sf – [float] Friction Slope
-Dfloodplain – [float] Floodplain deposition in bin–should check</p>
-<blockquote>
-<div><p>whether this is stored elsewhere</p>
-</div></blockquote>
-<dl class="simple">
-<dt>MigrationFactor – [float] Factor that determines how much of the</dt><dd><p>annual average migration occurs for each of duration curve</p>
+<p>Defines discharge distribution.</p>
+<p>Stores total discharge and various hydraulic parameters associated with
+various discharge bins.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>NFlows</strong> (<em>int</em>) – Number of discharge bins.</p>
 </dd>
-</dl>
-<p>Initialized – bool</p>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>Qw</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NFlows</em><em>)</em>) – Water Discharge in bin.</p></li>
+<li><p><strong>p</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NFlows</em><em>)</em>) – Fraction of time bin occurs.</p></li>
+<li><p><strong>Uc</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NFlows</em><em>)</em>) – Water velocity in channel in bin.</p></li>
+<li><p><strong>Uf</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NFlows</em><em>)</em>) – Water velocity on floodplain in bin.</p></li>
+<li><p><strong>Hc</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NFlows</em><em>)</em>) – Water depth in channel in bin.</p></li>
+<li><p><strong>Hf</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NFlows</em><em>)</em>) – Water depth on floodplain in bin.</p></li>
+<li><p><strong>Qwc</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NFlows</em><em>)</em>) – Discharge of water in the channel in bin.</p></li>
+<li><p><strong>Qwf</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NFlows</em><em>)</em>) – Discharge of water on the floodplain in bin.</p></li>
+<li><p><strong>Qs</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NFlows</em><em>)</em>) – Sediment discharge in bin. POTENTIAL CODE
+UPDATE: probably should remove
+this since all load is handled in clsLoad</p></li>
+<li><p><strong>WSE</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NFlows</em><em>)</em>) – Water surface elevation.</p></li>
+<li><p><strong>Sf</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NFlows</em><em>)</em>) – Friction Slope.</p></li>
+<li><p><strong>Dfloodplain</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NFlows</em><em>)</em>) – Floodplain deposition in bin–should check
+whether this is stored elsewhere.</p></li>
+<li><p><strong>MigrationFactor</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NFlows</em><em>)</em>) – Factor that determines how much of the
+annual average migration occurs for each of duration curve.</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsDurationCurve.clsDurationCurve.Initialized" title="MAST_1D.clsDurationCurve.clsDurationCurve.Initialized"><strong>Initialized</strong></a> (<em>bool</em>) – Flag to determine if object was initialized.</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt id="MAST_1D.clsDurationCurve.clsDurationCurve.FroudChannel">
 <code class="sig-name descname">FroudChannel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">j</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsDurationCurve.clsDurationCurve.FroudChannel" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Froude number in channel in jth discharge bin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>j</strong> (<em>int</em>) – Index of discharge bin.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Froude number.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt id="MAST_1D.clsDurationCurve.clsDurationCurve.Initialized">
@@ -247,73 +249,17 @@ Dfloodplain – [float] Floodplain deposition in bin–should check</p>
 <dl class="py method">
 <dt id="MAST_1D.clsDurationCurve.clsDurationCurve.WeightByFDC">
 <code class="sig-name descname">WeightByFDC</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsDurationCurve.clsDurationCurve.WeightByFDC" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-MAST_1D.clsDurationCurveTest">
-<span id="mast-1d-clsdurationcurvetest-module"></span><h2>MAST_1D.clsDurationCurveTest module<a class="headerlink" href="#module-MAST_1D.clsDurationCurveTest" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt id="MAST_1D.clsDurationCurveTest.clsDurationCurve">
-<em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsDurationCurveTest.</code><code class="sig-name descname">clsDurationCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">NFlows</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsDurationCurveTest.clsDurationCurve" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl>
-<dt>Attributes:</dt><dd><p>Qw – [float] Water Discharge in bin
-p – [float] Fraction of time bin occurs
-Uc – [float] Water velocity in channel in bin
-Uf – [float] Water velocity on floodplain in bin
-Hc – [float] Water depth in channel in bin
-Hf – [float] Water depth on floodplain in bin
-Qwc – [float] Discharge of water in the channel in bin
-Qwf – [float] Discharge of water on the floodplain in bin
-Qs – [float] Sediment discharge in bin – probably should remove</p>
-<blockquote>
-<div><p>this since all load is handled in clsLoad</p>
-</div></blockquote>
-<p>WSE – [float] Water surface elevation
-Sf – [float] Friction Slope
-Dfloodplain – [float] Floodplain deposition in bin–should check</p>
-<blockquote>
-<div><p>whether this is stored elsewhere</p>
-</div></blockquote>
-<dl class="simple">
-<dt>MigrationFactor – [float] Factor that determines how much of the</dt><dd><p>annual average migration occurs for each of duration curve</p>
+<dd><p>Weights a variable defined at all flows in the discharge distribution
+by the fractions of time each discharge in the distribution occurs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>array_like(length = NFlows)</em>) – Variable to be weighted.</p>
 </dd>
-</dl>
-<p>Initialized – bool</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Weighted variable.</p>
 </dd>
-</dl>
-<dl class="py method">
-<dt id="MAST_1D.clsDurationCurveTest.clsDurationCurve.FroudChannel">
-<code class="sig-name descname">FroudChannel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">j</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsDurationCurveTest.clsDurationCurve.FroudChannel" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="MAST_1D.clsDurationCurveTest.clsDurationCurve.Initialized">
-<code class="sig-name descname">Initialized</code><em class="property"> = False</em><a class="headerlink" href="#MAST_1D.clsDurationCurveTest.clsDurationCurve.Initialized" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="MAST_1D.clsDurationCurveTest.clsDurationCurve.NFlows">
-<code class="sig-name descname">NFlows</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsDurationCurveTest.clsDurationCurve.NFlows" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="MAST_1D.clsDurationCurveTest.clsDurationCurve.WeightByFDC">
-<code class="sig-name descname">WeightByFDC</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsDurationCurveTest.clsDurationCurve.WeightByFDC" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="MAST_1D.clsDurationCurveTest.clsDurationCurve.find_TauPrime">
-<code class="sig-name descname">find_TauPrime</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">NFlows</span></em>, <em class="sig-param"><span class="n">g</span></em>, <em class="sig-param"><span class="n">D65</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsDurationCurveTest.clsDurationCurve.find_TauPrime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Katie add.  Calculates the channel-averaged shear stress.  Was moved from
-the main Wilcock-Crowe function.</p>
-<dl class="simple">
-<dt>Arguments:</dt><dd><p>Sf – float
-g – float
-D65
-U – float</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -327,48 +273,38 @@ U – float</p>
 <dt id="MAST_1D.clsExchangeTypes.clsExchangeTypes">
 <em class="property">class </em><code class="sig-prename descclassname">MAST_1D.clsExchangeTypes.</code><code class="sig-name descname">clsExchangeTypes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">NSizes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MAST_1D.clsExchangeTypes.clsExchangeTypes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<blockquote>
-<div><p>Defines the main types of boundary-movement exchanges.</p>
-<p>Stores size-specific fluxes of sediment volume or tracer associated with</p>
-</div></blockquote>
-<p>lateral exchange in a reservoir.  Non-boundary movement exchanges
+<p>Defines the main types of boundary-movement exchanges.</p>
+<p>Stores size-specific fluxes of sediment volume or tracer associated with
+lateral exchange in a reservoir.  Non-boundary movement exchanges
 are handled elsewhere. Can be used for storing either sediment
 volume fluxes or sediment tracer concentrations.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul>
-<li><p><strong>NSizes</strong> (<em>int</em>) – Number of bed material sediment size classes. CONSIDER
+<dd class="field-odd"><p><strong>NSizes</strong> (<em>int</em>) – Number of bed material sediment size classes. CONSIDER
 RENAMING AS NBedSizes FOR CONSISTENCY WITH GSD.</p>
-<p>Attributes</p>
-</li>
-<li><p><strong>———-</strong> – OutMigration : array_like(float, length = NSizes + 1)
-Movement out of reservoir associated with lateral channel
-movement that does not lead to net width change. Size
-with index k = 0 represents washload.
-OutWidthChange : array_like(float, length = NSizes + 1)</p>
-<blockquote>
-<div><p>Movement out of reservoir associated with with net widening</p>
-</div></blockquote>
-<p>or narrowing. Size with index k = 0 represents washload.</p>
-</li>
-<li><p><strong>OutVerticalChange</strong> (<em>array_like(float, length = NSizes + 1)</em>) – Movement out of reservoir associated with vertical
-movement of one of the reservoir boundaries. Size
-with index k = 0 represents washload.
-InMigration : array_like(float, length = NSizes + 1)
-Movement into reservoir associated with lateral channel
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>OutMigration</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NSizes + 1</em><em>)</em>) – Movement out of reservoir associated with lateral channel
 movement that does not lead to net width change. Size
 with index k = 0 represents washload.</p></li>
-<li><p><strong>InWidthChange</strong> (<em>array_like(float, length = NSizes + 1)</em>) – Movement into reservoir associated with lateral channel
+<li><p><strong>OutWidthChange</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NSizes + 1</em><em>)</em>) – Movement out of reservoir associated with with net widening
+or narrowing. Size with index k = 0 represents washload.</p></li>
+<li><p><strong>OutVerticalChange</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NSizes + 1</em><em>)</em>) – Movement out of reservoir associated with vertical
+movement of one of the reservoir boundaries. Size
+with index k = 0 represents washload.</p></li>
+<li><p><strong>InMigration</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NSizes + 1</em><em>)</em>) – Movement into reservoir associated with lateral channel
 movement that does not lead to net width change. Size
 with index k = 0 represents washload.</p></li>
-<li><p><strong>InVerticalChange</strong> (<em>array_like(float, length = NSizes + 1)</em>) – Movement into reservoir associated with vertical
+<li><p><strong>InWidthChange</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NSizes + 1</em><em>)</em>) – Movement into reservoir associated with lateral channel
+movement that does not lead to net width change. Size
+with index k = 0 represents washload.</p></li>
+<li><p><strong>InVerticalChange</strong> (<em>array_like</em><em>(</em><em>float</em><em>, </em><em>length = NSizes + 1</em><em>)</em>) – Movement into reservoir associated with vertical
 movement of one of the reservoir boundaries. Size
-with index k = 0 represents washload.
-NSizes : int
-Number of bed material sediment size classes. CONSIDER
-RENAMING AS NBedSizes FOR CONSISTENCY WITH GSD.
-Initialized : bool.
-Flag indicating if object has been initialized.</p></li>
+with index k = 0 represents washload.</p></li>
+<li><p><strong>NSizes</strong> (<em>int</em>) – Number of bed material sediment size classes. CONSIDER
+RENAMING AS NBedSizes FOR CONSISTENCY WITH GSD.</p></li>
+<li><p><a class="reference internal" href="#MAST_1D.clsExchangeTypes.clsExchangeTypes.Initialized" title="MAST_1D.clsExchangeTypes.clsExchangeTypes.Initialized"><strong>Initialized</strong></a> (<em>bool.</em>) – Flag indicating if object has been initialized.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2691,11 +2627,6 @@ nuclides for production proce(ss n (spallation, fast muons, slow muons)</p></li>
 
 </dd></dl>
 
-</div>
-<div class="section" id="module-MAST_1D.deleteme">
-<span id="mast-1d-deleteme-module"></span><h2>MAST_1D.deleteme module<a class="headerlink" href="#module-MAST_1D.deleteme" title="Permalink to this headline">¶</a></h2>
-<p>Created on Mon Jan  4 13:16:27 2021</p>
-<p>&#64;author: lauerj</p>
 </div>
 <div class="section" id="module-MAST_1D">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-MAST_1D" title="Permalink to this headline">¶</a></h2>

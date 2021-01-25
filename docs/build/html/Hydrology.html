@@ -24,7 +24,6 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -83,17 +82,15 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">MAST-1D-2.0</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="AnimateResults.html">AnimateResults module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Animator.html">Animator package</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Hydrology package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hydrology-clsdcfromq-module">Hydrology.clsDCfromQ module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-Hydrology.clsDCfromQ">Hydrology.clsDCfromQ module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-Hydrology.clsProbScale">Hydrology.clsProbScale module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-Hydrology.clsQCreator">Hydrology.clsQCreator module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hydrology-clsqrecord-module">Hydrology.clsQrecord module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hydrology-clstsplot-module">Hydrology.clsTSPlot module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-Hydrology.clsQrecord">Hydrology.clsQrecord module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-Hydrology.clsTSPlot">Hydrology.clsTSPlot module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-Hydrology.clsTimeSeries">Hydrology.clsTimeSeries module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hydrology-clstimeseriesold-module">Hydrology.clsTimeSeriesOld module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-Hydrology">Module contents</a></li>
 </ul>
 </li>
@@ -172,8 +169,26 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="hydrology-clsdcfromq-module">
-<h2>Hydrology.clsDCfromQ module<a class="headerlink" href="#hydrology-clsdcfromq-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-Hydrology.clsDCfromQ">
+<span id="hydrology-clsdcfromq-module"></span><h2>Hydrology.clsDCfromQ module<a class="headerlink" href="#module-Hydrology.clsDCfromQ" title="Permalink to this headline">¶</a></h2>
+<p>Created on Wed Feb 10 17:38:44 2016</p>
+<p>&#64;author: geography</p>
+<dl class="py class">
+<dt id="Hydrology.clsDCfromQ.clsDCfromQ">
+<em class="property">class </em><code class="sig-prename descclassname">Hydrology.clsDCfromQ.</code><code class="sig-name descname">clsDCfromQ</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Qpath</span></em>, <em class="sig-param"><span class="n">HydroBins</span></em>, <em class="sig-param"><span class="n">recordbreaks</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">feet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">logbin</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Hydrology.clsDCfromQ.clsDCfromQ" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="Hydrology.clsDCfromQ.clsDCfromQ.ExtractDC">
+<code class="sig-name descname">ExtractDC</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">recordperiod</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Hydrology.clsDCfromQ.clsDCfromQ.ExtractDC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Hydrology.clsDCfromQ.clsDCfromQ.LoadQ">
+<code class="sig-name descname">LoadQ</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Hydrology.clsDCfromQ.clsDCfromQ.LoadQ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-Hydrology.clsProbScale">
 <span id="hydrology-clsprobscale-module"></span><h2>Hydrology.clsProbScale module<a class="headerlink" href="#module-Hydrology.clsProbScale" title="Permalink to this headline">¶</a></h2>
@@ -408,11 +423,189 @@ individual water years is preserved, but the order of the years is randomized</p
 </dd></dl>
 
 </div>
-<div class="section" id="hydrology-clsqrecord-module">
-<h2>Hydrology.clsQrecord module<a class="headerlink" href="#hydrology-clsqrecord-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-Hydrology.clsQrecord">
+<span id="hydrology-clsqrecord-module"></span><h2>Hydrology.clsQrecord module<a class="headerlink" href="#module-Hydrology.clsQrecord" title="Permalink to this headline">¶</a></h2>
+<p>Created on Thu Feb 11 13:54:29 2016
+&#64;author: geography</p>
+<dl class="py class">
+<dt id="Hydrology.clsQrecord.clsQrecord">
+<em class="property">class </em><code class="sig-prename descclassname">Hydrology.clsQrecord.</code><code class="sig-name descname">clsQrecord</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Path</span></em>, <em class="sig-param"><span class="n">recordbreaks</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">Qsheet</span><span class="o">=</span><span class="default_value">'Q'</span></em>, <em class="sig-param"><span class="n">smoothed</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Hydrology.clsQrecord.clsQrecord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Loads and holds data for entire time series, e.g. discharge or precipitation record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Dates</strong> (<em>[</em><em>date</em><em>]</em>) – Date in time series, in matplotlib’s datetime format.</p></li>
+<li><p><strong>Values</strong> (<em>[</em><em>float</em><em>]</em>) – Time series values.</p></li>
+<li><p><strong>smoothed</strong> (<em>bool</em>) – False by default; if smoothing is applied to data, becomes True.</p></li>
+<li><p><strong>averages</strong> (<em>[</em><em>[</em><em>int</em><em>,</em><em>int</em><em>,</em><em>float</em><em>]</em><em>]</em>) – List of averages for defined periods with their date indexes.</p></li>
+<li><p><strong>recordbreaks</strong> (<em>[</em><em>str</em><em>]</em>) – List of dates to divide data.</p></li>
+<li><p><strong>timechunks</strong> (<em>[</em><a class="reference internal" href="#Hydrology.clsTimeSeries.clsTimeSeries" title="Hydrology.clsTimeSeries.clsTimeSeries"><em>clsTimeSeries</em></a><em>]</em>) – List of divided data.</p></li>
+<li><p><strong>CumDep</strong> (<em>[</em><em>float</em><em>]</em>) – List of stored values for cumulative departure analysis.</p></li>
+<li><p><strong>Years</strong> (<em>[</em><em>int</em><em>]</em>) – List of years to correspond with CumDep.</p></li>
+<li><p><strong>indexdict</strong> (<em>{str:int}</em>) – Matches string of record chunk in form ddmmyyyyddmmyyyy to index in timechunks list.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="Hydrology.clsQrecord.clsQrecord.Cumu_departure">
+<code class="sig-name descname">Cumu_departure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">startyear</span></em>, <em class="sig-param"><span class="n">endyear</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Hydrology.clsQrecord.clsQrecord.Cumu_departure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the cumulative departure of total annual flow given a daily discharge record.
+-Sums flow for each year.
+-Calculates mean for all years.
+-Sets Values list to cumulative departure from this mean.
+Method is adapted from the USGS (Kresch, 1994)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>startyear</strong> (<em>int</em>) – </p></li>
+<li><p><strong>endyear</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Hydrology.clsQrecord.clsQrecord.Extract_timechunks">
+<code class="sig-name descname">Extract_timechunks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Hydrology.clsQrecord.clsQrecord.Extract_timechunks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Hydrology.clsQrecord.clsQrecord.Load_P_data">
+<code class="sig-name descname">Load_P_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Worksheet</span><span class="o">=</span><span class="default_value">'646810'</span></em>, <em class="sig-param"><span class="n">label</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">text</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Hydrology.clsQrecord.clsQrecord.Load_P_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads in precip data from ‘Elwha_daily_climate_data’ spreadsheet and fills Dates and Values lists and label</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Worksheet</strong> (<em>str</em>) – Optional name of Excel worksheet; default is ‘Q’)</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – Name of series (for labeling y-axis of figure.</p></li>
+<li><p><strong>text</strong> (<em>str</em>) – Optional Label for subplot.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Hydrology.clsQrecord.clsQrecord.Load_Pk_data">
+<code class="sig-name descname">Load_Pk_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Worksheet</span><span class="o">=</span><span class="default_value">'ForAnalysis'</span></em>, <em class="sig-param"><span class="n">label</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">text</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Hydrology.clsQrecord.clsQrecord.Load_Pk_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads in discharge data from the ‘Peak_McDonaldGauge’ Excel file and fills Dates and Values lists and label</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Worksheet</strong> (<em>str</em>) – Optional name of Excel worksheet; default is ‘Q’.</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – Name of series (for labeling y-axis of figure).</p></li>
+<li><p><strong>text</strong> (<em>str</em>) – Optional Label for subplot.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Hydrology.clsQrecord.clsQrecord.Load_Q_data">
+<code class="sig-name descname">Load_Q_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Worksheet</span><span class="o">=</span><span class="default_value">'Q'</span></em>, <em class="sig-param"><span class="n">label</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">text</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Hydrology.clsQrecord.clsQrecord.Load_Q_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads in discharge data from the ‘Q_McDonaldBridge’ Excel file and fills Dates and Values lists and label</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Worksheet</strong> (<em>str</em>) – Optional name of Excel worksheet; default is ‘Q’.</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – Name of series (for labeling y-axis of figure).</p></li>
+<li><p><strong>text</strong> (<em>str</em>) – Optional Label for subplot.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Hydrology.clsQrecord.clsQrecord.Load_SD_data">
+<code class="sig-name descname">Load_SD_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Worksheet</span><span class="o">=</span><span class="default_value">'Elwha_monthly_climate_data'</span></em>, <em class="sig-param"><span class="n">label</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">text</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Hydrology.clsQrecord.clsQrecord.Load_SD_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads in discharge data from the ‘Elwha_monthly_climate_data_with_snow_graphs’ Excel file and fills Dates and Values lists and label
+Currently brings in max January snow depth</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Worksheet</strong> (<em>str</em>) – Optional name of Excel worksheet; default is ‘Q’.</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – Name of series (for labeling y-axis of figure)</p></li>
+<li><p><strong>text</strong> (<em>str</em>) – Optional Label for subplot.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Hydrology.clsQrecord.clsQrecord.PlotDurationCurve">
+<code class="sig-name descname">PlotDurationCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bins</span></em>, <em class="sig-param"><span class="n">feet</span></em>, <em class="sig-param"><span class="n">export</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Hydrology.clsQrecord.clsQrecord.PlotDurationCurve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the CreateDurationCurve method in clsTimeSeries for each timechunk</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>feet</strong> (<em>bool</em>) – Denotes whether discharge data is in cubic meters per second (False)
+or cubic feet per second (True))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Hydrology.clsQrecord.clsQrecord.Smooth_data">
+<code class="sig-name descname">Smooth_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Hydrology.clsQrecord.clsQrecord.Smooth_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates a moving average of a smoothing value for a given Values dataset and
+adjusts Values and Date set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>int</em>) – Smoothing value–must be an odd number.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="hydrology-clstsplot-module">
-<h2>Hydrology.clsTSPlot module<a class="headerlink" href="#hydrology-clstsplot-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-Hydrology.clsTSPlot">
+<span id="hydrology-clstsplot-module"></span><h2>Hydrology.clsTSPlot module<a class="headerlink" href="#module-Hydrology.clsTSPlot" title="Permalink to this headline">¶</a></h2>
+<p>Created on Tue Mar 01 18:36:06 2016</p>
+<p>&#64;author: geography</p>
+<dl class="py class">
+<dt id="Hydrology.clsTSPlot.clsTSPlot">
+<em class="property">class </em><code class="sig-prename descclassname">Hydrology.clsTSPlot.</code><code class="sig-name descname">clsTSPlot</code><a class="headerlink" href="#Hydrology.clsTSPlot.clsTSPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="Hydrology.clsTSPlot.clsTSPlot.Add_Series">
+<code class="sig-name descname">Add_Series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">Dtype</span></em>, <em class="sig-param"><span class="n">label</span></em>, <em class="sig-param"><span class="n">smoothed</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">timechunks</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">text</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Hydrology.clsTSPlot.clsTSPlot.Add_Series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates clsTimeSeries object, loads the data to it, and adds it to the Series list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path where file is stored.</p></li>
+<li><p><strong>Dtype</strong> (<em>str</em>) – Type of data in order to reference the correct function to load the data.
+-‘Q’ = Daily Discharge
+-‘P’ = Daily Precipitation
+- smoothed–int (default is 0; if it is not 0, data is smoothed with smoothing function and plotted; value must be odd)
+- timechunks–[str] (list of periods to divide data)
+- text – str (optional Label for subplot)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Hydrology.clsTSPlot.clsTSPlot.Plot_func">
+<code class="sig-name descname">Plot_func</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ax</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">ylabel</span></em>, <em class="sig-param"><span class="n">shading</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Hydrology.clsTSPlot.clsTSPlot.Plot_func" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Hydrology.clsTSPlot.clsTSPlot.Plot_series">
+<code class="sig-name descname">Plot_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shading</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">smoothed</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Hydrology.clsTSPlot.clsTSPlot.Plot_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates plot of time series</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shading</strong> (<em>[[int],[int]]</em>) – For shading date ranges.  Contains lists of start-end date pairs with the format ‘yyyymmdd’).</p></li>
+<li><p><strong>smoothed</strong> (<em>int</em>) – Default is 0; if it is not 0, data is smoothed with smoothing function and plotted; value must be odd).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-Hydrology.clsTimeSeries">
 <span id="hydrology-clstimeseries-module"></span><h2>Hydrology.clsTimeSeries module<a class="headerlink" href="#module-Hydrology.clsTimeSeries" title="Permalink to this headline">¶</a></h2>
@@ -423,32 +616,47 @@ individual water years is preserved, but the order of the years is randomized</p
 <em class="property">class </em><code class="sig-prename descclassname">Hydrology.clsTimeSeries.</code><code class="sig-name descname">clsTimeSeries</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Dates</span></em>, <em class="sig-param"><span class="n">Values</span></em>, <em class="sig-param"><span class="n">label</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">text</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Hydrology.clsTimeSeries.clsTimeSeries" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Holds data for time chunks of time series</p>
-<p>Attributes:</p>
-<p>Dates–[date] (Date in time series, in matplotlib’s datetime format)
-Values–[float] (Time series values)
-label–str (Label for y-axis)
-averages–[[int,int,float]] (List of averages for defined periods with their date indexes)
-timechunks–[str] (list of periods to divide data)
-text – str (optional Label for subplot)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Dates</strong> (<em>[date]</em>) – Date in time series, in matplotlib’s datetime format.</p></li>
+<li><p><strong>Values</strong> (<em>[float]</em>) – Time series values.</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – Label for y-axis.</p></li>
+<li><p><strong>text</strong> (<em>str (optional)</em>) – Label for subplot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>Dates</strong> (<em>[</em><em>date</em><em>]</em>) – Date in time series, in matplotlib’s datetime format.</p></li>
+<li><p><strong>Values</strong> (<em>[</em><em>float</em><em>]</em>) – Time series values.</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – Label for y-axis.</p></li>
+<li><p><strong>averages</strong> (<em>[</em><em>[</em><em>int</em><em>,</em><em>int</em><em>,</em><em>float</em><em>]</em><em>]</em>) – List of averages for defined periods with their date indexes.</p></li>
+<li><p><strong>timechunks</strong> (<em>[</em><em>str</em><em>]</em>) – List of periods to divide data.</p></li>
+<li><p><strong>text</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Label for subplot.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt id="Hydrology.clsTimeSeries.clsTimeSeries.CreateDurationCurve">
 <code class="sig-name descname">CreateDurationCurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bins</span></em>, <em class="sig-param"><span class="n">feet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">minQ</span><span class="o">=</span><span class="default_value">40.0</span></em>, <em class="sig-param"><span class="n">logbin</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Hydrology.clsTimeSeries.clsTimeSeries.CreateDurationCurve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a flow duration curve for daily discharge data given a number of bins to use.  If the attribute
 feet is set to True, the function will run a ft^3/s to m^3/s conversion after the
 data has been binned.</p>
-<p>Attributes:</p>
-<p>bins–int (number of bins to use)
-feet–bool (denotes whether discharge data is in cubic meters per second (False)</p>
-<blockquote>
-<div><p>or cubic feet per second (True))</p>
-</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bins</strong> (<em>int</em>) – Number of bins to use.</p></li>
+<li><p><strong>feet</strong> (<em>bool (optional)</em>) – Denotes whether discharge data is in cubic meters per second (False)
+or cubic feet per second (True))</p></li>
+<li><p><strong>minQ</strong> (<em>???</em>) – NEEDS TO BE DOCUMENTED</p></li>
+<li><p><strong>logbin</strong> (<em>bool</em>) – NEEDS TO BE DOCUMENTED</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
-</div>
-<div class="section" id="hydrology-clstimeseriesold-module">
-<h2>Hydrology.clsTimeSeriesOld module<a class="headerlink" href="#hydrology-clstimeseriesold-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-Hydrology">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Hydrology" title="Permalink to this headline">¶</a></h2>
