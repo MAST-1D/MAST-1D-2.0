@@ -115,7 +115,7 @@ II:  SET CHANNEL GEOMETRY.
 Note that you must fill these variables even if you are importing them in Section
 I.A or I.B.  MAST-1D will set the feed and floodplain number based on these values.
 """
-inputs.Nnodes = 6 #  Number of nodes
+inputs.Nnodes = 16 #  Number of nodes
 inputs.Bc = 94. # Channel width (m)
 inputs.reachlength = 13673. # Length of reach (channel length) (m)
 inputs.Bf = 500 # Total valley width (m)
@@ -169,7 +169,8 @@ inputs.FeedType = "DurationCurve" # Choose 'DurationCurve' if using a duration
     # method for applying feed--see Section VI.E in clsModel.
 
 #  Downstream water surface elevation
-inputs.SetBoundary = True # True if you want to set a downstream boundary condition; false, model calculates it
+#inputs.SetBoundary = True # True if you want to set a downstream boundary condition; false, model calculates it
+#inputs.SetBoundary = True # True if you want to set a downstream boundary condition; false, model calculates it
 inputs.BoundaryFactor = [30.]
 inputs.BoundaryFactorCount = [] #  List of times to instigate WSE change--should
     # be an int (# of timesteps) for duration curves or a tuple ((yyyy, m, dd))
