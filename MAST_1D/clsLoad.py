@@ -811,7 +811,7 @@ class clsLoad(object):
         array_like(dim = 2, length = (NFlows, NSizes + 1)) : JKFeed
             JKFeed[0,:] is same as KFeed[:].  Only works when there is one flow bin.         
         """
-        
+            
         KFeed = np.zeros(self.NSizes + 1)
         JKFeed = np.zeros((1, self.NSizes + 1))
         
@@ -826,8 +826,7 @@ class clsLoad(object):
         
         for k in range(1, ControlNode.NSizes + 1):                   
             KFeed[k] = FeedArray[k]*Multiplier
-            JKFeed[0, k] = Multiplier * \
-            FeedArray[k] # Only works when there is one flow bin.
+            JKFeed[0, k] = FeedArray[k]*Multiplier  # Only works with one flow bin.
                     
         # Calculate mud load as a set constant of next finest size class
         KFeed[0] = KFeed[1]*MudFraction
@@ -897,7 +896,7 @@ class clsLoad(object):
         array_like(dim = 2, length = (NFlows, NSizes + 1)) : JKFeed
             JKFeed[0,:] is same as KFeed[:].  Only works when there is one flow bin.        
         """
-                
+
         KFeed, JKFeed = self.UpdateFeedRatingCurve(ControlNode, Multiplier, MudFraction, Q,\
             vfunc, TrinityFit, CalibrationFactor, ControlGSD)
 
@@ -1145,7 +1144,7 @@ class clsLoad(object):
     
     def ApplyMassConservationToMudLoad(self, DC):
         """
-        Method to adjust mud load based on amount of mud added or removed because
+        Method to adjust mud load based on amount of mud added or removed
         through exchange with sediment reservoirs adjacent to channel.
         
         Note
@@ -1215,7 +1214,7 @@ class clsLoad(object):
         possible given the right conditions). However, even the, the model 
         pulls the gravel that is being put into storage from both the active
         layer and load at rather arbitrary rates, so it is not clear whether
-        it is pulling the correct amount of traver gravel from the active 
+        it is pulling the correct amount of tracer gravel from the active 
         layer. In other words, if there is minimal bed change, it is possible
         for tracer particles to move too far downstream since there is no 
         exchange between load and active layer.

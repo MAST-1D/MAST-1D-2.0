@@ -11,11 +11,15 @@ class clsReach(object):
     A class defining a river reach.
     
     Defines the properties of a river reach within which sediment will be
-    routed downstream.  A reach consists of a set of nodes connected in
-    series.  Each node represents multiple bends of the channel.  The reach
-    class includes methods for computing water level in each node given
-    flow in the reach and downstream boundary conditions.  It also includes
-    methods for specifying a size-specific sediment feed rate.
+    routed downstream. A reach consists of a set of nodes connected in
+    series. Each node defines a typical cross-section in which sediment mass
+    conservaion is performed and represents multiple bends of the channel. 
+    Discharge can vary moderately from node to node in a reach, and lateral 
+    sediment supply can be provided at the node level, so reaches 
+    can thus be thought of as links in a low-resolution hydrologic network. 
+    The reach class includes methods for computing water level at each node 
+    given flow in each node and downstream boundary conditions.  It also 
+    includes methods for specifying a size-specific sediment feed rates. 
     
     Note
     ----
@@ -35,7 +39,8 @@ class clsReach(object):
         Sediment grain size at each bin boundary. Referred to as
         BinBdySizes elsewhere.
     inputs.Qw : array_like(float)
-        Flows in flow duration distribution applied to reach.
+        Flows in flow duration distribution applied to all nodes in reach.
+        Can be changed at node-level once specified.
     inputs.NLayers : int
         Number of substrate layers to consider.
     inputs.NTracers : int
@@ -48,16 +53,17 @@ class clsReach(object):
         Fraction of time represented by each discharge bin.
     inputs.Fa : array_like(float)
         Initial fractions for each sediment size class in active layer.
-        Note that Presently the initial floodplain size fractions are solved for to 
-        ensure that exchange between floodplain and channel is initially in
-        equilibrium.
+        Note that presently the initial floodplain size fractions are solved
+        for to ensure that exchange between floodplain and channel is 
+        initially in equilibrium.
     inputs.Bc : float
         Initial channel width (m).
     inputs.Bf : float
         Initial valley width (m). 
-        Note that it appears that the user enters intial valley width inputs.Bf as a parameter, but 
-        the node attribute Node.Bf represents the width of the floodplain, not the
-        entire valley, whose width is the sum of Node.Bf + Node.Bc.
+        Note that it appears that the user enters intial valley width 
+        inputs.Bf as a parameter, but the node attribute Node.Bf represents 
+        the width of the floodplain, not the entire valley, whose width is the
+        sum of Node.Bf + Node.Bc.
     inputs.Cfc : float
         Friction factor for channel. Cfc = 1/Czc^2.
     inputs.Cff : float
@@ -115,9 +121,16 @@ class clsReach(object):
         Flag that allows bedrock to be modeled for all nodes.  If False,
         the reach is assumed to always be fully alluvial.
     inputs.SetBoundary : bool
-        NEED TO DOCUMENT: PROBABLY HELPS SET DOWNSTREAM BOUNDARY CONDITION.
-    inputs.BoundaryFactor : array_like(float)???
-        NEED TO DOCUMENT: PROBABLY ADJUSTS BOUNDARY CONDITION
+        Determines if downstream boundary is a set water level (if True) or
+        computed using normal depth (if False).
+    inputs.BoundaryFactor : array_like(float)
+        The downstream WSE--is the same for all flows until changed.  Specified
+        according to timestep associated with BoundaryFactorCount.
+    inputs.BoundaryFactorCount : array_like(int)
+        List of times to instigate WSE change--should be an int (# of
+        timesteps) for duration curves or a tuple ((yyyy, m, dd))
+        for hydrographs.  Number of entries should be one less than 
+        BoundaryFactor.
     inputs.TransFunc : UNKOWN
         NEED TO DOCUMENT
     inputs.TrinityFit : bool
@@ -126,27 +139,87 @@ class clsReach(object):
     inputs.CalibrationFactor : float
         Sediment transport calibration factor. Used to adjust
         reference Shields stress in Wilcock Crowe type calculation.
+    inputs.Qlist : array-like(float)
+        List of list of daily discharges. Can contain an arbitrary number of
+        hydrographs, and each hydrograph can be assigned to a specific node.
+        To save space, the actual flow list is not stored in the node object,
+        and instead, the lists are stored at reach level and assigned to
+        appropriate nodes using an ID.
+    inputs.Qw : array-like(float)
+        List of list of discharge bins in flow duration curve generated from
+        each daily discharge hydrograph timeseries.
+    inputs.p : array-like(float)
+        List of list of probabilities for bins in flow duration curve 
+        generated from each daily discharge hydrograph timeseries.
+    inputs.DischargeFileID : array-like(integer)
+        ID of each of the discharge timeseries.  Each node is given this id, 
+        which correspond with the given timeseries files.
+    inputs.DischargeFileCoords : array-like(integer)
+        Downstream coordinate at upper end of a given discharge timeseries. 
+        Used for assigning the appropriate DischargeFileID to a given node.
     
     Attributes
     ----------
     Node : array_like(:obj:`MAST_1D.clsNode`, length = NNodes)
         An array of interconnected node objects.
     NFlows : int
-        Number of discharge bins considered in flow duration distribution 
+        Number of discharge bins considered in flow duration distributions 
     NBedSizes : int 
         Number of bed material sediment size bins
-       
+    NTracers : int
+        Number of tracers.
+    NLayers : int
+        Number of initial layers in substrate.  Note that this is updated for
+        each node at node level as program runs, so it is not recommended to
+        use the NLayers attribute at reach level after the program is initialized.
+    Qsjkfeed : array_like(float, dim = 2, length = (NFlows, NSizes + 1))
+        Sediment load for feed for reach in bin j of discharge distribution 
+        and size k of GSD. Size with index k = 0 represents washload.
+        NOTE: This attribute is redundant because conceptually it is the same
+        as as the feed for the load of node 0 in the reach, the value for 
+        which is specified separately.  TO DO: This should be thought of as read-only.
+        A get statement should be written that simply passes the load of the first node.
+        Alternatively, simply delete this attribute.
+    QsAvkFeed : array_like(float, length = NSizes + 1).  
+        Sediment feed for upper end of reach, averaged across all bins of FDC 
+        in size k. Size with index k = 0 represents washload.
+        NOTE: This attribute is redundant because conceptually it is the same
+        as as the feed for the load of node 0 in the reach, the value for 
+        which is specified separately.  TO DO: This should be thought of as read-only.
+        A get statement should be written that simply passes the load of the first node.
+        Alternatively, simply delete this attribute
+    CumulativeOutput : array_like(float, length = NSizes + 1)
+        Cumulative amount of sediment for each size class transported from the 
+        last node. Katie added to track reservoir filling.
+    CumulativeFeed : array_like(float, length = NSizes + 1)
+        Cumulative amount of sediment for each size class supplied 
+        to the upstream-most node. Katie added.
+    CumulativeBankSupply : array_like(float, length = NSizes + 1)
+        This is an Elwha-specific variable that represents
+        the cumultive widening-specific supply to the active layer of
+        the upstream-most four nodes in the reach (which represented the
+        Middle Elwha). Should be updated for general use. Katie added.
+    CumulativeBankSink : array_like(float, length = NSizes + 1)
+        This is an Elwha-specific variable that represents
+        the cumultive widening-specific flux from active layer to floodplain
+        through narrowing for the upstream-most four nodes in the reach 
+        (which represented the Middle Elwha. Should be updated for 
+        general use. Katie added.
+    Qlist : array-like(float)
+        List of list of daily discharges. Can contain an arbitrary number of
+        hydrographs, and each hydrograph can be assigned to a specific node.
+        Katie added.
+    BoundaryHc : array-like(float)
+        Downstream boundary condition for water depth.  Specified by 
+        Inputs.BoundaryFactor. Depth is specified at
+        counts determined in BoundaryFactorCount. Katie added.
+        
+        
+   
     Notes
     -----
     Lots more to document here:
-    Qsjkfeed : float
-    QsAvkFeed : float
     BoundaryConditionDownstreamEtaBed : float
-    NTracers : int (number of sizes)
-    NFlows : int (number of flows in FDC)
-    NLayers : int
-    CumulativeOutput : [float] (Cumulative amount of sediment for each size
-    class transported from the last node) # Katie add to track reservoir filling!
     Initialized : bool
     
     """
@@ -163,7 +236,7 @@ class clsReach(object):
     
         if not self.Initialized:
             self.NBedSizes = len(inputs.Dbdy) - 2
-            self.NFlows = len(inputs.Qw)
+            self.NFlows = len(inputs.Qw[0])
             self.NTracers = inputs.NTracers
             self.NLayers = inputs.NLayers
             
@@ -181,6 +254,7 @@ class clsReach(object):
             self.CumulativeBankSink = np.zeros(self.NBedSizes + 1) # Katie add
             self.BoundaryHc = "" # Katie add
             self.SetBoundary = False
+            self.Qlist = inputs.Qlist
         else:
             raise RuntimeError('Tried to initiate clsReach twice.')
     
@@ -193,8 +267,7 @@ class clsReach(object):
         
         i = 0
         for Node in self.Node:
-            Node.DC.Qw = inputs.Qw
-            Node.DC.p = inputs.p
+
 
             Node.ActiveLayer.GSD.F = inputs.Fa 
             Node.ActiveLayer.GSD.UpdateStatistics()
@@ -225,6 +298,13 @@ class clsReach(object):
             else:
                 Node.xc = self.Node[i-1].xc + self.Node[i-1].dxc
                 
+            # Set the flow timeseries identifier
+            for ID in range(len(inputs.DischargeFileCoords)):
+                if Node.xc >= inputs.DischargeFileCoords[ID]:
+                    Node.Q_ID = ID    
+            Node.DC.Qw = inputs.Qw[Node.Q_ID]   # Assign flow duration curve to node
+            Node.DC.p = inputs.p[Node.Q_ID]
+            
             #Node.xc = Node.dxc * (i - 1)
                 
             Node.FSandSusp = inputs.FSandSusp
@@ -453,24 +533,44 @@ class clsReach(object):
                     
         
         # ***********************************SETUP TRACERS*************************
+        ArbitraryValue = 1.
+        # Set tracer concentration in all reservoirs
+        if hasattr(inputs, "TracerICFloodplain"):
+            IC_FP = inputs.TracerICFloodplain
+        else:
+            IC_FP = ArbitraryValue
+            
+        if hasattr(inputs, "TracerICActiveLayer"):
+            IC_AL = inputs.TracerICActiveLayer
+        else:
+            IC_AL = ArbitraryValue
+              
+        if hasattr(inputs, "TracerICSubstrate"):
+            IC_S = inputs.TracerICSubstrate
+        else:
+            IC_S = ArbitraryValue
+        
+        if hasattr(inputs, "TracerBCFeed"):
+            BC_F = inputs.TracerBCFeed
+        else:
+            BC_F = ArbitraryValue
+        
         Node = self.Node[0]
         for k in range(Node.NSizes + 1):
             if k == 0:
                 # Set tracer concentration in mud feed to 1
                 for j in range(self.NFlows):
-                    Node.Load.TMudFeedj[j, 0] = 1.
+                    Node.Load.TMudFeedj[j, 0] = BC_F
             else:
                 # Set tracer concentration in bed material feed to 1
-                Node.Load.TBedFeedk[k, 0] = 1.
-            
-            # Set tracer concentration in all reservoirs to arbitrary value
-            ArbitraryValue = 1.
+                Node.Load.TBedFeedk[k, 0] = BC_F
+                
             for i in range(self.nnodes()):
-                self.Node[i].Floodplain.T[k, 0] = ArbitraryValue
-                self.Node[i].ActiveLayer.T[k, 0] = ArbitraryValue
+                self.Node[i].Floodplain.T[k, 0] = IC_FP
+                self.Node[i].ActiveLayer.T[k, 0] = IC_AL
                 for m in range(self.NLayers):
-                    self.Node[i].Substrate[m].C.T[k, 0] = ArbitraryValue
-                    self.Node[i].Substrate[m].F.T[k, 0] = ArbitraryValue
+                    self.Node[i].Substrate[m].C.T[k, 0] = IC_S
+                    self.Node[i].Substrate[m].F.T[k, 0] = IC_S
         # ********************************END SETUP TRACERS ***********************
 
     def SetupTracers(self, inputs, TracerProperties):
@@ -537,10 +637,16 @@ class clsReach(object):
                 depth = self.BoundaryHc
                 
             else:
-                depth = self.ManningNormalDepthForBoundary(ControlNode.Slope, ControlNode.Bc, \
-                    ControlNode.Bf, ControlNode.nc(), ControlNode.nf, ControlNode.Floodplain.L - \
-                    ControlNode.ActiveLayer.L, self.Node[-1].DC.Qw[j], ControlNode.ChSin)
-            self.Node[-1].DC.WSE[j] = depth + ControlNode.etabav
+                #depth = self.ManningNormalDepthForBoundary(ControlNode.Slope, ControlNode.Bc, \
+                #    ControlNode.Bf, ControlNode.nc(), ControlNode.nf, ControlNode.Floodplain.L - \
+                #    ControlNode.ActiveLayer.L, self.Node[-1].DC.Qw[j], ControlNode.ChSin)
+                #depth = self.ManningNormalDepthForBoundary(ControlNode.Slope, ControlNode.Bc, \
+                #    ControlNode.Bf, ControlNode.nc(), ControlNode.nf, ControlNode.Floodplain.L - \
+                #    ControlNode.ActiveLayer.L, ControlNode.DC.Qw[j], ControlNode.ChSin)
+                depth = self.ManningNormalDepthForBoundary(self.Node[-1].Slope, self.Node[-1].Bc, \
+                    self.Node[-1].Bf, self.Node[-1].nc(), self.Node[-1].nf, self.Node[-1].Floodplain.L - \
+                    self.Node[-1].ActiveLayer.L, self.Node[-1].DC.Qw[j], self.Node[-1].ChSin)
+            self.Node[-1].DC.WSE[j] = depth + self.Node[-1].etabav
             #print ControlNode.etabav
    
     def set_up_hydrograph(self):
@@ -581,6 +687,8 @@ class clsReach(object):
             Node.Load.QsjTot = np.zeros(Node.NFlows)
             #Node.DC.WSE[0] = Node.etabav
             Node.DC.Sf = np.zeros(Node.NFlows) 
+            Node.SLatSourcejk = np.zeros((Node.NFlows, Node.NSizes + 1))
+            Node.Ssum = np.zeros((Node.NFlows + 1, Node.NSizes + 1))
             
     
     def BackwaterPredictor(self, WSE1, KC1, KF1, KC2, KF2, AC1, AF1, AC2, \
@@ -623,7 +731,7 @@ class clsReach(object):
         dxf : float 
             Down foodplain length between sections.
         Q1 : float 
-            Total discharge in m3/s at section 2.
+            Total discharge in m3/s at section 1.
         Q2 : float 
             Total discharge in m3/s at section 2.
         WSE2Guess : float 
@@ -932,12 +1040,16 @@ class clsReach(object):
             if Node.Canyon == False and WidthChange == True:
                 Node.Narrowing(BcMin, W, alphatau)
                 #print Node.ActiveLayer.Volume
-            Node.UpdateLateralSedFluxes()
-            Node.UpdateLateralTracerConcentrations() # Note that lateral tracer 
-                # concentrations in mud are set using the mud feed
             Node.WidenRate = 0.
             Node.cbank = 0.
             Node.DeltaEtaB = 0.
+            
+            Node.UpdateLateralSedFluxes()
+            Node.UpdateLateralTracerConcentrations() # Note that lateral tracer 
+                # concentrations in mud are set using the mud feed
+            #Node.WidenRate = 0.
+            #Node.cbank = 0.
+            #Node.DeltaEtaB = 0.
             
             for k in range(Node.NSizes + 1):
                 Node.Load.QsAvkLoad[k] = 0.
@@ -959,6 +1071,7 @@ class clsReach(object):
             Node.UpdateVolumeSizeFractionsandTracersInAllReservoirs(dt, \
                 TracerProperties)
             Node.UpdateGeometricParameters(dt)
+       
             
     def StepDownstream(self, dt, alphabed, LMinAfterSplit, LMinBeforeRemove, \
         SubstrateSpacing, TracerProperties, TransFunc, TrinityFit, CalibrationFactor,\
@@ -1000,7 +1113,7 @@ class clsReach(object):
             Parameter for width change function.
         """
         Dmudj = np.zeros(self.NFlows)
-        
+        #print ('dt = %s' % dt)
         # do hydraulics, sediment transport, morphodynamics and sediment mass
         # conservation
         
@@ -1035,6 +1148,7 @@ class clsReach(object):
             #Calculate lateral reservoir exchanges
             
             Node.UpdateLateralSedFluxes()
+            Node.UpdateExtraWidthFluxes(Node.WidenRate, Node.NarrowRate, 0) # Katie add
             Node.UpdateLateralTracerConcentrations() # Note that lateral tracer 
                 # concentrations in mud are set using the mud feed
             
@@ -1064,7 +1178,7 @@ class clsReach(object):
             Node.UpdateVerticalExchangeSedFluxes(Node.DeltaEtaB, alphabed)
             Node.UpdateVerticalExchangeTracerConcentrations()
             
-            Node.UpdateExtraWidthFluxes(Node.WidenRate, Node.NarrowRate, Node.DeltaEtaB) # Katie add
+            #Node.UpdateExtraWidthFluxes(Node.WidenRate, Node.NarrowRate, Node.DeltaEtaB) # Katie add
             
             Node.Load.ApplyMassConservationToMudLoad(Node.DC) # This cannot be 
                 # applied until here since vertical exchange fluxes influence 

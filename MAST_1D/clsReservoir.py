@@ -180,8 +180,11 @@ class clsReservoir:
                     # by sediment volume in a given size class
                     if NewSedVolume[k] > 0.:
                         self.T[k, L] = NewTVolume[k, L] / NewSedVolume[k]
+                        #if self.T[k,L] > 1: print('dt = %s' % dt)
                     else:
-                        self.T[k, L] = 0.        
+                        self.T[k, L] = 0.   
+                    if self.T[k, L] > 1: 
+                        print('Warning: Tracer concentration set above one; consider reducing dt')
         self.DeltaS = NewSedVolumeTotal - self.Volume
         self.Volume = NewSedVolumeTotal
         self.GSD.UpdateStatistics()

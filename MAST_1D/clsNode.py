@@ -271,8 +271,8 @@ class clsNode(object):
                     self.Load.QsAvkFeed[0] / self.Load.QsavBedTot))
             else:
                 FWashloadInPointBar = 1.
-                print('Bed material load is zero.  Washload fraction in ' + \
-                    'point bar set equal to 1.')
+                #print('Bed material load is zero.  Washload fraction in ' + \
+                #    'point bar set equal to 1.')
             
             Fkpointbar = [0.] * (self.NSizes + 1)
             Fkpointbar[0] = FWashloadInPointBar
@@ -1247,7 +1247,7 @@ class clsNode(object):
             self.ActiveLayer.SourceFeedSed[k] = self.Load.QsAvkFeed[k]
             # **********MASS CONSERVATION IF BED ELEVATION IS FIXED************
         
-            if self.FixedElev:
+            #if self.FixedElev:
                 # If the total influx in size k is greater than the transport 
                 # capacity assuming fully alluvial conditions, this is where we 
                 # have to figure out how to handle the extra sediment entering 
@@ -1260,7 +1260,7 @@ class clsNode(object):
                 # were fully alluvial. For now, the assumption is that the 
                 # material stored has a size distribution similar to the 
                 # existing active layer.
-                if NetInfluxTotal > Outflux:
+            #    if NetInfluxTotal > Outflux:
                     # if the system is gaining sediment, make sure the sediment
                     # stored is similar to the size distribution of the active 
                     # layer
@@ -1272,26 +1272,26 @@ class clsNode(object):
                     # leaves the system if outfluxes are greater than influxes
                     # and prevents the load from being completely zero (which
                     # was what the old method did).                    
-                    NormStay = (NetInfluxTotal - Outflux) * \
-                        (self.ActiveLayer.GSD.F[k] * \
-                        self.AlphaPartlyAlluvial + \
-                        self.Load.GSDBedloadAv.F[k] * \
-                        (1. - self.AlphaPartlyAlluvial))
+            #        NormStay = (NetInfluxTotal - Outflux) * \
+            #            (self.ActiveLayer.GSD.F[k] * \
+            #            self.AlphaPartlyAlluvial + \
+            #            self.Load.GSDBedloadAv.F[k] * \
+            #            (1. - self.AlphaPartlyAlluvial))
                         
-                    self.ActiveLayer.SinkLoadSed[k] = NetInflux[k] - NormStay
+            #        self.ActiveLayer.SinkLoadSed[k] = NetInflux[k] - NormStay
                     
-                    x = 'fller'
-                    if self.ActiveLayer.SinkLoadSed[k] < 0.:
-                        self.ActiveLayer.SinkLoadSed[k] = 0. # Katie comment out
+            #        x = 'fller'
+            #        if self.ActiveLayer.SinkLoadSed[k] < 0.:
+            #            self.ActiveLayer.SinkLoadSed[k] = 0. # Katie comment out
                         #self.ActiveLayer.SinkLoadSed[k] = .5*NetInflux[k] # Katie add
                         #print('negative size specific load in partly alluvial \
                             #computation in UpdateSedimentSourcesAndSinks of Node \
                             #was converted to zero')
-                    self.Load.QsAvkLoad[k] = self.ActiveLayer.SinkLoadSed[k] # Katie add to maintain mass conservation
+            #        self.Load.QsAvkLoad[k] = self.ActiveLayer.SinkLoadSed[k] # Katie add to maintain mass conservation
                     #self.Load.ExSed.InVerticalChange[0] = self.ActiveLayer.SinkLoadSed[0]-self.ActiveLayer.SourceFeedSed[0] # Katie add                    
                     #self.ActiveLayer.SinkLoadSed[0] = deepcopy(self.Load.QsAvkFeed[0]) # Katie add
                                         
-                else:
+            #    else:
                     # If the system is sediment starved, assume the only outflux
                     # is that computed from the fraction of the bed that is 
                     # alluvial.
@@ -1299,20 +1299,22 @@ class clsNode(object):
 #                    if self.FractionAlluvial < .00001: # Katie add--so that the active layer doesn't run out of sediment
 #                        self.ActiveLayer.SinkLoadSed[k] = self.Load.QsAvkFeed[k]                    
 #                    else:
-                    self.ActiveLayer.SinkLoadSed[k] = self.Load.QsAvkLoad[k]                    
-                    self.ActiveLayer.SinkLoadSed[0] = deepcopy(self.Load.QsAvkFeed[0]) # Katie add
+            #        self.ActiveLayer.SinkLoadSed[k] = self.Load.QsAvkLoad[k]                    
+            #        self.ActiveLayer.SinkLoadSed[0] = deepcopy(self.Load.QsAvkFeed[0]) # Katie add
                     # Katie:  this is where you would add the code to allow mud to 
                     # be entrained--so that the partly alluvial GSD doesn't get
                     # overtaken by mud.
                     
                 # Katie try to make it so that partly-alluvial node isn't dominated by mud
-                    self.ActiveLayer.SinkLoadSed[0] = self.ActiveLayer.SourceFeedSed[0] - self.ActiveLayer.GSD.F[0]*(NetInfluxTotal-Outflux)
+            #        self.ActiveLayer.SinkLoadSed[0] = self.ActiveLayer.SourceFeedSed[0] - self.ActiveLayer.GSD.F[0]*(NetInfluxTotal-Outflux)
                     #self.Load.QsAvkLoad[0] = self.ActiveLayer.SinkLoadSed[0]
                     #self.Load.ExSed.InVerticalChange[0] = -self.ActiveLayer.GSD.F[0]*(NetInfluxTotal-sum(self.ActiveLayer.SinkLoadSed))
                     
-            else:
-                self.ActiveLayer.SinkLoadSed[k] = deepcopy(self.Load.QsAvkLoad[k])
-                self.ActiveLayer.SinkLoadSed[0] = deepcopy(self.Load.QsAvkFeed[0])#Katie add
+            #else:
+            self.ActiveLayer.SinkLoadSed[k] = deepcopy(self.Load.QsAvkLoad[k])
+            self.ActiveLayer.SinkLoadSed[0] = deepcopy(self.Load.QsAvkFeed[0])#Katie add
+            #This may not matter if we don't track mud in the active layer.
+            #Mud (so size 0) should be accounted for in the water column mass conservation.
 
         for k in range(self.NSizes + 1):
             self.Floodplain.SourceLatSed[k] = self.Dfav[k] * self.dxc
@@ -1594,7 +1596,9 @@ class clsNode(object):
         g : float
             APPEARS TO BE UNUSED
         W : float
-            NEEDS TO BE DOCUMENTED        
+            Narrowing constant--used to calibrate narrowing function.  
+            As a starting guide, estimate the percentage of bar that is 
+            vegetated annually and double it.    
         alphaF : float
             NEEDS TO BE DOCUMENTED
         alphatau : float
@@ -1703,6 +1707,9 @@ class clsNode(object):
     #                Fs = self.ActiveLayer.GSD.FfinerThanD_upper[i] # Katie change from parentheses to brackets
     #                i = i + 1		
                 widthchangeN = -((oldBc+sum(TotalNarrowing))-BcMin)*W/(365.25*24*60*60) #Katie multiply by percent sand # Change per second--simplest solution; only one calibration term which is percent widening per year.
+            #else:
+                #print('widthchangeN not set, Tauprime = %s and alphatau = %s' % (TauPrime,alphatau)) 
+                #widthchangeN = -((oldBc+sum(TotalNarrowing))-BcMin)*W/(365.25*24*60*60)
             TotalNarrowing.append(widthchangeN*self.DC.p[j])                
         self.NarrowRate = sum(TotalNarrowing)
         #print self.NarrowRate*576.*150
@@ -1835,22 +1842,22 @@ class clsNode(object):
         # width change, and lateral sources, summed across all bed material
         # sizes
 
-        #        NetQsIn = np.sum(self.ActiveLayer.ExSed.InMigration[1:self.NSizes + 1]\
-        #             - self.ActiveLayer.ExSed.OutMigration[1:self.NSizes + 1] + \
-        #             self.ActiveLayer.ExSed.InWidthChange[1:self.NSizes + 1] - \
-        #             self.ActiveLayer.ExSed.OutWidthChange[1:self.NSizes + 1] +\
-        #             self.ActiveLayer.SourceLatSed[1:self.NSizes + 1] - \
-        #             self.ActiveLayer.SinkLatSed[1:self.NSizes + 1] + \
-        #             self.ActiveLayer.SourceFeedSed[1:self.NSizes + 1] - \
-        #             self.ActiveLayer.SinkLoadSed[1:self.NSizes + 1])
-
         NetQsIn = np.sum(self.ActiveLayer.ExSed.InMigration[1:self.NSizes + 1]\
             - self.ActiveLayer.ExSed.OutMigration[1:self.NSizes + 1] + \
-            self.ActiveLayer.ExSed.InWidthChange[1:self.NSizes + 1] + \
+            self.ActiveLayer.ExSed.InWidthChange[1:self.NSizes + 1] - \
+            self.ActiveLayer.ExSed.OutWidthChange[1:self.NSizes + 1] +\
             self.ActiveLayer.SourceLatSed[1:self.NSizes + 1] - \
             self.ActiveLayer.SinkLatSed[1:self.NSizes + 1] + \
             self.ActiveLayer.SourceFeedSed[1:self.NSizes + 1] - \
             self.ActiveLayer.SinkLoadSed[1:self.NSizes + 1])
+
+        #NetQsIn = np.sum(self.ActiveLayer.ExSed.InMigration[1:self.NSizes + 1]\
+        #    - self.ActiveLayer.ExSed.OutMigration[1:self.NSizes + 1] + \
+        #    self.ActiveLayer.ExSed.InWidthChange[1:self.NSizes + 1] + \
+        #    self.ActiveLayer.SourceLatSed[1:self.NSizes + 1] - \
+        #    self.ActiveLayer.SinkLatSed[1:self.NSizes + 1] + \
+        #    self.ActiveLayer.SourceFeedSed[1:self.NSizes + 1] - \
+        #    self.ActiveLayer.SinkLoadSed[1:self.NSizes + 1])
              
         # This is where a formulation accounts for the possibility that the bed
         # is partially alluvial:
@@ -1891,7 +1898,7 @@ class clsNode(object):
     
     def UpdateGeometricParameters(self, dt):
         """
-        Method for updating the geomoetric parameters of the node.
+        Method for updating the geometric parameters of the node.
         
         Parameters
         ----------

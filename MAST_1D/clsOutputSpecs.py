@@ -22,7 +22,7 @@ class clsOutputSpecs(object):
         self.Q = []
         self.QsavBedTot = []
         self.QsavTotAllFeed = []
-        self.Qsk = []
+        self.Qsk_1 = []
         self.F = []
         self.FpF = []
         self.SubF = []
@@ -50,8 +50,8 @@ class clsOutputSpecs(object):
         self.Q.append(Node.DC.Qw[0])
         self.QsavBedTot.append(Node.Load.QsavBedTot)
         #self.QsavTotAllFeed.append(Node.Load.QsavTotAllFeed)
-        x = Node.Load.QsAvkLoad
-        self.Qsk.append(x.tolist())
+        x = Node.Load.QsAvkLoad[1]
+        self.Qsk_1.append(x.tolist())
         #x = Node.ActiveLayer.GSD.F
         #self.F.append(x.tolist())
         #x = Node.Substrate[-1].C.GSD.F
@@ -66,7 +66,7 @@ class clsOutputSpecs(object):
         #self.OutVChange.append(x.tolist())
         #x = Node.ActiveLayer.SinkLoadSed
         #self.SinkLoadSed.append(x.tolist())
-        #self.Bc.append(Node.Bc)
+        self.Bc.append(Node.Bc)
         #self.CumuWiden.append(Node.CumulativeWidening)
         #self.CumuNarrow.append(Node.CumulativeNarrowing)
       
