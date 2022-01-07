@@ -22,12 +22,10 @@ import pandas
 
 if __name__ == "__main__":
     # User inputs output folder here.
-    #path = os.path.join(os.pardir, 'C:\Users\geography\Dropbox\MAST-1D_version_K12\Output\FinalRuns_DamRemovalPaper\Removal_MiddleAldwell_02_4000_twothirds_newOutput2')
     root = tk.Tk()
     root.withdraw()
     path = tk.filedialog.askdirectory(title="Select Folder Where Output Data are Located")
-    print(path)
-    print("Printed")
+    root.destroy()
 
     ##################################################
 

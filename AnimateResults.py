@@ -17,12 +17,21 @@ import tkinter as T
 from Animator.clsGUI import clsGUI
 
 # Find initial output folder.
-pathfile = open(os.path.join('Animator', 'PathLastOpened.txt')).readlines()
-path = pathfile
-if len(path) > 0:
-    path = pathfile[0]
-else:
-    path = ""
+root = T.Tk()
+root.withdraw()
+path = T.filedialog.askdirectory(title="Select Folder Where Output Data are Located")
+print(path)
+print("Printed")
+root.destroy()
+
+#root=T.Tk()
+
+#pathfile = open(os.path.join('Animator', 'PathLastOpened.txt')).readlines()
+#path = pathfile
+#if len(path) > 0:
+#    path = pathfile[0]
+#else:
+#    path = ""
     
 def animate(i):
 
@@ -67,6 +76,8 @@ GUI = clsGUI()
 GUI.SetUpGUI(path)
 
 # The animation
-ani = animation.FuncAnimation(GUI.fig.figure, animate, init_func=GUI.fig.Aninit,frames=GUI.fig.ntimes, interval=50, blit=True)
+ani = animation.FuncAnimation(GUI.fig.figure, animate, init_func=GUI.fig.Aninit,frames=GUI.fig.ntimes, interval=100, blit=True)
 
 T.mainloop()
+print('got here')
+#T.root.widthdraw()

@@ -35,6 +35,9 @@ class clsGUI(object):
         self.ffbutton = T.Button(self.f, text = u"\u23E9", font=('bold'), command = self.fforward)
         self.aniplot = FigureCanvasTkAgg(self.fig.figure, master=self.f)
         self.error = ""
+        #button = T.Button(self.root, text = 'root quit', command=self.quit)
+        #button.pack()
+        
     
     def SetUpGUI(self, path):
         
@@ -90,8 +93,9 @@ class clsGUI(object):
             self.fig.annotation.set_animated(True)
             
         else:
-            self.fig.SetPlot(self.fig.attributes[self.fig.variables[0]])
-            self.var.set(self.fig.variables[0])
+            #self.fig.SetPlot(self.fig.attributes[self.fig.variables[0]])
+            self.fig.SetPlot(self.fig.attributes[list(self.fig.variables)[0]])
+            self.var.set(list(self.fig.variables)[0])
             self.updateplot(self.var.get())
             self.fig.var = self.var
             self.fig.calc_t_and_nodes()
@@ -103,9 +107,9 @@ class clsGUI(object):
         filename = filedialog.askdirectory(**self.dir_opt)
         
         # Write new current path
-        pathfile = open(os.path.join('Animator', 'PathLastOpened.txt'), 'w')
-        pathfile.write(filename)
-        pathfile.close()
+        #pathfile = open(os.path.join('Animator', 'PathLastOpened.txt'), 'w')
+        #pathfile.write(filename)
+        #pathfile.close()
         
         # Update plot and GUI
         self.BuildPlot(filename)
@@ -145,3 +149,8 @@ class clsGUI(object):
         self.fig.pause = True
         self.pausebutton.configure(text = u"\u25B6", bg='GREEN')
         self.fig.j = self.fig.j + 1
+
+#    def quit(self):
+#        self.root.destroy()
+#        import sys
+#        sys.exit()
