@@ -2,18 +2,8 @@
 """
 Created on Tue Mar 01 18:36:06 2016
 
-@author: geography
+@author: geography 
 """
-
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jan 12 10:40:16 2016
-
-Handles hydrologic and climate data for Elwha
-
-@author: geography
-"""
-
 import xlrd
 import datetime
 import matplotlib.pyplot as plt
@@ -23,25 +13,20 @@ from clsTimeSeries import clsTimeSeries
 
 class clsTSPlot(object):
     
-    def __init__(self):
-        
-        """
-        Attributes:
-
-        Series--[clsTimeSeries] (List that stores time series objects)
-        """
-        
+    def __init__(self): 
         self.Series = []
 
     def Add_Series(self,path, Dtype,label, smoothed=0,timechunks=[],text = ""):
-        
         """
         Creates clsTimeSeries object, loads the data to it, and adds it to the Series list
         
-        Attributes:
+        Attributes
+        ----------
         
-        path--str (path where file is stored)
-        Dtype--str (type of data in order to reference the correct function to load the data)
+        path : str 
+            Path where file is stored.
+        Dtype : str 
+            Type of data in order to reference the correct function to load the data.
             -'Q' = Daily Discharge
             -'P' = Daily Precipitation
             - smoothed--int (default is 0; if it is not 0, data is smoothed with smoothing function and plotted; value must be odd)
@@ -73,7 +58,7 @@ class clsTSPlot(object):
             self.Series.append(series)
             
         else:
-            print 'Improper spreadsheet format'
+            print('Improper spreadsheet format')
             
             
     def Plot_series(self,shading=[],smoothed=0):
@@ -81,10 +66,12 @@ class clsTSPlot(object):
         """
         Creates plot of time series
         
-        Attributes:
-        
-        shading--[[int],[int]] (For shading date ranges.  Contains lists of start-end date pairs with the format 'yyyymmdd')
-        smoothed--int (default is 0; if it is not 0, data is smoothed with smoothing function and plotted; value must be odd)
+        Parameters
+        ---------- 
+        shading : [[int],[int]] 
+            For shading date ranges.  Contains lists of start-end date pairs with the format 'yyyymmdd').
+        smoothed : int 
+            Default is 0; if it is not 0, data is smoothed with smoothing function and plotted; value must be odd).
         """
         
         fig, axes = plt.subplots(nrows=len(self.Series), ncols=1, sharex=True,sharey=False)

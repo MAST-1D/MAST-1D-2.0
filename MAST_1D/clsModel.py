@@ -1,4 +1,3 @@
-
 from copy import deepcopy
 import os
 from clsReach import clsReach
@@ -12,9 +11,6 @@ import numpy as np
 from math import exp
 import math
 
-
-
-
 class clsModel(object):
     
     def __init__(self, inputs):
@@ -22,9 +18,31 @@ class clsModel(object):
         self.inputs = inputs
         
     def SetInitialConditions(self, inputs):
-        
         """
         Section I:  Load the Reach object from specifications in 'InputsMainpage...'
+        and perform initial hydraulic and sediment transport computations to 
+        fully define the initial condition.
+        
+        Parameters
+        ----------
+        inputs : :obj:`MAST_1D.clsInputs`
+            The class defining all input parameters.
+        Returns
+        -------
+        Reach : :obj:`MAST_1D.clsReach`
+            The initialized reach.
+        ControlNode : :obj:`MAST_1D.clsNode`
+            A node with basic default input parameters.
+        ControlGSD : :obj:`MAST_1D.clsGSD`
+            A basic grain size distribution.
+        zControlBoundary : :obj:`MAST_1D.clsNode`
+            A node representing the downstreawm boundary
+        TracerProperties : :obj:`MAST_1D.clsTracerProperties`
+        CalibrationFactor : float
+            Sediment transport calibration factor. Used to adjust
+            reference Shields stress in Wilcock Crowe type calculation.
+            (UNSURE IF IT IS BEING SET HERE).
+        
         """
             
         #  Sets reach parameters by either loading existing conditions from a 
@@ -52,11 +70,28 @@ class clsModel(object):
         Reach.StepDownstream(0., self.inputs.AlphaBed, 0.2, 0.1, self.inputs.LayerL,\
             TracerProperties, self.inputs.TransFunc, self.inputs.TrinityFit,\
             CalibrationFactor, False, self.inputs.W,\
-            self.inputs.ErodeT, self.inputs.alphatau, self.inputs.BcMin, self.inputs.vfunc, self.inputs.AvulsionThreshold, Reach.Node[0].ActiveLayer.GSD, self.inputs.AvulsionExchange, self.inputs.MobilityThreshold) # Katie: may want to change other parameters to variables.  Width change variables are optional.
+            self.inputs.ErodeT, self.inputs.alphatau, self.inputs.BcMin,\
+            self.inputs.vfunc, self.inputs.AvulsionThreshold,\
+            Reach.Node[0].ActiveLayer.GSD, self.inputs.AvulsionExchange,\
+            self.inputs.MobilityThreshold) # Katie: may want to change other parameters to variables.  Width change variables are optional.
         
         #  Preserve control nodes to be used to set boundary conditions later
+        
         ControlNode = deepcopy(Reach.Node[0]) # For calculating feed from a rating curve (see update feed below)
         ControlGSD = deepcopy(Reach.Node[0].ActiveLayer.GSD)
+        # Note that for now, there is only one control node representing the upstream
+        # end of the system.  However, multiple control nodes could be used
+        # to compute a sediment supply from tributaries.  If this approach is 
+        # taken, at a minimum, the parameters in the control notes used for
+        # computing sediment transport capacity would need to be defined.  A
+        # non-complete list of such parameters includes width, depth, slope,
+        # grain size distribution, channel roughness parameters, and all the
+        # flags related to the choice of roughness formula and sediment
+        # transport equation. An alternative approach for determining lateral
+        # sediment supply would simply be to specify a size-specific supply
+        # based on a rating curve.  This would need to be done at each time 
+        # step and is not implemented.
+        
         zControlBoundary = deepcopy(Reach.Node[-1]) # To set boundary condition with changing water depth                       
         #  Set reach to existing conditions if desired after control nodes have been set
         if inputs.initialcond == True:
@@ -85,11 +120,15 @@ class clsModel(object):
         return Reach, ControlNode, ControlGSD, zControlBoundary, TracerProperties, CalibrationFactor
             
     def CustomNodes(self, Reach):
-        
         """
         Section II:  Control the behavior of individual nodes if desired.
         Specify which input variables have node-specific initial or
         boundary conditions.  The user can add/remove custom variables.
+        
+        Parameters
+        ----------
+        Reach : :obj:`MAST_1D.clsReach`
+            The initialized reach.
         """
         
         #  This function is run after initial floodplain conditions and Control 
@@ -190,10 +229,12 @@ class clsModel(object):
                 Reach.Node[-1].DC.WSE[j] = Reach.Node[-1].etabav + self.inputs.BoundaryFactor[0]
         
     def RunModel(self):
-        
         """
-        Section III:  Set initial conditions.
+        Perform the model run.
         """        
+        #**********************************************************************
+        #Section III:  Set initial conditions.
+                
         #  Loads reach inputs and sets initial bed and floodplain conditions.
         Reach, ControlNode, ControlGSD, zControlBoundary, TracerProperties, CalibrationFactor = \
             self.SetInitialConditions(self.inputs)
@@ -216,13 +257,12 @@ class clsModel(object):
         #for Node in Reach.Node:
          #   Node.Flmud = .05
             
-        """
-        Section IV:  Set boundary conditions.  Only simple changes to the feed rate
-        and downstream water surface elevation are set here.  More complicated 
-        algorithms can be hard-coded in Section VI, although some may require
-        global variables to be defined here.
-        """
-        
+        #**********************************************************************
+        #Section IV:  Set boundary conditions.  Only simple changes to the feed rate
+        #and downstream water surface elevation are set here.  More complicated 
+        #algorithms can be hard-coded in Section VI, although some may require
+        #global variables to be defined here.
+         
         #  Load factor sets the timing of changes in upstream sediment feed.
         #  If you provide integers, it will use the timestep number to determine
         #  when to switch sediment load.  If a tuple is provided, it will convert 
@@ -250,8 +290,8 @@ class clsModel(object):
         if self.inputs.Hydrograph == False:
             BoundaryType = 'counter'
         else:
-            BoundaryFactorCount = map(lambda x: datetime.date(*x[:6]),\
-                self.inputs.BoundaryFactorCount)
+            BoundaryFactorCount = list(map(lambda x: datetime.date(*x[:6]),\
+                self.inputs.BoundaryFactorCount))
             BoundaryType = 'date'
         NextBoundary = 0 #  Keeps track of which item in BoundaryChangeCount is the current trigger      
         
@@ -260,9 +300,9 @@ class clsModel(object):
         BoundaryTrigger = False # Trigger that determines whether nodes are added in a Dam Removal situation      
         NodeTrigger = False        
         
-        """
-        Section V:  Define time-keeping counters and set up output
-        """        
+        #**********************************************************************
+        #Section V:  Define time-keeping counters and set up output
+        
         
         #  Timesteps elapsed for number flow duration curves or the number of 
         #  days elapsed for hydrographs
@@ -291,7 +331,7 @@ class clsModel(object):
         subdaycount = 0 # Timestep counter within a day
         if self.inputs.Hydrograph == True:
             dt = 1./365.25/Tmult*365.25*24*60*60 # In seconds
-            MaxSteps = len(self.inputs.Qlist) # Time counter--Total number of days
+            MaxSteps = min(len(self.inputs.Qlist[0]),self.inputs.MaxSteps) # Time counter--Total number of days
         LowFlow = False # Sets low flow tag
         
         try:
@@ -302,7 +342,7 @@ class clsModel(object):
             dt = 1./365.25/27*365.25*24*60*60
             Reach.Node[-1].Canyon = True
 
-        #  Set up output
+        #  Set up output--note that the variables saved are specified in clsOutputSpecs
         OutputObj = clsOutputWriter(self.inputs.Outputfolder, self.inputs.DailyNodes, date)
         
         #  'Standard' output files that are printed at consistent time intervals
@@ -312,38 +352,37 @@ class clsModel(object):
         NextCount = 0 # Keeps track of what value of counter will trigger the next standard print interval
         
         #  Output files that are written at user-defined dates for model performance testing      
-        ValidateDates = map(lambda x: datetime.date(*x[:6]), self.inputs.ValidateDates) # List of dates to output data
+        ValidateDates = list(map(lambda x: datetime.date(*x[:6]), self.inputs.ValidateDates)) # List of dates to output data
         VarPrintstep = 0 # Locator for performance-testing output files  
 
-        """
-        Section VI:  Iterate through timesteps.
-        """        
+        #**********************************************************************
+        #Section VI:  Iterate through timesteps.        
         
         if self.inputs.Hydrograph == True:
             Reach.Node[0].Load.QsAvkFeed, Reach.Node[0].Load.Qsjkfeed = Reach.Node[0].Load.UpdateElwhaFeedRatingCurve(ControlNode, LoadFactor[n],\
-                self.inputs.MudFraction, self.inputs.Qlist[counter],\
+                self.inputs.MudFraction, self.inputs.Qlist[0][counter],\
                 self.inputs.vfunc, self.inputs.TrinityFit, CalibrationFactor, ControlGSD, Section = 'Middle')       
         
-        print 'Model setup complete!  Starting timesteps...'
+        print('Model setup complete!  Starting timesteps...')
 
         while counter < MaxSteps and Reach.Node[3].ActiveLayer.GSD.D50 == Reach.Node[3].ActiveLayer.GSD.D50:
-            """
-            VI.A:  Record output if at the proper timestep
-            """
+            #************************************************
+            #VI.A:  Record output if at the proper timestep
 
             #  If time tracker is at the defined interval, write 'standard' output
             #  to file and save a copy of Reach in case of model crashing.
             #if Tyear == 0 or date.month == 10 and date.day == 1 and subdaycount == 1:
-#            if counter % 1 == 0: # To print every timestep for debugging purposes
-#            if subdaycount == Tmult: # To output every day for debugging purposes
-            if counter == NextCount:
+            #if counter % 1 == 0: # To print every timestep for debugging purposes
+            #if subdaycount == Tmult: # To output every day for debugging purposes
+            if counter == int(NextCount):
                 NextCount = NextCount + Interval
                 year = 0                
                 if Tyear == 0:
                     year = 0.
                 else:
                     year = Tyear-(dt/60./60./24./365.25)
-                    
+                
+                print('Saving regular output at count = %s' % counter) 
                 for out in self.inputs.Outputvars:
                     OutputObj.Output('Out_'+ out, Reach, out, \
                         Printstep, year)
@@ -357,20 +396,20 @@ class clsModel(object):
                 #print 'nc'
                 #print Reach.Node[0].nc()
                 #print Reach.Node[-3].nc()
-#                pickle.dump(Reach, open(os.path.join(os.pardir, self.inputs.Outputfolder, "save.Reach"), "wb" )) 
-#                pickle.dump(self.inputs, open(os.path.join(os.pardir, self.inputs.Outputfolder, "inputparams.inputs"), "wb"))
+                #pickle.dump(Reach, open(os.path.join(os.pardir, self.inputs.Outputfolder, "save.Reach"), "wb" )) 
+                #pickle.dump(self.inputs, open(os.path.join(os.pardir, self.inputs.Outputfolder, "inputparams.inputs"), "wb"))
                 
             #  If date is one specified for performance testing, write output.
             if date in ValidateDates and subdaycount == 1:
+                print('Saving validation output at specified date of: %s ' % date)
                 for out in self.inputs.Validatevars:
                     OutputObj.Output('OutValidate_'+ out, Reach, out, \
                         VarPrintstep, float(date.year))
                 VarPrintstep += 1
             
-            """
-            VI.B:  Perform mass conservation (for more details, see the 'Step Downstream'
-            function in the Reach class)
-            """
+            #************************************************
+            #VI.B:  Perform mass conservation (for more details, see the 'Step Downstream'
+            #function in the Reach class)
             
             #  If the model is running a hydrograph, the discharge is updated
             #  here at the start of each day and daily output variables are 
@@ -382,12 +421,13 @@ class clsModel(object):
                     
                     #  Record output variables
                     OutputObj.PopulateDailyLists(Reach)
+                    OutputObj.PopulateDailyDictList(Reach, self.inputs.DailyOutputVars, date)
                     LowFlow = False
                     #  Update the discharge
                     #print self.inputs.Qlist[counter]
                     for Node in Reach.Node:
                         for j in range(Reach.NFlows):
-                            Node.DC.Qw[j] = self.inputs.Qlist[counter]
+                            Node.DC.Qw[j] = self.inputs.Qlist[Node.Q_ID][counter]
                         Node.UpdateDepthAndDischargeAtAllFlows(self.inputs.vfunc)
                         for j in range(Reach.NFlows):
                             Node.DC.WSE[j] = Node.DC.Hc[j] + Node.etabav
@@ -395,28 +435,60 @@ class clsModel(object):
                     # Find downstream boundary condition for the new discharge.                   
                     Reach.find_downstream_boundary(zControlBoundary)   
                     
-                    # Make it so that sediment transport only occurs if flow is above
-                    # threshold.  Increase timestep in that case. Only works with hydrograph
-                    if Reach.Node[0].DC.Qw[0] < 40.:
+                    # Sediment transport only occurs if flow is above a
+                    # threshold.  Increase timestep if above even higher 
+                    # threshold. Only works with hydrograph
+                    #if Reach.Node[0].DC.Qw[0] < 40.:
+                    if Reach.Node[0].DC.Qw[0] < self.inputs.LowFlowThreshold:
                         LowFlow = True
                         dt = dt*Tmult
                         Tmult = 1
-                    elif Reach.Node[0].DC.Qw[0] > 300. and self.inputs.CyclingHydrograph == False:
-                        Tmult = 150
+                    #elif Reach.Node[0].DC.Qw[0] > 300. and self.inputs.CyclingHydrograph == False:
+                    elif Reach.Node[0].DC.Qw[0] > self.inputs.HighFlowTimestepThreshold and self.inputs.CyclingHydrograph == False:
+                        #Tmult = 150
+                        Tmult = self.inputs.TmultHighFlow
                         dt = 1./365.25/Tmult*365.25*24*60*60
+                        print ('dt in model set to high flow dt of %s' % dt)
                     else:
                         Tmult = self.inputs.Tmult
                         if self.inputs.CyclingHydrograph == True:
-                            dt = 1./365.25/27*365.25*24*60*60
+                            #dt = 1./365.25/27*365.25*24*60*60
+                            dt = 1./365.25/self.inputs.TmultCyclingHydrograph*365.25*24*60*60
                         else:
                             dt = 1./365.25/Tmult*365.25*24*60*60
+                            #print ('dt in model = %s' % dt)
 
             else:
                 subdaycount = 1
                 
 
             # Apply feed update after output has been written to file
-            Reach.Node[0].Load.QsAvkFeed, Reach.Node[0].Load.Qsjkfeed = NewAvkFeed, NewJKFeed            
+            Reach.Node[0].Load.QsAvkFeed, Reach.Node[0].Load.Qsjkfeed = NewAvkFeed, NewJKFeed
+
+            # Define any lateral sediment supply here.  In this implementation, the
+            # lateral sources are simply a multiple of the sediment supplied
+            # to the upper end of the reach, but it should be possible to compute
+            # the lateral sources for other geometries using different control
+            # nodes. These nodes would need to have transport rates computed
+            # in advance of this call, which can be done by 
+            # 1) defining the flow duration curve for each control node,
+            # which for hydrograph runs is a single discharge and probability,
+            # 2) running ControlNode.UpdateDepthAndDischargeAtAllFlows, 
+            # 3) calling ControlNode.UpdateSedimentLoadByDurationAndSize, and
+            # 4) using ControlNode.Qsjk and ControlNode.QsAvkLoad as the load, 
+            # potentially after multiplying by the appropriate multiplier.
+            
+            # Note that lateral sources are not computed for low flow conditions.
+            for i in range(len(self.inputs.LateralSedimentSourceNodes)):
+                index = self.inputs.LateralSedimentSourceNodes[i]
+                if LowFlow == True:
+                    multiplier = 0
+                else:
+                    multiplier = self.inputs.LateralMultiplier[i]
+                Qsjk = Reach.Node[0].Load.Qsjkfeed
+                Qsav = Reach.Node[0].Load.QsAvkFeed
+                Reach.Node[index].SLatSourcejk = np.array(Qsjk)*multiplier
+                Reach.Node[index].SLatSourceAv = np.array(Qsav)*multiplier
             
             #  Run through the hydraulics, sediment transport, and mass conservation
             #  computations. See 'Step Downstream' in the Reach class for more
@@ -435,10 +507,9 @@ class clsModel(object):
             Reach.UpdateOutput(dt)
             Tyear = Tyear + dt/ 365.25 / 24. / 60. /60.
 
-            """
-            VI.C:  Check for bedrock and perform partly-alluvial computations if
-            activated
-            """
+            #************************************************
+            #VI.C:  Check for bedrock and perform partly-alluvial computations if
+            #activated
     
             #This section of code is experimental and is intended to crudely 
             #represent the exposure of bedrock, which would result in a partly 
@@ -456,16 +527,15 @@ class clsModel(object):
             #if Reach.Node[-1].CumulativeBedChange < .5: # Katie add
             #    Reach.Node[-1].etabav = Reach.Node[-1].InitialBedElev -.5
 
-            """
-            VI.D:  EXAMPLE CUSTOMIZATION:  Activate dam removal.  This piece of
-            the model was added to trigger the sediment feed and downstream boundary
-            changes associated with dam removal in the Middle Elwha River. A boolean
-            variable called 'Removal' was added to the inputs class to trigger 
-            this section of code if set to True.  If this section is unwanted,
-            the user can either set inputs.Removal to False or comment out this
-            section.
-            """            
-        
+            #************************************************
+            #VI.D:  EXAMPLE CUSTOMIZATION:  Activate dam removal.  This piece of
+            #the model was added to trigger the sediment feed and downstream boundary
+            #changes associated with dam removal in the Middle Elwha River. A boolean
+            #variable called 'Removal' was added to the inputs class to trigger 
+            #this section of code if set to True.  If this section is unwanted,
+            #the user can either set inputs.Removal to False or comment out this
+            #section.
+              
             # There are two processes--emptying of Lake Aldwell and the consequent 
             # boundary lowering, and the pulse of sediment from Lake Mills.            
             
@@ -520,24 +590,28 @@ class clsModel(object):
                             
                             # Reset hydraulics
                             Reach.set_up_hydrograph()
+                            Reach.find_downstream_boundary(zControlBoundary)
+                        
                             for Node in Reach.Node:
                                 for j in range(Reach.NFlows):
-                                    Node.DC.Qw[j] = self.inputs.Qlist[counter]
+                                    Node.DC.Qw[j] = self.inputs.Qlist[Node.Q_ID][counter]
                                 Node.UpdateDepthAndDischargeAtAllFlows(self.inputs.vfunc)
                                 for j in range(Reach.NFlows):
                                     Node.DC.WSE[j] = Node.DC.Hc[j] + Node.etabav
-                            Reach.find_downstream_boundary(zControlBoundary)
+                            #Reach.find_downstream_boundary(zControlBoundary)
                         
                         else:
                             BoundaryTrigger = True
                             Reach.SetBoundary = False
                             #Reach.Add_Nodes(zControlBoundary, 5, zControlBoundary.etabav, zControlBoundary.xc, self.inputs.Outputvars, self.inputs.Outputfolder)
                             #zControlBoundary = deepcopy(Reach.Node[-1]) # Set downstream boundary to new downstreammost node                       
+                            Reach.find_downstream_boundary(zControlBoundary)
+                            
                             for Node in Reach.Node:
                                 Node.UpdateDepthAndDischargeAtAllFlows(self.inputs.vfunc)
                                 for j in range(Reach.NFlows):
                                     Node.DC.WSE[j] = Node.DC.Hc[j] + Node.etabav
-                            Reach.find_downstream_boundary(zControlBoundary)
+                            
 
                     # Find downstream boundary condition--will want to move this out of the hydrograph loop when simulating the removal with a flow duration curve.
                     Reach.find_downstream_boundary(zControlBoundary)
@@ -582,10 +656,9 @@ class clsModel(object):
                     # Counter at feed change for feed code below
                     #startcounter = counter
                     
-            """
-            VI.E:  Update sediment feed.  Custom sediment feed regimes can be called
-            here, but they should be written in the Load class.
-            """
+            #************************************************
+            #VI.E:  Update sediment feed.  Custom sediment feed regimes can be called
+            #here, but they should be written in the Load class.
             
             # Trigger a change in feed at the proper time--used for the 'default'
             # feed function.
@@ -616,11 +689,11 @@ class clsModel(object):
             # for a given flow.  Mud feed is a set proportion of feed for the
             # next finest size class.
             if counter < MaxSteps-1:                                  
-                if self.inputs.FeedType == 'RatingCurve' and subdaycount == Tmult - 1 and self.inputs.Qlist[counter + 1]>40.:                
+                if self.inputs.FeedType == 'RatingCurve' and subdaycount == Tmult - 1 and self.inputs.Qlist[0][counter + 1]>40.:                
                     Node = Reach.Node[0]
                     NewAvkFeed, NewJKFeed = \
                         Node.Load.UpdateFeedRatingCurve(ControlNode, LoadFactor[n],\
-                        self.inputs.MudFraction, self.inputs.Qlist[counter + 1],\
+                        self.inputs.MudFraction, self.inputs.Qlist[0][counter + 1],\
                         self.inputs.vfunc, self.inputs.TrinityFit, CalibrationFactor, ControlGSD) 
             
             # ******************Example: ELWHA RATING CURVE *******************
@@ -631,23 +704,23 @@ class clsModel(object):
             # for the bed material load, but uses an emperical sediment rating 
             # curve provided by Curran/Konrad for the suspended load.  
             if counter < MaxSteps-1:
-                if self.inputs.FeedType == 'RatingCurveMiddleElwha' and subdaycount == Tmult - 1 and self.inputs.Qlist[counter + 1]>40.:
+                if self.inputs.FeedType == 'RatingCurveMiddleElwha' and subdaycount == Tmult - 1 and self.inputs.Qlist[0][counter + 1]>40.:
                 #print self.inputs.Qlist                                  
                     Node = Reach.Node[0]
                     NewAvkFeed, NewJKFeed = \
                         Node.Load.UpdateElwhaFeedRatingCurve(ControlNode, LoadFactor[n],\
-                        self.inputs.MudFraction, self.inputs.Qlist[counter + 1],\
+                        self.inputs.MudFraction, self.inputs.Qlist[0][counter + 1],\
                         self.inputs.vfunc, self.inputs.TrinityFit, CalibrationFactor, ControlGSD, Section = 'Middle')
                         
             if counter < MaxSteps-1:
-                if self.inputs.FeedType == 'RatingCurveMiddleElwhaStochastic' and subdaycount == Tmult - 1 and self.inputs.Qlist[counter + 1]>40.:
+                if self.inputs.FeedType == 'RatingCurveMiddleElwhaStochastic' and subdaycount == Tmult - 1 and self.inputs.Qlist[0][counter + 1]>40.:
                 #print self.inputs.Qlist
                     multiplier = np.random.lognormal(0., .9)
                     #print multiplier                                  
                     Node = Reach.Node[0]
                     NewAvkFeed, NewJKFeed = \
                         Node.Load.UpdateElwhaFeedRatingCurve(ControlNode, multiplier,\
-                        self.inputs.MudFraction, self.inputs.Qlist[counter + 1],\
+                        self.inputs.MudFraction, self.inputs.Qlist[0][counter + 1],\
                         self.inputs.vfunc, self.inputs.TrinityFit, CalibrationFactor, ControlGSD, Section = 'Middle')
 
             if counter < MaxSteps-1:      
@@ -655,7 +728,7 @@ class clsModel(object):
                     Node = Reach.Node[0]
                     NewAvkFeed, NewJKFeed = \
                         Node.Load.UpdateElwhaFeedRatingCurve(ControlNode, LoadFactor[n],\
-                        self.inputs.MudFraction, self.inputs.Qlist[counter + 1],\
+                        self.inputs.MudFraction, self.inputs.Qlist[0][counter + 1],\
                         self.inputs.vfunc, self.inputs.TrinityFit, CalibrationFactor, ControlGSD, Section = 'Upper')
 
             # ******************End ELWHA RATING CURVE ************************
@@ -694,7 +767,7 @@ class clsModel(object):
             # a run (see Activate Dam Removal, Section VI.D).  The feed is determined
             # by the daily flow, and the multiplier by the decay function.
             if counter < MaxSteps-1: 
-                if self.inputs.FeedType == 'DamRemovalRatingCurve' and subdaycount == Tmult - 1 and self.inputs.Qlist[counter + 1]>40.:                
+                if self.inputs.FeedType == 'DamRemovalRatingCurve' and subdaycount == Tmult - 1 and self.inputs.Qlist[0][counter + 1]>40.:                
 #                    DamTyearStart = Tyear
                     Node = Reach.Node[0]
                     C = self.inputs.C2
@@ -715,14 +788,14 @@ class clsModel(object):
                     NewAvkFeed, NewJKFeed = \
                         Node.Load.UpdateElwhaFeedRatingCurve(ControlNode,\
                         multiplier, self.inputs.MudFraction,\
-                        self.inputs.Qlist[counter + 1], self.inputs.vfunc,\
+                        self.inputs.Qlist[0][counter + 1], self.inputs.vfunc,\
                         self.inputs.TrinityFit, CalibrationFactor, ControlGSD,\
                         Removal = True, PercSus = self.inputs.PercSus, FixedCapacity = FixedCapacity)
 
                     feedcounter = counter - startcounter
                     
             if counter < MaxSteps-1:         
-                if self.inputs.FeedType == 'DamRemovalFirstPulseRatingCurve' and subdaycount == Tmult - 1 and self.inputs.Qlist[counter + 1]>40.:                
+                if self.inputs.FeedType == 'DamRemovalFirstPulseRatingCurve' and subdaycount == Tmult - 1 and self.inputs.Qlist[0][counter + 1]>40.:                
 #                    DamTyearStart = Tyear
                     Node = Reach.Node[0]
                     C = self.inputs.C1
@@ -745,7 +818,7 @@ class clsModel(object):
                     NewAvkFeed, NewJKFeed = \
                         Node.Load.UpdateElwhaFeedFineRatingCurve(ControlNode,\
                         multiplier, self.inputs.MudFraction,\
-                        self.inputs.Qlist[counter + 1], self.inputs.vfunc,\
+                        self.inputs.Qlist[0][counter + 1], self.inputs.vfunc,\
                         self.inputs.TrinityFit, CalibrationFactor, ControlGSD, ControlGSD,\
                         Removal = True, PercSus = PercSus, FixedCapacity = FixedCapacity, FirstPulse = True)
                     #print sum(NewAvkFeed)*60*60*24
@@ -753,9 +826,9 @@ class clsModel(object):
                 
             # ************End ELWHA DAM REMOVAL:  Rating CURVE ****************
             
-            """
-            VI.F:  Update the downstream boundary condition if it is user-defined.
-            """
+            #************************************************
+            #VI.F:  Update the downstream boundary condition if it is user-defined.
+
             BoundaryGauge = ""
             if BoundaryType == 'counter':
                 BoundaryGauge = counter
@@ -768,13 +841,12 @@ class clsModel(object):
                     Reach.BoundaryHc = BoundaryFactor[NextBoundary]                
                     if NextBoundary < len(BoundaryFactorCount) - 1: NextBoundary += 1
                         
-            """
-            VI.G:  Adjust lateral exchange parameters.  This section of code is a 
-            relic from a previous version and is a way to adjust the migration 
-            rate as a function of the sediment supply rate.  It is currently
-            commented out but could be used as an alternative to the width change
-            function.
-            """            
+            #************************************************
+            #VI.G:  Adjust lateral exchange parameters.  This section of code is a 
+            #relic from a previous version and is a way to adjust the migration 
+            #rate as a function of the sediment supply rate.  It is currently
+            #commented out but could be used as an alternative to the width change
+            #function.         
 
             # In this section, the bank migration rate, width, etc can be adjusted.
             # For now, bank migration rate is a function of load.  It would also be
@@ -790,15 +862,15 @@ class clsModel(object):
             #        Node.cbank = InitialMigrationRate
             # *********************************************************************
             
-            """
-            VI.H:  Update time trackers
-            """
+            #************************************************
+            #VI.H:  Update time trackers
+
             #  Print record of time--every 10 timesteps for duration curve and 
             #  every month for hydrographs
             if date.day == 1 and subdaycount == 0 and self.inputs.Hydrograph == True and self.inputs.CyclingHydrograph == False:
-                print str(date)
+                print(str(date))
             if self.inputs.Hydrograph == False and counter % 10 == 0:
-                print counter
+                print(counter)
             
             #  Change the length of the timestep if at the user-specified point in the model            
             if len(dtcount) > 0 and counter == dtcount[m]:
@@ -822,15 +894,16 @@ class clsModel(object):
                 counter = 0
                 NextCount = Interval
         
-        """
-        VII:  Save final output
-        """
+        #**********************************************************************
+        #VII:  Save final output
+
         #  Save final objects
 #        pickle.dump(Reach, open(os.path.join(os.pardir, self.inputs.Outputfolder, "save.Reach"), "wb" )) 
 #        pickle.dump(self.inputs, open(os.path.join(os.pardir, self.inputs.Outputfolder, "inputparams.inputs"), "wb"))         
         
         #  Save objects with daily record (for hydrographs)
         OutputObj.WriteDailyFiles()
+        OutputObj.SimpleWriteDailyFile()
 
         # Produce done file
         donefile = os.path.join(os.pardir, self.inputs.Outputfolder, 'Model_finished')

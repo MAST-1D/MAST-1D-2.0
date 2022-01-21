@@ -9,71 +9,199 @@ import numpy as np
 from math import exp
 
 class clsNode(object):
-    """ 
-    Attributes:
-        ActiveLayer -- clsReservoir
-        Substrate -- [clsSubstratePairClass]
-        Floodplain -- clsReservoir
-        Load -- clsLoad (This represents sediment moving out of the node)
-        Slope -- float (Down channel slope)
-        H -- float
-        Bf -- float (floodplain width)
-        Bc -- float (channel width)        cbank -- float (Bank migration rate normal to down-channel direction)
-        DeltaEtaB -- float (Rate of bed elevation change)
-        InitialBedElev -- float (Initial bed elevation)
-        Hpb -- float (point bar thickness)
-        Bcrate -- float (widening rate)
-        etabav -- float (bed elevation)
-        ChSin -- float (channel sinusity)
-        xc -- float (down channel coordinate)
-        x -- float (down valley coordinate)
-        Dfjk -- [float] (deposition rate on the floodplain in each bin of the
-                flow duration curve j and for each size k--could be a
-                property of load)
-        SLatSourcejk -- [float] (lateral sources of sediment in m3/s in each 
-                        bin of the flow duration curve j in size k)
-        SLatSourceAv -- [float] (mean annual lateral source of sediment in 
-                        m3/s in size k)
-        Dfav -- [float] (duration-averaged deposition rate on the floodplain 
-                in size k)
-        FixedElev -- bool (flag to determine if the node's elevation is fixed 
-        (e.g. bedrock or boundary condition))
-        
-        ****Note that pTLatSource could be adjusted as a function of time to 
+    """
+    A segment of a river valley in which sediment transport is computed and
+    and bed/bar sediment is conserved.
+    
+    The node object is the heart of MAST-1D. It include sediment
+    storage reservoirs representing active layer of the channel bed, floodplain,
+    and a series of substrate sediment storage reservoirs.  The 
+    geometry of these reservoirs as well as the size distributions of their
+    sediment are available within each node.  The node object 
+    includes attributes used for representing bedrock or coarse, non-erodible
+    lag layers.  It also stores parameters such as hydraulic roughness, a distribution
+    of discharge, and hydraulic output.
+    
+    Parameters
+    ----------
+    NLayers : int
+        Number of initial layers in substrate.
+    NTracers : int
+        Number of tracers.
+    BinBdySizes : array_like(float)
+        Sediment grain size at each bin boundary.
+    NFlows : int
+        Number of discharge bins in flow duration distribution. 
+    
+    Attributes
+    ----------
+    ActiveLayer : :obj:`MAST_1D.clsReservoir`
+        A sediment storage reservoir representing the active layer of the channel.
+    Substrate : array_like(:obj:`MAST_1D.clsSubstratePairClass`, length = NLayers)
+        The sediment substrate.  There are two zones, one representing the average
+        properties of sediment accessible to the channel if the channel incises and 
+        another representing sediment that would be transferred to the floodplain and 
+        could thus become available to the channel through lateral bank erosion. There
+        are an arbitrary number of substrate layers. 
+    Floodplain : :obj:`MAST_1D.clsReservoir`
+        A sediment storage reservoir representing material stored adjacent to the
+        channel and thus availble to the channel through lateral bank migration.  Sediment
+        can be added to the floodplain through bar deposition or by overbank deposition.
+    Load : :obj:`MAST_1D.clsLoad`
+        Sediment moving downstream out of the node.
+    Slope : float 
+        Average down-channel slope. 
+    H : float
+        Channel depth.
+    Bf : float 
+        Floodplain width).
+    Bc : float
+        Channel width.
+    cbank : float 
+        Average lateral bank migration rate normal to down-channel direction for node.
+    DeltaEtaB : float 
+        Average rate of bed elevation change within channel.
+    InitialBedElev : float 
+        Initial bed elevation.
+    Hpb : float
+        Point bar thickness.  Used to compute lateral sediment flux to floodplain.
+    Bcrate : float
+        Channel widening rate.
+    etabav : float
+        Average channel bed elevation within node.
+    ChSin : float 
+        Channel sinusity.
+    xc : float 
+        Down channel coordinate.
+    x : float
+        Down valley coordinate.
+    Dfjk : array_like(float) 
+        Deposition rate on the floodplain in each bin of the
+        low duration curve j and for each size k.  NOTE:  MAY 
+        BE WORTH MOVING SO THIS IS A PROPERTY OF THE LOAD OBJECT.
+    SLatSourcejk : array_like(float, dim = 2, length = (NFlows, NSizes))
+        Lateral sources of sediment in m3/s in each 
+        bin j of the flow duration in size class k.
+    SLatSourceAv : array_like(float, length = NSizes)
+        Mean annual lateral source of sediment in m3/s in size k.
+    Dfav : array_like(float, length = NSizes) 
+        Duration-averaged deposition rate on the floodplain in size k.  Usually 
+        very small excepth in mud and sand sizes.
+    FixedElev : bool 
+        Flag to determine if the node's elevation is fixed 
+        (e.g. bedrock or boundary condition).
+    pTLatSource : ???
+        Not sure if this attribute is still implemented--it should reprsent
+        the probabilities of lateral erosion events.  There is a note saying that 
+        pTLatSource could be adjusted as a function of time to 
         represent individual erosion events.  This would require changing the 
         duration curve at various times in the computation as well.
-        TLatSourceAv -- [float] (Duration-averaged concentration of cosmogenic
-                        nuclides in the sediment coming from lateral sources 
-                        in size k and tracer l)
-        DC -- clsDurationCurve (Duration curve object used to store flow and
-              sediment flux in each bin of flow duration curve.)
-        Initialized -- bool (flag to determine if arrays have been 
-                       redimensioned appropriately)
-        lambdap -- float (porosity)
-        sigma -- float (subsidence rate)
-        dxc -- float (Down channel spacing to next node represented by this 
-               node)
-        Cfc -- float (Friction coefficient for channel)
-        Cff -- float (Friction coefficient for floodplain)
-        FSandSusp -- float (Fraction sand load that is suspended)
-        Kbar -- float (Parameter controlling fraction washload in point bar 
-                deposits)
-        AlphaBar -- float (Parameter controlling similarity between bed 
-                    material load and bar deposition.)
-        AlphaPartlyAlluvial -- float (Parameter controlling similarity between
-        bed material load and deposition in the active layer of a partly
-        alluvial node)
-        nc -- float (Manning's n for channel)
-        ncAddons -- float (Form drag addition for manning's n)
-        ncMultiplier -- float (Sinuosity multiplier for manning's n)
-        nf -- float (Manning's n for floodplain)
-        PointBarSubsurfaceGSD -- clsGSD
-        Flmud -- float (Floodplain number for mud)
-        Flbed -- float (Floodplain number for bed material sizes)
-        Data-structure related parameters
-        NSizes -- int (number of sizes)
-        NTracers -- int (number of tracers)
-        NFlows -- int (number of flows in FDC)
+    TLatSourceAv : array_like(float, dim = 2, length = (NSizes, NTracers))
+        Duration-averaged concentration of cosmogenic tracer nuclides in the 
+        sediment coming from lateral sources in size k and tracer l.
+    DC : :obj:`MAST_1D.clsDurationCurve` 
+        Duration curve object used to store flow and sediment flux in each bin 
+        of flow duration curve.
+    Initialized : bool 
+        Flag to determine if arrays have been redimensioned appropriately.
+    lambdap : float
+        Porosity of all sediment deposits.
+    sigma : float
+        Subsidence rate.
+    dxc : float
+        Down-channel distance to next node.
+    Cfc : float 
+        Friction coefficient for channel.
+    Cff : float
+        Friction coefficient for floodplain.
+    FSandSusp : float
+        Fraction sand load that is suspended.
+    Kbar : float
+        Parameter controlling fraction washload in point bar deposits.
+    AlphaBar : float
+        Parameter controlling similarity between bed material load and bar deposition.
+    AlphaPartlyAlluvial : float
+        Parameter controlling similarity between bed material load and deposition in 
+        the active layer of a partly alluvial node.
+    nc : float (read only)
+        Manning's n for channel, including grain roughness, which is computed from
+        the grain size distribution of the active layer, with form drag and sinuosity 
+        multiplier included.
+    ncAddons : float
+        Form drag addition for Manning's n.
+    ncMultiplier : float
+        Sinuosity multiplier for Manning's n.
+    nf : float
+        Manning's n for floodplain)
+    PointBarSubsurfaceGSD : :obj:`MAST_1D.clsGSD`
+        Size distribution of subsurface of point bar.  Material with this distribution 
+        is transferred into the floodplain by lateral channel shifting. It is a mixture
+        of the active layer and the load.
+    FkPointBarDepositAnnualAverage : ???
+        Fraction in size class k in long-term average transfer of sediment
+        to point bar.  COMPUTED IN __getattribute__. ADDITIONAL DOCUMENTATION 
+        MAY BE APPROPRIATE.
+    Flmud : float
+        Floodplain number for mud.  Influences fraction of suspended mud flowing above
+        floodplain level and across floodplain that gets stored in the floodplain through
+        overbank deposition.
+    Flbed : float
+        Floodplain number for bed material sizes
+    NLayers : int (read only)
+        Number of layers of substrate.
+    NSizes : int
+        Number of sediment size bins.
+    NTracers : int
+        Number of tracers.
+    NFlows : int
+        Number of discharge bins in flow duration distribution.
+    CumulativeBedChange : float (read only)
+        Total channel bed elevation change since beginning of simulation.
+    BarPavingRatio : float (read only)
+        Ratio of D50 in active layer to D50 in subsurface of point bars.
+    FractionAlluvial : float (read only)
+        Ratio of sediment storage volume in active layer to maximum
+        sediment storage volume of active layer.  
+    CumulativeNarrowing : float
+        Katie add--NEEDS DOCUMENTATION
+    CumulativeWidening : float
+        Katie add--NEEDS DOCUMENTATION
+    CumulativeTotalAvulsionWidth : float
+        Katie add--NEEDS DOCUMENTATION
+    CumulativeTotFeed : float
+        Katie add--NEEDS DOCUMENTATION
+    CumulativeTotBedMaterialFeed : float
+        Katie add--NEEDS DOCUMENTATION
+    CumulativeWideningVolume : float
+        Katie add--NEEDS DOCUMENTATION
+    CumulativeWideningBedMaterialVolume : float
+        Katie add--NEEDS DOCUMENTATION
+    CumulativeChannelVolumeChange : float
+        Katie add--NEEDS DOCUMENTATION
+    PartlyAlluvial : boolean
+        Katie add--NEEDS DOCUMENTATION
+    Canyon : Boolean 
+        Katie add--NEEDS DOCUMENTATION
+    ControlSubstrate : :obj:`MAST_1D.clsSubstratePairClass`
+        Stores original substrate in case incision is so large that a new layer is needed below 
+        all the initial layers.    
+    NarrowRate : float
+        Channel narrowing rate.
+    WideningRate : float
+        Channel widening rate.
+    ValleyMargin : float
+        Katie add--it is the original fp + bc width.
+    CumuTotVolume : float
+        Katie add--NEEDS DOCUMENTATION 
+    TotalSubstrateVolume : float. 
+        To check mass conservation (Katie add).
+    CumuTotalSubstrateCDeltaS : float
+        Katie add--NEEDS DOCUMENTATION
+    TotalCVol : float
+        Katie add--NEEDS DOCUMENTATION
+    CobbleMobility : float
+        Katie add--NEEDS DOCUMENTATION  
+    
     """
     
     Initialized = False
@@ -97,7 +225,15 @@ class clsNode(object):
             return object.__getattribute__(self, name)
         elif name == 'FkPointBarDepositAnnualAverage':
             """
-            Here, Kbar defines the weighting of overall washload vs. bed 
+            Note
+            ----
+            
+            There are some interesting code comments in the __getattribute__ function.
+            Basically, it looks like a call to return the 'PointBarSubsurfaceGSD'
+            attribute will return the annual average of this attribute.
+            
+            
+            In this function, Kbar defines the weighting of overall washload vs. bed 
             material load in new bar material and is defined as 
             kbar = pb/pw*(Fw,bar/Fb,bar), where pb and pw are the fractions bed
             material and wash load in the total load, respectively, and Fw,bar 
@@ -135,8 +271,8 @@ class clsNode(object):
                     self.Load.QsAvkFeed[0] / self.Load.QsavBedTot))
             else:
                 FWashloadInPointBar = 1.
-                print('Bed material load is zero.  Washload fraction in ' + \
-                    'point bar set equal to 1.')
+                #print('Bed material load is zero.  Washload fraction in ' + \
+                #    'point bar set equal to 1.')
             
             Fkpointbar = [0.] * (self.NSizes + 1)
             Fkpointbar[0] = FWashloadInPointBar
@@ -151,7 +287,7 @@ class clsNode(object):
     
     def nGrain(self): # Grain roughness
         """
-        Return: float
+        Grain Roughness computed from size distribution in active layer.
         """
         # Katie make it so that mud is not in roughness 
         #calculation--for partly alluvial problem
@@ -164,9 +300,9 @@ class clsNode(object):
 
         return nGrain
     
-    def nc(self): # Grain roughness
+    def nc(self):
         """
-        Return: float
+        Total channel roughness including form drag and multiplier for sinuosity.
         """
         #print 'nc'
         #print self.nGrain() + self.ncAddons
@@ -183,19 +319,34 @@ class clsNode(object):
     BedPavingRatio = property(getBedPavingRatio)
     
     def getFractionAlluvial(self):
-        return self.ActiveLayer.Volume / self.ActiveLayer.L / self.Bc / \
-            self.dxc
+        return self.ActiveLayer.Volume / self.ActiveLayer.L / self.Bc / self.dxc
     
     FractionAlluvial = property(getFractionAlluvial)
 
-    def SplitOrCombineSubstrate(self, LMinAfterSplit, LMinBeforeRemove, \
-            Spacing):
+    def SplitOrCombineSubstrate(self, LMinAfterSplit, LMinBeforeRemove, Spacing):
         """
-        Arguments:
-            LMinAfterSplit -- float
-            LMinBeforeRemove -- float
-            Spacing -- float
+        Method for updating the substrate if the top layer is too thick or too thin.
+        
+        If the top layer is thicker than allowed, the top layer is split into two 
+        layers, both having the same size distribution.  If the top layer is thinner than
+        allowed, it is combined with the layer below it.  Splitting or combining 
+        substrate layers does not result in horizontal mixing between channel and floodplain
+        zones of the substrate.  Also, if the number of subsrate layers drops to 1, adds
+        a control substrate below the substrate.
+        
+        Parameters
+        ----------
+        LMinAfterSplit : float
+            Minimum thickness (m) for a substrate node if a new substrate layer 
+            is to be spawned (when aggrading). This It is necessary to split 
+            substrate so as not to mix material too deeply.
+        LMinBeforeRemove : float
+            Minimum thickness (m) allowed for the top substrate layer if system is degrading.  
+            If too thin, the layer is removed and its sediment is mixed with the next lower layer.             
+        Spacing : float
+            Thickness of all but top-most substrate layers (m).
         """
+        
         # Katie--add this loop.  If the number of substrate layers gets down to
         # 1, a new layer is added to the bottom.  This could be a problem because
         # it will not have been exchanging with the floodplain constantly like the
@@ -258,14 +409,6 @@ class clsNode(object):
             #print self.NLayers()
     
     def __init__(self, NLayers, NTracers, BinBdySizes, NFlows):
-        """
-        Arguments:
-            NLayers -- int
-            NTracers -- int
-            BinBdySizes -- [float]
-            NFlows -- int
-        """
-
         if not self.Initialized:
             self.NSizes = len(BinBdySizes) - 2
             self.NTracers = NTracers
@@ -319,6 +462,9 @@ class clsNode(object):
     
     def EquilibriumMudFloodplainNumber(self, DeltaEta, cbank):
         """
+        Computes floodplain number required to achieve long-term deposition
+        rate that produces a given overbank sediment thickness.
+        
         This function can be used to compute the floodplain number for mud at 
         perfect equilibrium, when the bed is not changing and there is no net 
         divergence in load.  It must be called after the hydraulics have been 
@@ -326,12 +472,18 @@ class clsNode(object):
         The variable DeltaEta should represent the mud fraction of the 
         thickness of the overbank sediment deposit.
         
-        Arguments:
-            DeltaEta -- float
-            cbank -- float
+        Parameters
+        ----------
+        DeltaEta : float
+            Average thickness of overbank fines at eroding banks, 
+            assuming long-term bed elevation is constant.
+        cbank : float
+            Long-term average bank migration rate. 
         
         Return: float
+            Equilibrium floodplain number for mud.
         """
+        
         # Store old values of Fl, Dfjk(j,0) and Dfav(0)
         try:
             OldvalFl = self.Flmud
@@ -359,20 +511,27 @@ class clsNode(object):
     
     def NormalChannelDepthAndDischarge(self, Qw, threshold, Manning): #  Input variables are now the same between VBA and this Python version (Katie)
         """
-        This subroutine computes the normal water depth as a function of 
+        Calculates steady uniform flow hydraulics.
+        
+        This method computes the normal water depth as a function of 
         channel width, floodplain thickness, floodplain width, friction 
         coefficients in channel and on floodplain, and slope, and partitions
-        flow into channel and floodplain zones.
-
-        Can perform calculation either using Manning's equation (for Manning
-         = True) or Chezy equation (For Manning = False)
+        flow into channel and floodplain zones. It can perform calculation
+        either using Manning's equation (for Manning = True) or Chezy
+        equation (For Manning = False)
         
-        Arguments:
-            Qw -- float
-            threshold -- float
-            Manning -- bool
+        Parameters
+        ----------
+            Qw : float
+                Discharge (m3/s)
+            threshold : float
+                allowable error threshold.
+            Manning : bool
+                Flag indicating whether to use Manning's equation (if True) or
+                Chezy equation (if False).
             
-        Return: [float]
+        Return: float
+            Normal depth in channel (m).
         """
 
         g = 9.81
@@ -444,17 +603,32 @@ class clsNode(object):
     
     def ChezyDischarge(self, H, Bc, Czc, Sc, Bf, Czf, Tf, Sf):
         """
-        Arguments:
-            H -- float
-            Bc -- float
-            Czc -- float
-            Sc -- float
-            Bf -- float
-            Czf -- float
-            Tf -- float
-            Sf -- float
+        Estimates overall discharge in channel/floodplain complex
+        using Chezy equation.
+                
+        Parameters
+        ----------
+        H : float
+            Flow Depth in channel (m)
+        Bc : float
+            Channel width (m)
+        Czc : float
+            Chezy coefficient in channel zone.
+        Sc : float
+            Average Channel Slope
+        Bf : float
+            Floodplain width (m)
+        Czf : float
+            Chezy coefficient in floodplain zone.
+        Tf : float
+            Floodplain thickness (same as channel depth).
+        Sf : float
+            Averate down-channel slope in floodplain zone.
         
-        Return: float
+        Returns
+        -------
+        float
+            Discharge (m3/s)
         """
         g = 9.81
         if H > Tf:
@@ -465,17 +639,32 @@ class clsNode(object):
     
     def ManningDischarge(self, H, Bc, nc, Sc, Bf, nf, Tf, Sf):
         """
-        Arguments:
-            H -- float
-            Bc -- float
-            nc -- float
-            Sc -- float
-            Bf -- float
-            nf -- float
-            Tf -- float
-            Sf -- float
+        Estimates overall discharge in channel/floodplain complex
+        using Manning equation.       
         
-        Return: float
+        Parameters
+        ----------
+        H : float
+            Flow Depth in channel (m).
+        Bc : float
+            Channel width (m).
+        nc : float
+            Manning's n for channel zone.
+        Sc : float
+            Average Channel Slope.
+        Bf : float
+            Floodplain width (m).
+        nf : float
+            Mannin's n for floodplain zone.
+        Tf : float
+            Floodplain thickness (same as channel depth).
+        Sf : float
+            Averate down-channel slope in floodplain zone.
+        
+        Returns
+        -------
+        float
+            Discharge (m3/s)
         """
 
         if H > Tf:
@@ -486,8 +675,14 @@ class clsNode(object):
     
     def UpdateDepthAndDischargeAtAllFlows(self, Manning):
         """
-        Arguments:
-            Manning -- bool
+        Method to compute and update hydraulic parameters using steady uniform
+        flow approximation.  Performs computation for all discharges in discharge distribution.
+        
+        Parameters
+        ----------
+        Manning : bool
+            Flag indicating whether to use Manning's equation (if True) or
+            Chezy equation (if False).
         """
         
         for j in range(self.DC.NFlows()):
@@ -509,11 +704,25 @@ class clsNode(object):
             
     def UpdateDepthAndDischargeAtOneFlow(self, Manning, Qw):
         """
-        Arguments:
-            Manning -- bool
-            Qw -- float
+        Function to compute velocity and friction slope using steady uniform
+        flow approximation.  Performs computation for one discharge. Katie add for 
+        width change function with flow duration curve.
+        
+        Parameters
+        ----------
+        Manning : bool
+            Flag indicating whether to use Manning's equation (if True) or
+            Chezy equation (if False).
+        Qw : float  
+            Discharge (m3/s)
             
-        Katie add for width change function with flow duration curve
+        Returns
+        -------
+        Uc : float
+            Channel Velocity
+        Sf : float  
+            Average slope of node (note this is simply the node's slope property)
+        
         """
                     
         ChannelHQ = self.NormalChannelDepthAndDischarge(Qw, \
@@ -535,6 +744,8 @@ class clsNode(object):
     
     def UpdateLateralSedFluxes(self):
         """
+        Method that computes and updates the size-specific lateral fluxes for the node.
+        
         These are volume fluxes and do not include overbank deposition, which
         is handled as a net source term for the floodplian and as a net sink 
         term for the water column (for mud) or the active layer (for sand)
@@ -696,12 +907,16 @@ class clsNode(object):
 
     def UpdateLateralTracerConcentrations(self):
         """
+        Method that computes and updates concentrations of tracers in lateral fluxes.
+        
         This subroutine is necessary because the subroutine that updates tracer
         concentrations based on mass conservation at each node operates as a
         method of clsReservoir and thus does not have access to the tracer 
-        concentrations in the adjacent reservoirs. 
-        Consequently, these must be set up at node level.
+        concentrations in the adjacent reservoirs. Consequently, these must be 
+        set up at node level.
     
+        Note
+        ----
         This does not need to be called before calling mass conservaiton on the
         load because all washload tracer concentrations are computed using the 
         tracer concentration of the washload feed.
@@ -811,18 +1026,24 @@ class clsNode(object):
 
     def UpdateVerticalExchangeSedFluxes(self, BedAggradationRate, alpha):
         """
+        Method that computes and updates fluxes associated with vertical bed movement.
+        
         This subroutine considers only fluxes associated with boundary movement
         of bottom of active layer/floodplain. Net fluxes associated with 
-        overbank deposition are handled in UpdateSedimentSourcesAndSinks
-    
-        This routine results in a source of mud to the water column from the 
+        overbank deposition are handled in UpdateSedimentSourcesAndSinks. Results 
+        in a source of mud to the water column from the 
         bed if the channel is degrading into a substrate that contains mud. 
         Only the duration-averaged supply rate of mud to the water column is 
         specified.
         
-        Arguments:
-            BedAggredationRate -- float 
-            alpha -- float
+        Parameters
+        ----------
+        BedAggredationRate : float
+            Rate at which bed is aggrading.
+        alpha : float
+            Coefficient determining the
+            mixture between bed material and load that gets transferred 
+            to substrate when system is aggrading.
         """
         #print 'Agg' + str(BedAggradationRate)
         for k in range(self.NSizes + 1):
@@ -902,8 +1123,10 @@ class clsNode(object):
 
     def UpdateVerticalExchangeTracerConcentrations(self):
         """
-        This subroutine is necessary because the subroutine that updates tracer
-        concentrations based on mass conservation at each node operates as a 
+        Method that computes and updates concentrations of tracers in vertical fluxes.
+        
+        This method is necessary because the method that updates tracer
+        concentrations based on mass conservation at each node operates is a 
         method of clsReservoir and thus does not have access to the tracer 
         concentrations in the adjacent reservoirs.
         Consequently, these must be set up at node level.
@@ -939,7 +1162,10 @@ class clsNode(object):
                 self.Substrate[-1].C.ExTracer[L].OutVerticalChange[0]
     
     def UpdateExtraWidthFluxes(self, WidenRate, NarrowRate, AggRate):
-        
+        """
+        Katie add. Method that updates sediment fluxes in the floodplain and
+        active layer reservoir objects--to reflect width change.
+        """
         # Katie add        
         
         # Now add extra bit of floodplain adjacent to active layer to sediment
@@ -963,7 +1189,9 @@ class clsNode(object):
     
     def UpdateNetSedimentSourcesAndSinks(self):
         """
-        Floodplain deposition is handled as a sink here
+        Method that updates fluxes in all sediment storage reservoirs.
+        
+        Floodplain deposition is handled as a sink here.
         """
         
         # *********************************************************************
@@ -1019,7 +1247,7 @@ class clsNode(object):
             self.ActiveLayer.SourceFeedSed[k] = self.Load.QsAvkFeed[k]
             # **********MASS CONSERVATION IF BED ELEVATION IS FIXED************
         
-            if self.FixedElev:
+            #if self.FixedElev:
                 # If the total influx in size k is greater than the transport 
                 # capacity assuming fully alluvial conditions, this is where we 
                 # have to figure out how to handle the extra sediment entering 
@@ -1032,7 +1260,7 @@ class clsNode(object):
                 # were fully alluvial. For now, the assumption is that the 
                 # material stored has a size distribution similar to the 
                 # existing active layer.
-                if NetInfluxTotal > Outflux:
+            #    if NetInfluxTotal > Outflux:
                     # if the system is gaining sediment, make sure the sediment
                     # stored is similar to the size distribution of the active 
                     # layer
@@ -1044,26 +1272,26 @@ class clsNode(object):
                     # leaves the system if outfluxes are greater than influxes
                     # and prevents the load from being completely zero (which
                     # was what the old method did).                    
-                    NormStay = (NetInfluxTotal - Outflux) * \
-                        (self.ActiveLayer.GSD.F[k] * \
-                        self.AlphaPartlyAlluvial + \
-                        self.Load.GSDBedloadAv.F[k] * \
-                        (1. - self.AlphaPartlyAlluvial))
+            #        NormStay = (NetInfluxTotal - Outflux) * \
+            #            (self.ActiveLayer.GSD.F[k] * \
+            #            self.AlphaPartlyAlluvial + \
+            #            self.Load.GSDBedloadAv.F[k] * \
+            #            (1. - self.AlphaPartlyAlluvial))
                         
-                    self.ActiveLayer.SinkLoadSed[k] = NetInflux[k] - NormStay
+            #        self.ActiveLayer.SinkLoadSed[k] = NetInflux[k] - NormStay
                     
-                    x = 'fller'
-                    if self.ActiveLayer.SinkLoadSed[k] < 0.:
-                        self.ActiveLayer.SinkLoadSed[k] = 0. # Katie comment out
+            #        x = 'fller'
+            #        if self.ActiveLayer.SinkLoadSed[k] < 0.:
+            #            self.ActiveLayer.SinkLoadSed[k] = 0. # Katie comment out
                         #self.ActiveLayer.SinkLoadSed[k] = .5*NetInflux[k] # Katie add
                         #print('negative size specific load in partly alluvial \
                             #computation in UpdateSedimentSourcesAndSinks of Node \
                             #was converted to zero')
-                    self.Load.QsAvkLoad[k] = self.ActiveLayer.SinkLoadSed[k] # Katie add to maintain mass conservation
+            #        self.Load.QsAvkLoad[k] = self.ActiveLayer.SinkLoadSed[k] # Katie add to maintain mass conservation
                     #self.Load.ExSed.InVerticalChange[0] = self.ActiveLayer.SinkLoadSed[0]-self.ActiveLayer.SourceFeedSed[0] # Katie add                    
                     #self.ActiveLayer.SinkLoadSed[0] = deepcopy(self.Load.QsAvkFeed[0]) # Katie add
                                         
-                else:
+            #    else:
                     # If the system is sediment starved, assume the only outflux
                     # is that computed from the fraction of the bed that is 
                     # alluvial.
@@ -1071,20 +1299,22 @@ class clsNode(object):
 #                    if self.FractionAlluvial < .00001: # Katie add--so that the active layer doesn't run out of sediment
 #                        self.ActiveLayer.SinkLoadSed[k] = self.Load.QsAvkFeed[k]                    
 #                    else:
-                    self.ActiveLayer.SinkLoadSed[k] = self.Load.QsAvkLoad[k]                    
-                    self.ActiveLayer.SinkLoadSed[0] = deepcopy(self.Load.QsAvkFeed[0]) # Katie add
+            #        self.ActiveLayer.SinkLoadSed[k] = self.Load.QsAvkLoad[k]                    
+            #        self.ActiveLayer.SinkLoadSed[0] = deepcopy(self.Load.QsAvkFeed[0]) # Katie add
                     # Katie:  this is where you would add the code to allow mud to 
                     # be entrained--so that the partly alluvial GSD doesn't get
                     # overtaken by mud.
                     
                 # Katie try to make it so that partly-alluvial node isn't dominated by mud
-                    self.ActiveLayer.SinkLoadSed[0] = self.ActiveLayer.SourceFeedSed[0] - self.ActiveLayer.GSD.F[0]*(NetInfluxTotal-Outflux)
+            #        self.ActiveLayer.SinkLoadSed[0] = self.ActiveLayer.SourceFeedSed[0] - self.ActiveLayer.GSD.F[0]*(NetInfluxTotal-Outflux)
                     #self.Load.QsAvkLoad[0] = self.ActiveLayer.SinkLoadSed[0]
                     #self.Load.ExSed.InVerticalChange[0] = -self.ActiveLayer.GSD.F[0]*(NetInfluxTotal-sum(self.ActiveLayer.SinkLoadSed))
                     
-            else:
-                self.ActiveLayer.SinkLoadSed[k] = deepcopy(self.Load.QsAvkLoad[k])
-                self.ActiveLayer.SinkLoadSed[0] = deepcopy(self.Load.QsAvkFeed[0])#Katie add
+            #else:
+            self.ActiveLayer.SinkLoadSed[k] = deepcopy(self.Load.QsAvkLoad[k])
+            self.ActiveLayer.SinkLoadSed[0] = deepcopy(self.Load.QsAvkFeed[0])#Katie add
+            #This may not matter if we don't track mud in the active layer.
+            #Mud (so size 0) should be accounted for in the water column mass conservation.
 
         for k in range(self.NSizes + 1):
             self.Floodplain.SourceLatSed[k] = self.Dfav[k] * self.dxc
@@ -1106,12 +1336,13 @@ class clsNode(object):
     
     def UpdateNetTracerSourceAndSinkConcentrations(self):
         """
-        This subroutine is necessary because the mass conservation at each node
+        Method that updates tracer concentrations in sediment moving into/out of 
+        sediment storage reserviors for the node. Also computes the 
+        duration-averaged tracer concentration in the load.
+        
+        This method is necessary because the mass conservation at each node
         operates as a method of clsReservoir and thus does not have access to 
         the node's lateral sources and sinks.
-        
-        This routine also computes the duration-averaged tracer concentration 
-        in the load.
         """
         for L in range(self.NTracers):
             # Set up tracer concentrations in source and sinks for washload 
@@ -1138,49 +1369,79 @@ class clsNode(object):
     
     def FloodplainDeposition(self, C, Qwf, Fl, Bf):
         """
-        This routine computes overbank deposition rates (m/s), outgoing 
+        Computes overbank deposition rate.
+        
+        This function computes overbank deposition rates (m/s), outgoing 
         suspended mud flux (m3/s), and fraction mud in point bars (no units) 
         for a single set of steady discharge and sediment supply terms at a 
         single node.  All terms are assumed constant over the interval of the 
-        computation.
-        If the computed outgoing suspended sediment flux is less than zero, the
-        deposition rate is reduced so that the outgoing sediment flux is zero 
-        and mass is conserved.
+        computation. If the computed outgoing suspended sediment flux is less 
+        than zero, the deposition rate is reduced so that the outgoing sediment 
+        flux is zero and mass is conserved. See Lauer and Parker, 2008, Water
+        Resources Research.
         
-        Arguments:
-            C -- float (Average suspended sediment concentration above 
-                floodplain level)
-            Qwf -- float (Water discharge across floodplain (m3/s))
-            Fl -- float (Floodplain number (can be size specific))
-            Bf -- float (Floodplain width (m))
+        Parameters
+        ----------
+        C : float
+            Average suspended sediment concentration above 
+            floodplain level.
+        Qwf : float
+            Water discharge across floodplain (m3/s)
+        Fl : float
+            Floodplain number (can be size specific)
+        Bf : float 
+            Floodplain width (m)
+    
+        Returns
+        -------
+        float
+            Volumetric overbank deposition per unit channel length (m2/s).
         
-        Return: float
+        Notes
+        -----
+        Note that the overbank deposition rate is a volume rate of sediment 
+        particles deposited on floodplain per unit channel length, so has 
+        units of L2/T.  It is not the vertical rate of change floodplain
+        elevation. Also note that it does not include a porosity term. 
+                
         """
-
         return Fl * C * Qwf / Bf
-        # Note that D is a volume rate of sediment particles deposited on 
-        # floodplain per unit channel length, so has units of L2/T.  It is not
-        # the vertical rate of change floodplain elevation, and thus does not 
-        #include a porosity term.
+
     
     def RouseFractionSuspendedLoadAboveFloodplainLevel(self, SettlingVel, \
         ustar, Hc, Lf, Intervals):
         """
-        Units of settling velocity and ustar must be consistent
-        Units of Hc and Hf must be consistent
+        Computes fraction of load for particles of a given settling velocity that turbulence
+        keeps suspendeed above the floodplain elevation. 
         
-        Arguments:
-            SusSedLoad -- float (Volumetric suspended sediment load in size 
-                class of interest)
-            Qc -- float (Water discharge in channel)
-            SettlingVel -- float (Settling velocity for suspended sediment)
-            Ustar -- float (Shear velocity in channel)
-            Hc -- float (Flow depth in channel)
-            Lf -- float (height of floodplain with respect to channel bed)
-            Intervals -- float (number of intervals over which integral is 
-                numerically integrated.)
+        Computed using Rouse suspended sediment profile.  
         
-        Return: float
+        Note
+        ----
+        Units of settling velocity and ustar must be consistent and
+        units of Hc and Hf must be consistent.
+        
+        Parameters
+        ----------
+        SusSedLoad : float 
+            Volumetric suspended sediment load in size class of interest.
+        Qc : float 
+            Water discharge (m3/s) in channel.
+        SettlingVel : float
+            Settling velocity for suspended sediment (same units as Ustar)
+        Ustar : float 
+            Shear velocity in channel (same units as SettlingVel)
+        Hc : float
+            Flow depth in channel
+        Lf : float
+            Height of floodplain with respect to channel bed (m).
+        Intervals : float 
+            Number of intervals over which integral is numerically integrated.
+        
+        Returns
+        -------
+        float
+            Fraction of load moving above floodplain level.
         """
     
         # Test whether flow is above floodplain and return if flow is below
@@ -1194,7 +1455,7 @@ class clsNode(object):
             # floodplain level is just total suspended load divided by channel 
             # discharge
             if Lf / Hc < 0.05:
-                print 'floodplain elevation is below near bed elevation so Rouse Profile can not be computed.  Concentration set to load/discharge.'
+                print('floodplain elevation is below near bed elevation so Rouse Profile can not be computed.  Concentration set to load/discharge.')
 
             # Integrate for lower part of water column up to floodplain level.
             # Assume near bed concentration is evaluated at zeta = 0.05 and
@@ -1224,13 +1485,19 @@ class clsNode(object):
 
     def RouseIntegrand(self, Zita, Zitab, Vs, ustar):
         """
-        Arguments:
-            Zita -- float
-            ZItab -- float
-            Vs -- float
-            ustar -- float
+        Computes integrand for use in Rouse integration.
+        
+        CONSIDER MAKING A PRIVATE FUNCTION IN RouseFractionSuspendedLoadAboveFloodplainLevel.
+        
+        Parameters
+        ----------
+            Zita : float
+            ZItab : float
+            Vs : float
+            ustar : float
             
-        Return: float
+        Returns
+            float
         """
         #print 'Zita ' + str(Zita)
         #print 'Zitab ' + str(Zitab)
@@ -1243,8 +1510,8 @@ class clsNode(object):
     
     def UpdateDMudj(self):
         """
-        Updates mud deposition rate for each bin and computes flow-duration 
-        averaged value of overbank mud deposition rate (k = 0).
+        Method for updating mud deposition rate for each bin and
+        computing flow-duration averaged value of overbank mud deposition rate (k = 0).
         """
         self.Dfav[0] = 0.
         for j in range(self.DC.NFlows()):
@@ -1262,9 +1529,9 @@ class clsNode(object):
 
     def UpdateDSandj(self):
         """
-        Updates sand deposition rate for each bin and computes flow-duration 
-        averaged value of overbank sand deposition rate (k = represntative of
-        all sand sizes).
+        Method for updating sand deposition rate for each bin and
+        computing flow-duration averaged value of overbank sand
+        deposition rate (k = represntative of all sand sizes).
         """
         g = 9.81
         #print self.Floodplain.L-self.ActiveLayer.L
@@ -1308,18 +1575,42 @@ class clsNode(object):
         #print 'sand' +  str(self.Dfav)
     def WidthChange(self, Manning, TrinityFit, CalibrationFactor, SG, rho_w, g, W, alphaF, alphatau, BcMin, dt, ControlGSD, MobilityThreshold):
         """
-        Katie added this function.  It is an optional add-on to replace the constant
+        Katie added this method.  It is an optional add-on to replace the constant
         migration rate (Node.cbank).  Bank erosion and floodplain sequestration are
         treated as separate, independent processes.
         
-        Arguments:
-        
-        Manning -- bool
-        thresholdQ -- float
-        W -- float
-        ErodeT -- float
-        BcMin -- float
-        dt -- float
+        Parameters
+        ----------
+        Manning : bool
+            APPEARS TO BE UNUSED
+        TrinityFit : bool
+            Flag that determines if Gaeuman fit to Wilcock & Crowe is used.  Regular
+            Wilcock and Crowe used if false.
+        CalibrationFactor : float
+            Sediment transport calibration factor. Used to adjust reference Shields
+            stress in Wilcock Crowe type sediment transport computation.
+        SG : float
+            Specific gravity of sediment.
+        rho_w : float
+            Density of water
+        g : float
+            APPEARS TO BE UNUSED
+        W : float
+            Narrowing constant--used to calibrate narrowing function.  
+            As a starting guide, estimate the percentage of bar that is 
+            vegetated annually and double it.    
+        alphaF : float
+            NEEDS TO BE DOCUMENTED
+        alphatau : float
+            NEEDS TO BE DOCUMENTED
+        BcMin : float
+            Minimum channel width (m)       
+        dt : float
+            Timestep
+        ControlGSD : ???
+            APPEARS TO BE UNUSED
+        MobilityThreshold : float   
+            Parameter representing mobility of bank toe material.
         """
         index = -3
         self.cbank = 0. # Turns off constant migration rate so that ExchangeType values can be filled with this function        
@@ -1383,6 +1674,21 @@ class clsNode(object):
 
     
     def Narrowing(self, BcMin, W, alphatau):
+        """
+        Katie added this method.  It appears to complete the width change 
+        computation performed by WidthChange method. CONSIDER INCLUDING 
+        THIS AS PART OF THE WIDTHCHANGE METHOD.
+        
+        Parameters
+        ----------
+        BcMin : float
+            Minimum channel width (m)  
+        W : float
+            NEEDS TO BE DOCUMENTED   
+        alphatau : float
+            NEEDS TO BE DOCUMENTED
+        """
+        
         self.NarrowRate = 0.
         TotalNarrowing = []
         oldHc = self.DC.Hc
@@ -1401,35 +1707,40 @@ class clsNode(object):
     #                Fs = self.ActiveLayer.GSD.FfinerThanD_upper[i] # Katie change from parentheses to brackets
     #                i = i + 1		
                 widthchangeN = -((oldBc+sum(TotalNarrowing))-BcMin)*W/(365.25*24*60*60) #Katie multiply by percent sand # Change per second--simplest solution; only one calibration term which is percent widening per year.
+            #else:
+                #print('widthchangeN not set, Tauprime = %s and alphatau = %s' % (TauPrime,alphatau)) 
+                #widthchangeN = -((oldBc+sum(TotalNarrowing))-BcMin)*W/(365.25*24*60*60)
             TotalNarrowing.append(widthchangeN*self.DC.p[j])                
         self.NarrowRate = sum(TotalNarrowing)
         #print self.NarrowRate*576.*150
         #self.Bcrate = sum(TotalWidening) + sum(TotalNarrowing)
         #self.Bc = oldBc
     
-    def Avulsion(self, threshold, spacing, exchange):
-        
+    def Avulsion(self, threshold, spacing, exchange):       
         """
-        Katie added this function.
-        This function simulates avulsion on a node-by-node basis.  When the channel
-        elevation approaches that of the bank (how close is a user-defined threshold),
-        the uppermost substrate layer will be incorporated back into the floodplain.
-        The active layer will also join the Floodplain reservoir.  The bed elevation
-        (etabav) will be adjusted so that it is lowered by an increment of 1 substrate
-        spacing.
+        Katie added this method. Simulates avulsion on a node-by-node basis.
         
-        If this occurs repeatedly in a given node, it should simulate valley filling,
-        like that of a delta.
+        When the channel elevation approaches that of the bank (how close is a
+        user-defined threshold), the uppermost substrate layer will be incorporated
+        back into the floodplain. The active layer will also join the Floodplain
+        reservoir.  The bed elevation (etabav) will be adjusted so that it is
+        lowered by an increment of 1 substrate spacing. If this occurs repeatedly
+        in a given node, it should simulate valley filling, like that of a delta.
         
-        Attributes:
-        
-            -threshold (float)--difference between the bank (Floodplain.L-ActiveLayer.L)
-                the channel elevation after which avulsion will occur
+        Parameters
+        ----------
+        threshold : float
+            difference between the bank (Floodplain.L-ActiveLayer.L)
+            and the channel elevation after which avulsion will occur.
+        spacing : ???
+            NEEDS TO BE DOCUMENTED
+        exchange : ???
+            NEEDS TO BE DOCUMENTED
         """
         
         if self.Floodplain.L-self.ActiveLayer.L < threshold:
-            print 'Avulsion!'
-            print self.Floodplain.L
+            print('Avulsion!')
+            print(self.Floodplain.L)
             # This part of the code extracts a slice of substrate that is the 
             # thickness of the user-specified original substrate spacing.  This
             # is so that the depth of the new channel is consistent and does not
@@ -1522,27 +1833,31 @@ class clsNode(object):
             self.CumulativeTotalAvulsionWidth = self.CumulativeTotalAvulsionWidth + self.Bc*exchange
 
     def ExnerBed(self):
-
+        """
+        Method for computing total net influx of sediment to active layer
+        from all sources and then updating bed elevation. Calculation is summed across all sizes.
+        """
+    
         # Compute total net lateral influx to active layer due to migration,
         # width change, and lateral sources, summed across all bed material
         # sizes
 
-#        NetQsIn = np.sum(self.ActiveLayer.ExSed.InMigration[1:self.NSizes + 1]\
-#             - self.ActiveLayer.ExSed.OutMigration[1:self.NSizes + 1] + \
-#             self.ActiveLayer.ExSed.InWidthChange[1:self.NSizes + 1] - \
-#             self.ActiveLayer.ExSed.OutWidthChange[1:self.NSizes + 1] +\
-#             self.ActiveLayer.SourceLatSed[1:self.NSizes + 1] - \
-#             self.ActiveLayer.SinkLatSed[1:self.NSizes + 1] + \
-#             self.ActiveLayer.SourceFeedSed[1:self.NSizes + 1] - \
-#             self.ActiveLayer.SinkLoadSed[1:self.NSizes + 1])
-
         NetQsIn = np.sum(self.ActiveLayer.ExSed.InMigration[1:self.NSizes + 1]\
             - self.ActiveLayer.ExSed.OutMigration[1:self.NSizes + 1] + \
-            self.ActiveLayer.ExSed.InWidthChange[1:self.NSizes + 1] + \
+            self.ActiveLayer.ExSed.InWidthChange[1:self.NSizes + 1] - \
+            self.ActiveLayer.ExSed.OutWidthChange[1:self.NSizes + 1] +\
             self.ActiveLayer.SourceLatSed[1:self.NSizes + 1] - \
             self.ActiveLayer.SinkLatSed[1:self.NSizes + 1] + \
             self.ActiveLayer.SourceFeedSed[1:self.NSizes + 1] - \
             self.ActiveLayer.SinkLoadSed[1:self.NSizes + 1])
+
+        #NetQsIn = np.sum(self.ActiveLayer.ExSed.InMigration[1:self.NSizes + 1]\
+        #    - self.ActiveLayer.ExSed.OutMigration[1:self.NSizes + 1] + \
+        #    self.ActiveLayer.ExSed.InWidthChange[1:self.NSizes + 1] + \
+        #    self.ActiveLayer.SourceLatSed[1:self.NSizes + 1] - \
+        #    self.ActiveLayer.SinkLatSed[1:self.NSizes + 1] + \
+        #    self.ActiveLayer.SourceFeedSed[1:self.NSizes + 1] - \
+        #    self.ActiveLayer.SinkLoadSed[1:self.NSizes + 1])
              
         # This is where a formulation accounts for the possibility that the bed
         # is partially alluvial:
@@ -1559,9 +1874,14 @@ class clsNode(object):
     def UpdateVolumeSizeFractionsandTracersInAllReservoirs(self, dt, \
         TracerProperties):
         """
-        Arguments:
-            dt -- float
-            TracerProperties -- clsTracerProperties
+        Method for mixing sediment and tracer concentrations into reservoirs.
+        
+        Parameters
+        ----------
+            dt : float
+                Timestep.
+            TracerProperties : array_like(:obj:clsTracerProperties, length = NTracers)
+                Production and decay properties for each tracer type.
         """
         self.ActiveLayer.UpdateFandT(dt, self.lambdap, TracerProperties)
         self.Floodplain.UpdateFandT(dt, self.lambdap, TracerProperties)
@@ -1578,8 +1898,18 @@ class clsNode(object):
     
     def UpdateGeometricParameters(self, dt):
         """
-        Arguments:
-            dt -- float
+        Method for updating the geometric parameters of the node.
+        
+        Parameters
+        ----------
+            dt : float
+                Timestep.
+                
+        Note
+        ----
+        For simulating a node with partly alluvial cover on bedrock, the 
+        subroutine may need some adjustment.  See comments in the code
+        for ideas.        
         """
 
         self.etabav = self.etabav + self.DeltaEtaB * dt
@@ -1644,7 +1974,7 @@ class clsNode(object):
         # alluvial case, if bed cover fraction would increase to greater than
         # 1, then need to allow bed elevation to change and also to compute 
         # appropriate vertical boundary exchange fluxes.  Should be easy to 
-        # write if-then statements that modify boundary flux compuations.
+        # write if statements that modify boundary flux compuations.
         # Problem is how to handle the last substrate layer when it is almost 
         # gone, especially since all funtions to this function have computed 
         # rates, not total volumes.  Given the rate at which the boundary is 

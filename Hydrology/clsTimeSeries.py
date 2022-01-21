@@ -15,20 +15,38 @@ class clsTimeSeries(object):
     """
     Holds data for time chunks of time series
     
-    Attributes:
-    
-    Dates--[date] (Date in time series, in matplotlib's datetime format)
-    Values--[float] (Time series values)
-    label--str (Label for y-axis)  
-    averages--[[int,int,float]] (List of averages for defined periods with their date indexes)
-    timechunks--[str] (list of periods to divide data)
-    text -- str (optional Label for subplot)
+    Parameters
+    ----------
+    Dates : [date] 
+        Date in time series, in matplotlib's datetime format.
+    Values : [float]
+        Time series values.
+    label : str 
+        Label for y-axis.  
+    text : str (optional)
+        Label for subplot.
+        
+    Attributes
+    ----------
+    Dates : [date] 
+        Date in time series, in matplotlib's datetime format.
+    Values : [float]
+        Time series values.
+    label : str 
+        Label for y-axis.  
+    averages : [[int,int,float]] 
+        List of averages for defined periods with their date indexes.
+    timechunks : [str]
+        List of periods to divide data.
+    text : str (optional)
+        Label for subplot.
     """
     
     def __init__(self,Dates,Values, label="", text=""):
         self.Dates = Dates
         self.Values = Values
-        self.average = np.mean(self.Values)
+        #self.average = np.mean(self.Values)
+        self.average = np.mean(list(self.Values))
         self.DurationCurves = []
         self.label = label
         self.text = text
@@ -54,17 +72,22 @@ class clsTimeSeries(object):
 ##        self.Values = map(lambda x: x.value, sheet.col_slice(colx=3,start_rowx = 1,end_rowx = None))
     
     def CreateDurationCurve(self, bins, feet=False, minQ=40., logbin=False):
-        
         """
         Creates a flow duration curve for daily discharge data given a number of bins to use.  If the attribute
         feet is set to True, the function will run a ft^3/s to m^3/s conversion after the 
         data has been binned.
         
-        Attributes:
-        
-        bins--int (number of bins to use)
-        feet--bool (denotes whether discharge data is in cubic meters per second (False)
+        Parameters
+        ----------
+        bins : int
+            Number of bins to use.
+        feet : bool (optional)
+            Denotes whether discharge data is in cubic meters per second (False)
             or cubic feet per second (True))
+        minQ : ???
+            NEEDS TO BE DOCUMENTED
+        logbin : bool
+            NEEDS TO BE DOCUMENTED     
         """
         
         binQ = []
@@ -72,7 +95,7 @@ class clsTimeSeries(object):
         
         #  Define bin edges
         maxbin = max(self.Values)
-        binlist = range(0,int(maxbin),int(bins))
+        binlist = list(range(0,int(maxbin),int(bins)))
         
         if logbin == True:
             binlist = [0,bins]
@@ -91,7 +114,7 @@ class clsTimeSeries(object):
         
         #  Convert from histogram to frequency plot
         total = float(sum(DCraw))
-        DC = map(lambda x: x/total, DCraw)
+        DC = list(map(lambda x: x/total, DCraw))
 
         #  Find average value of each bin
         i = 0

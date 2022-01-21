@@ -11,8 +11,10 @@ REQUIRED PACKAGES
 User does not modify.
 """
 import os
+import tkinter as tk
 import sys
 import csv
+
 import json
 from copy import deepcopy
 import multiprocessing
@@ -21,6 +23,9 @@ from Hydrology.clsTimeSeries import clsTimeSeries
 from Hydrology.clsQCreator import clsQCreator
 from MAST_1D.clsInputs import clsInputs
 from MAST_1D.clsModel import clsModel
+from tkinter import filedialog
+
+#repackage.up()
 
 """
 OBJECT AND FUNCTION DEFINITION
@@ -98,7 +103,11 @@ Here you can import a .csv file with spacially-explicit initial conditions
 I.B  IMPORT REACH CONDITIONS FROM A PREVIOUS RUN
 """
 inputs.initialcond = False # If you are using a prior run as initial conditions, True; if starting from scratch, False
-inputs.priorReach = 'C:\Users\Katie\Dropbox\MAST-1D_version_K15\Output\PreRemoval\EDamIndex3Mob06AlphaN1AlphaG055NewAvulsionFP02'+ '//' +'save.Reach' # File with initial conditions Reach object
+#inputs.priorReach = 'C:\Users\Katie\Dropbox\MAST-1D_version_K15\Output\PreRemoval\EDamIndex3Mob06AlphaN1AlphaG055NewAvulsionFP02'+ '//' +'save.Reach' # File with initial conditions Reach object
+if inputs.initialcond == True:
+    root = tk.Tk()
+    root.withdraw()
+    inputs.priorReach = filedialog.askopenfilename(title="Select prior reach output file, should be a save.Reach file")
 
 """
 II:  SET CHANNEL GEOMETRY.
@@ -106,7 +115,7 @@ II:  SET CHANNEL GEOMETRY.
 Note that you must fill these variables even if you are importing them in Section
 I.A or I.B.  MAST-1D will set the feed and floodplain number based on these values.
 """
-inputs.Nnodes = 6 #  Number of nodes
+inputs.Nnodes = 16 #  Number of nodes
 inputs.Bc = 94. # Channel width (m)
 inputs.reachlength = 13673. # Length of reach (channel length) (m)
 inputs.Bf = 500 # Total valley width (m)
@@ -160,7 +169,8 @@ inputs.FeedType = "DurationCurve" # Choose 'DurationCurve' if using a duration
     # method for applying feed--see Section VI.E in clsModel.
 
 #  Downstream water surface elevation
-inputs.SetBoundary = True # True if you want to set a downstream boundary condition; false, model calculates it
+#inputs.SetBoundary = True # True if you want to set a downstream boundary condition; false, model calculates it
+#inputs.SetBoundary = True # True if you want to set a downstream boundary condition; false, model calculates it
 inputs.BoundaryFactor = [30.]
 inputs.BoundaryFactorCount = [] #  List of times to instigate WSE change--should
     # be an int (# of timesteps) for duration curves or a tuple ((yyyy, m, dd))

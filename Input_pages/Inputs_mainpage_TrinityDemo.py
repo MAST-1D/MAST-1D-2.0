@@ -341,8 +341,8 @@ inputs.Outputvars = ['Slope','Bf','Bc',\
 # B. Output on specific dates (for hydrograph runs)
 
 # Dates (yyyy, m, dd) in which to output variables for model validation 
-inputs.ValidateDates = [(1939, 1, 01),(1968, 1, 01),(1976, 1, 01),(1981, 1, 01),\
-    (1990, 1, 01),(2000, 1, 01),(2006, 1, 01),(2009, 1, 01),(2014, 12, 30),(2016, 8, 11)]     
+inputs.ValidateDates = [(1939, 1, 1),(1968, 1, 1),(1976, 1, 1),(1981, 1, 1),\
+    (1990, 1, 1),(2000, 1, 1),(2006, 1, 1),(2009, 1, 1),(2014, 12, 30),(2016, 8, 11)]     
 # Variables (attributes of clsNode) in which to output on specific dates for model validation
 inputs.Validatevars = ['Bc','CumulativeNarrowing','CumulativeWidening'] 
 

@@ -12,7 +12,7 @@ from clsNode import clsNode
 import os
 from clsOutputSpecs import clsOutputSpecs
 import json
-
+import pandas as pd
 
 class clsOutputWriter(object):
     
@@ -21,12 +21,20 @@ class clsOutputWriter(object):
         """
         Attributes:
         
-        -Outputfolder--str (Name of folder (within parent folder) to write outputfiles)
-        -DailyNodes--[int] (List of integers denoting the nodes for which daily data will be saved)
+        Outputfolder : str 
+            Name of folder (within parent folder) to write outputfiles
+        DailyNodes : array-like(int) 
+            List of integers denoting nodes for which daily data will be saved
+            as individual files.  However, note that the SimpleWriteDailyFile)
+            function duplicates the function that writes data from daily nodes.
+        startdate : str
+            Date to begin storing time series data.
+        
         """
         
         self.Outputfolder = Outputfolder 
         self.DailyNodes = {}
+        self.DailyDictList = []
         
         for Node in DailyNodes:
             DailyNode = clsOutputSpecs(startdate)
@@ -141,7 +149,38 @@ class clsOutputWriter(object):
         
         for DailyNode in self.DailyNodes.keys():
             self.DailyNodes[DailyNode].PopulateLists(Reach.Node[DailyNode])
+    
+        
+    def PopulateDailyDictList(self, Reach, variables, T):
+        
+        """
+        A method for updating a list of dictionaries of user specified 
+        variables stored in a reach.
+        
+        Parameters
+        ----------
+        Reach : obj:`MAST_1D.clsReach`
+            The reach from which output is to be taken.
+        variables : array-like(string)        
+            List of names of variables that will be saved. For example, for
+            the median grain size of the active layer at node 12, call using 
+            'Node[12].ActiveLayer.GSD.D50'.  
             
+        """
+        a_dict = {}
+        a_dict["time_year"] = str(T)
+        for var in variables:
+            a_dict[var] = eval("Reach."+var)
+            
+        self.DailyDictList.append(a_dict)
+
+    def SimpleWriteDailyFile(self):
+        outputpath = os.path.join(os.pardir, self.Outputfolder)
+        with open(os.path.join(outputpath, "DailyOutputAsDictionary"), 'w', encoding="utf8") as fout:
+            json.dump(self.DailyDictList, fout)
+        df = pd.DataFrame(self.DailyDictList)
+        df.to_csv(os.path.join(outputpath, "DailyOutput.csv"), index = False)
+        
     def WriteDailyFiles(self):
         """
         Writes the daily data stored in the clsOutputSpecs object to a json file
@@ -151,25 +190,28 @@ class clsOutputWriter(object):
         outputpath = os.path.join(os.pardir, self.Outputfolder)
         datelist = []
         for DailyNode in self.DailyNodes.keys():
-            datelist = map(lambda x: x.strftime('%Y,%m,%d'), self.DailyNodes[DailyNode].Date)
-            json.dump(self.DailyNodes[DailyNode].Q, open(os.path.join(outputpath, "save.DailyQ" + str(DailyNode)), "wb" ))
-            json.dump(self.DailyNodes[DailyNode].QsavBedTot, open(os.path.join(outputpath, "save.DailyQsavBedTot" + str(DailyNode)), "wb" ))
-            json.dump(self.DailyNodes[DailyNode].QsavTotAllFeed, open(os.path.join(outputpath, "save.DailyQsavTotAllFeed" + str(DailyNode)), "wb" )) 
-            json.dump(self.DailyNodes[DailyNode].Qsk, open(os.path.join(outputpath, "save.DailyQsk" + str(DailyNode)), "wb" )) 
-            json.dump(self.DailyNodes[DailyNode].F, open(os.path.join(outputpath, "save.DailyF" + str(DailyNode)), "wb" )) 
-            json.dump(self.DailyNodes[DailyNode].FpF, open(os.path.join(outputpath, "save.DailyFpF" + str(DailyNode)), "wb" )) 
-            json.dump(self.DailyNodes[DailyNode].SubF, open(os.path.join(outputpath, "save.DailySubF" + str(DailyNode)), "wb" )) 
-            json.dump(self.DailyNodes[DailyNode].Bc, open(os.path.join(outputpath, "save.DailyBc" + str(DailyNode)), "wb" )) 
-            json.dump(self.DailyNodes[DailyNode].CumuWiden, open(os.path.join(outputpath, "save.DailyCumuWiden" + str(DailyNode)), "wb" )) 
-            json.dump(self.DailyNodes[DailyNode].CumuNarrow, open(os.path.join(outputpath, "save.DailyCumuNarrow" + str(DailyNode)), "wb" ))
-            json.dump(self.DailyNodes[DailyNode].Eshear, open(os.path.join(outputpath, "save.DailyEshear" + str(DailyNode)), "wb" )) 
-            json.dump(self.DailyNodes[DailyNode].InVChange, open(os.path.join(outputpath, "save.DailyInVChange" + str(DailyNode)), "wb" ))
-            json.dump(self.DailyNodes[DailyNode].OutVChange, open(os.path.join(outputpath, "save.DailyOutVChange" + str(DailyNode)), "wb" ))
-            json.dump(self.DailyNodes[DailyNode].SinkLoadSed, open(os.path.join(outputpath, "save.DailySinkLoadSed" + str(DailyNode)), "wb" ))
+            datelist = list(map(lambda x: x.strftime('%Y,%m,%d'), self.DailyNodes[DailyNode].Date))
+            json.dump(self.DailyNodes[DailyNode].Q, open(os.path.join(outputpath, "save.DailyQ" + str(DailyNode)), "w", encoding="utf8" ))
+            json.dump(self.DailyNodes[DailyNode].QsavBedTot, open(os.path.join(outputpath, "save.DailyQsavBedTot" + str(DailyNode)), "w", encoding="utf8" ))
+            json.dump(self.DailyNodes[DailyNode].QsavTotAllFeed, open(os.path.join(outputpath, "save.DailyQsavTotAllFeed" + str(DailyNode)), "w" )) 
+            json.dump(self.DailyNodes[DailyNode].Qsk_1, open(os.path.join(outputpath, "save.DailyQsk1" + str(DailyNode)), "w" )) 
+            json.dump(self.DailyNodes[DailyNode].F, open(os.path.join(outputpath, "save.DailyF" + str(DailyNode)), "w" )) 
+            json.dump(self.DailyNodes[DailyNode].FpF, open(os.path.join(outputpath, "save.DailyFpF" + str(DailyNode)), "w" )) 
+            json.dump(self.DailyNodes[DailyNode].SubF, open(os.path.join(outputpath, "save.DailySubF" + str(DailyNode)), "w" )) 
+            json.dump(self.DailyNodes[DailyNode].Bc, open(os.path.join(outputpath, "save.DailyBc" + str(DailyNode)), "w" )) 
+            json.dump(self.DailyNodes[DailyNode].CumuWiden, open(os.path.join(outputpath, "save.DailyCumuWiden" + str(DailyNode)), "w" )) 
+            json.dump(self.DailyNodes[DailyNode].CumuNarrow, open(os.path.join(outputpath, "save.DailyCumuNarrow" + str(DailyNode)), "w" ))
+            json.dump(self.DailyNodes[DailyNode].Eshear, open(os.path.join(outputpath, "save.DailyEshear" + str(DailyNode)), "w" )) 
+            json.dump(self.DailyNodes[DailyNode].InVChange, open(os.path.join(outputpath, "save.DailyInVChange" + str(DailyNode)), "w" ))
+            json.dump(self.DailyNodes[DailyNode].OutVChange, open(os.path.join(outputpath, "save.DailyOutVChange" + str(DailyNode)), "w" ))
+            json.dump(self.DailyNodes[DailyNode].SinkLoadSed, open(os.path.join(outputpath, "save.DailySinkLoadSed" + str(DailyNode)), "w" ))
             
             
       
-        json.dump(datelist, open(os.path.join(outputpath, "save.DailyDate"), "wb" ))
+        #json.dump(datelist, open(os.path.join(outputpath, "save.DailyDate"), "wb" ))
+        json.dump(datelist, open(os.path.join(outputpath, "save.DailyDate"), "w", encoding="utf8" ))
+        #json.dump(datelist, open(os.path.join(outputpath, "save.DailyDate"), "w"))
+
 
       
      

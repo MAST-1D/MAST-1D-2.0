@@ -1,39 +1,70 @@
-
 from clsExchangeTypes import clsExchangeTypes
 from clsGSD import clsGSD 
 import numpy as np
 from copy import deepcopy
 
-
-class clsReservoir:
+class clsReservoir: 
     """
-    Attributes:
-        L -- float (Thickness)
-        T -- [float] (Tracer concentration in size k)
-        ExSed -- clsExchangeTypes (Size specific sediment fluxes into and out
-                 of reservoir (units of volume/time))
-        ExTracer -- [clsExchangeTypes] (Size and tracer specific tracer 
-                    concentrations in sediment moving into and out of 
-                    reservoir)
-        SourceLatSed -- [float] (Lateral Sediment Source (e.g. bluffs, etc.))
-        SourceLatTracer -- [float] (Tracer concentration in net lateral tracer
-                           source)
-        SinkLatSed -- [float] (Sediment flux to lateral sink (e.g. floodplain
-                      deposition, dredging, etc.))
-        SinkLatTracer -- [float] (Tracer concentraiton in lateral sediment sink
-                         --may not be necessary since outgoing T is just T)
-        SourceFeedSed -- [float] (Upstream sediment feed)
-        SourceFeedTracer -- [float] (Tracer concentration in upstream sediment
-                            feed)
-        SinkLoadSed -- [float] (Sediment flux out of node in load)
-        SinkLoadTracer -- [float] (Tracer concentration in load)
-        NTracers -- int (number of tracers)
-        NSizes -- int (number of bed material grain sizes.  note that k = 0 
-                  represents washload.)
-        GSD -- clsGSD (grain size distribution for reservoir)
-        Volume -- float (total reservoir volume including voids, for all sizes)
-        
-        Initialized -- bool
+    A class defining a sediment storage reservoir.
+    
+    Defines the volume and nature of sediment stored within a given 
+    sediment storage reservoir and includes the method for performing size-specific 
+    mass balance computations for sediment and tracer mass.
+    
+    Parameters
+    ----------
+        BinBdySizes : array_like(float)
+            Sediment grain size at each bin boundary. Note that the number
+            of sediment sizes NSizes = BinBdySizes - 2.
+        NTracers : int
+            Number of tracers.
+    
+    Attributes
+    ----------
+        NTracers : int 
+            Number of tracers.
+        NSizes : int 
+            Number of bed material grain sizes. Note that k = 0 represents washload.)
+        GSD : :obj:`MAST_1D.clsGSD`
+            Grain size distribution of sediment for reservoir.
+        Volume : float 
+            Total reservoir volume including voids, for all sizes.
+        L : float 
+            Vertical thickness of reservoir
+        T : array_like (float, length = NTracers)
+            Tracer concentration in size k.
+        ExSed : :obj:`MAST_1D.clsExchangeTypes`
+            Size specific sediment fluxes representing processes considered in the 
+            clsExchangeTypes class moving into and out of the reservoir. 
+            (units of volume/time).
+        ExTracer : array_like(:obj:`MAST_1D.clsExchangeTypes`, length = NTracers) 
+            Size and tracer specific tracer concentrations in sediment
+            moving into and out of reservoir. Defined for each tracer type.
+        SourceLatSed : array_like(float, length=Nsizes)
+            Size-specific lateral sediment source (e.g. bluffs, etc.).
+        SourceLatTracer : array_like (float, ndim = 2)
+            Tracer concentration in net lateral tracer source for each tracer type
+            and sediment size.  Size of array is NSizes x NTracers.
+        SinkLatSed : array_like(float, length=Nsizes)
+            Size specific sediment flux to lateral sink (e.g. floodplain deposition,
+            dredging, etc.).
+        SinkLatTracer : array_like (float, ndim = 2)
+            Tracer concentration in lateral sediment sink for each size and tracer time.
+            Size of array is NSizes x NTracers.
+            May not be necessary since for cosmogenic tracer, loss is proportional to T.
+        SourceFeedSed : array_like(float, length=Nsizes)
+            Upstream sediment feed for each sediment size.
+        SourceFeedTracer : array_like (float, ndim = 2)
+            Tracer concentration in upstream sediment feed, for each 
+            sediment size and tracer type. Size of array is NSizes x NTracers.
+        SinkLoadSed : array_like(float, length=Nsizes)
+            Sediment flux out of node in load for each sediment size.
+        SinkLoadTracer : array_like (float, ndim = 2)
+            Tracer concentration in load for each 
+            sediment size and tracer type. Size of array is NSizes x NTracers
+        Initialized : bool
+            Flag to determine if reservoir has been initialized
+            
     """
     Initialized = False
     
@@ -47,44 +78,46 @@ class clsReservoir:
     
     NSizes = property(getNSizes)
     
-    def __init__(self, BinBdySizes, NTracers):
-        """
-        Arguments:
-            BinBdySizes -- [float]
-            NTracers -- int
-        """
+    def __init__(self, BinBdySizes, NumTracers):
         if not self.Initialized:
-            self.NSizes = len(BinBdySizes) - 2
+            #self.NSizes = len(BinBdySizes) - 2
+            sizes = len(BinBdySizes)-2
+            #self.NTracers = NTracers
             
-            self.NTracers = NTracers
-            
-            self.ExSed = clsExchangeTypes(self.NSizes)
-            self.ExTracer = [clsExchangeTypes(self.NSizes) for i in \
-                            range(NTracers)]
+            #self.ExSed = clsExchangeTypes(self.NSizes)
+            self.ExSed = clsExchangeTypes(sizes)
+            self.ExTracer = [clsExchangeTypes(sizes) for i in range(NumTracers)]
             self.GSD = clsGSD(BinBdySizes)
-            self.T = np.zeros((self.NSizes + 1, NTracers))
+            self.T = np.zeros((sizes + 1, NumTracers))
             self.Initialized = True
             self.DeltaS = 0. # Katie add to keep track of mass conservation
             self.L = 0.
             self.Volume = 0.
             
-            self.SourceLatSed = np.zeros(self.NSizes + 1)
-            self.SourceLatTracer = np.zeros((self.NSizes + 1, NTracers))
-            self.SinkLatSed = np.zeros(self.NSizes + 1)
-            self.SinkLatTracer = np.zeros((self.NSizes + 1, NTracers))
-            self.SourceFeedSed = np.zeros(self.NSizes + 1)
-            self.SourceFeedTracer = np.zeros((self.NSizes + 1, NTracers))
-            self.SinkLoadSed = np.zeros(self.NSizes + 1)
-            self.SinkLoadTracer = np.zeros((self.NSizes + 1, NTracers))
+            self.SourceLatSed = np.zeros(sizes + 1)
+            self.SourceLatTracer = np.zeros((sizes + 1, NumTracers))
+            self.SinkLatSed = np.zeros(sizes + 1)
+            self.SinkLatTracer = np.zeros((sizes + 1, NumTracers))
+            self.SourceFeedSed = np.zeros(sizes + 1)
+            self.SourceFeedTracer = np.zeros((sizes + 1, NumTracers))
+            self.SinkLoadSed = np.zeros(sizes + 1)
+            self.SinkLoadTracer = np.zeros((sizes + 1, NumTracers))
         else:
             raise RuntimeError('Tried to initiate clsReservoir twice.')
     
     def UpdateFandT(self, dt, lambdap, TracerProperties):
         """
-        Arguments:
-            dt -- float
-            lambdap -- float
-            TracerProperties -- clsTracerProperties
+        Apply mass conservation to the reservoir to estimate sediment size fractions and
+        tracer concentrations in future timestep.
+        
+        Arguments
+        ---------
+            dt : float
+                Timestep (seconds).
+            lambdap : float
+                Porosity of reservoir deposit.
+            TracerProperties : array_like(:obj:clsTracerProperties, length = NTracers)
+                Production and decay properties for each tracer type.
         """
         DeltaSedVolume = np.zeros(self.NSizes + 1)
         DeltaTVolume = np.zeros((self.NSizes + 1, self.NTracers))
@@ -147,8 +180,11 @@ class clsReservoir:
                     # by sediment volume in a given size class
                     if NewSedVolume[k] > 0.:
                         self.T[k, L] = NewTVolume[k, L] / NewSedVolume[k]
+                        #if self.T[k,L] > 1: print('dt = %s' % dt)
                     else:
-                        self.T[k, L] = 0.        
+                        self.T[k, L] = 0.   
+                    if self.T[k, L] > 1: 
+                        print('Warning: Tracer concentration set above one; consider reducing dt')
         self.DeltaS = NewSedVolumeTotal - self.Volume
         self.Volume = NewSedVolumeTotal
         self.GSD.UpdateStatistics()
